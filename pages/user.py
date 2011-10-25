@@ -129,7 +129,7 @@ class EditProfile(Base):
         self.selenium.find_element(*self._hide_email_checkbox).click()
 
     @property
-    def is_hide_email_checbox_checked(self):
+    def is_hide_email_checkbox_checked(self):
         return self.selenium.is_checked(self._hide_email_checkbox)
 
     def check_hide_email(self):
