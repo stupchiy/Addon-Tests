@@ -99,7 +99,6 @@ class TestAccounts:
 
     def test_hide_email_checkbox_works(self, mozwebqa):
 
-
         home_page = Home(mozwebqa)
         home_page.login()
 
@@ -107,7 +106,7 @@ class TestAccounts:
         Assert.true(home_page.header.is_user_logged_in)
 
         view_profile_page = home_page.header.click_view_profile()
-        Assert.false(view_profile_page.is_email_present, 'expected state of profile incorrect')
+        Assert.false(view_profile_page.is_email_present, 'Expected state of profile incorrect.')
 
         edit_profile_page = home_page.header.click_edit_profile()
         Assert.true(edit_profile_page.is_hide_email_checkbox_checked)
@@ -118,7 +117,7 @@ class TestAccounts:
         view_profile_page = home_page.header.click_view_profile()
         Assert.true(view_profile_page.is_email_present)
         credentials = mozwebqa.credentials['default']
-        Assert.equal(credentials['email'], view_profile_page.email_value, "values doesn't the expected email")
+        Assert.equal(credentials['email'], view_profile_page.email_value, 'Actual value is not equal with the expected one.')
 
         Assert.equal(view_profile_page.about_me, 'About me')
 
@@ -160,4 +159,4 @@ class TestAccounts:
         Assert.false(edit_profile_page.is_hide_email_checkbox_checked)
         edit_profile_page.check_hide_email()
         edit_profile_page.click_update_account()
-        Assert.true(edit_profile_page.is_hide_email_checkbox_checked, 'could not restore profile to intial state')
+        Assert.true(edit_profile_page.is_hide_email_checkbox_checked, 'Could not restore profile to initial state.')
