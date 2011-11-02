@@ -44,24 +44,28 @@ import re
 from pages.page import Page
 from datetime import datetime
 from string import capitalize
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Base(Page):
+#===============================================================================
+# Webdriver code
+#===============================================================================
+    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(2)")
+    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(1)")
+    _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth(0)")
+    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(3)")
+    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(0)")
+    _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
-    _next_link_locator = "css=.paginator .rel > a:nth(2)"
-    _previous_link_locator = "css=.paginator .rel > a:nth(1)"
-    _current_page_locator = "css=.paginator .num > a:nth(0)"
-    _last_page_link_locator = "css=.paginator .rel > a:nth(3)"
-    _first_page_link_locator = "css=.paginator .rel > a:nth(0)"
-    _results_displayed_text_locator = "css=.paginator .pos"
 
+    _amo_logo_link_locator = (By.CSS_SELECTOR, ".site-title a")
+    _amo_logo_image_locator = (By.CSS_SELECTOR, ".site-title img")
 
-    _amo_logo_link_locator = "css=.site-title a"
-    _amo_logo_image_locator = "css=.site-title img"
+    _mozilla_logo_link_locator = (By.CSS_SELECTOR, "#global-header-tab a")
 
-    _mozilla_logo_link_locator = "css=#global-header-tab a"
-
-    _breadcrumbs_locator = "css=#breadcrumbs>ol>li"
+    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs>ol>li")
 
     def login(self, user="default"):
         login = self.header.click_login()
@@ -69,72 +73,44 @@ class Base(Page):
 
     @property
     def page_title(self):
-        return self.selenium.get_title()
-
-    @property
-    def amo_logo_title(self):
-        return self.selenium.get_attribute("%s@title" % self._amo_logo_link_locator)
+        return self.selenium.title
 
     @property
     def is_amo_logo_visible(self):
-        return self.selenium.is_visible(self._amo_logo_link_locator)
-
-    @property
-    def amo_logo_image_source(self):
-        return self.selenium.get_attribute("%s@src" % self._amo_logo_image_locator)
+        return self.selenium.find_element(*self._amo_logo_link_locator).is_displayed()
 
     @property
     def is_amo_logo_image_visible(self):
-        return self.selenium.is_visible(self._amo_logo_image_locator)
+        return self.selenium.find_element(*self._amo_logo_image_locator).is_displayed()
 
     @property
     def is_mozilla_logo_visible(self):
-        return self.selenium.is_visible(self._mozilla_logo_link_locator)
+        return self.selenium.find_element(*self._mozilla_logo_link_locator).is_displayed()
 
     def click_mozilla_logo(self):
-        self.selenium.click(self._mozilla_logo_link_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
-
-    def page_forward(self):
-        self.selenium.click(self._next_link_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
-
-    def page_back(self):
-        self.selenium.click(self._previous_link_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
-
-    @property
-    def is_prev_link_enabled(self):
-        button = self.selenium.get_attribute(self._previous_link_locator + "%s" % "@class")
-        return not ("disabled" in button)
+        self.selenium.find_element(*self._mozilla_logo_link_locator).click()
 
     @property
     def is_prev_link_visible(self):
-        return self.selenium.is_visible(self._previous_link_locator)
-
-    @property
-    def is_next_link_enabeld(self):
-        button = self.selenium.get_attribute(self._next_link_locator + "%s" % "@class")
-        return not("disabled" in button)
+        return self.selenium.find_element(*self._previous_link_locator).is_displayed()
 
     @property
     def is_next_link_visible(self):
-        return self.selenium.is_visible(self._next_link_locator)
+        return self.selenium.is_visible(*self._next_link_locator).is_displayed()
 
     @property
     def current_page(self):
-        return int(self.selenium.get_text(self._current_page_locator))
+        return int(self.selenium.find_element(*self._current_page_locator))
 
     @property
     def results_displayed(self):
-        return self.selenium.get_text(self._results_displayed_text_locator)
+        return self.selenium.find_element(*self._results_displayed_text_locator).text
 
     def go_to_last_page(self):
-        self.selenium.click(self._last_page_link_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*self._last_page_link_locator).click()
 
     def go_to_first_page(self):
-        self.selenium.click(self._first_page_link_locator)
+        self.selenium.find_element(*self._first_page_link_locator).click()
         self.selenium.wait_for_page_to_load(self.timeout)
 
     def credentials_of_user(self, user):
@@ -145,20 +121,41 @@ class Base(Page):
         return Base.HeaderRegion(self.testsetup)
 
     @property
-    def breadcrumb_name(self):
-        return self.selenium.get_text("%s > span" % self._breadcrumbs_locator)
-
-    @property
     def breadcrumbs(self):
         return [self.BreadcrumbsRegion(self.testsetup, i) for i in range(self.breadcrumbs_count)]
 
     @property
     def breadcrumbs_count(self):
-        return self.selenium.get_css_count(self._breadcrumbs_locator)
+        return len(self.selenium.find_elements(*self._breadcrumbs_locator))
 
     @property
     def is_breadcrumb_menu_visible(self):
-        return self.selenium.is_visible(self._breadcrumbs_locator)
+        return self.selenium.find_element(*self._breadcrumbs_locator).is_displayed()
+#===============================================================================
+# RC code
+#===============================================================================
+
+    @property
+    def amo_logo_title(self):
+        return self.selenium.get_attribute("%s@title" % self._amo_logo_link_locator)
+
+    @property
+    def amo_logo_image_source(self):
+        return self.selenium.get_attribute("%s@src" % self._amo_logo_image_locator)
+
+    @property
+    def is_prev_link_enabled(self):
+        button = self.selenium.get_attribute(self._previous_link_locator + "%s" % "@class")
+        return not ("disabled" in button)
+
+    @property
+    def is_next_link_enabeld(self):
+        button = self.selenium.get_attribute(self._next_link_locator + "%s" % "@class")
+        return not("disabled" in button)
+
+    @property
+    def breadcrumb_name(self):
+        return self.selenium.get_text("%s > span" % self._breadcrumbs_locator)
 
     def _extract_iso_dates(self, xpath_locator, date_format, count):
         """
@@ -202,26 +199,32 @@ class Base(Page):
         ]
         return integer_numbers
 
+#===============================================================================
+# Webdriver code
+#===============================================================================
     class HeaderRegion(Page):
 
         #other applications
-        _other_applications_locator = "id=other-apps"
-        _other_apps_list_locator = "css=ul.other-apps"
-        _app_thunderbird = "css=#app-thunderbird a"
+        _other_applications_locator = (By.ID, "other-apps")
+        _other_apps_list_locator = (By.CSS_SELECTOR, "ul.other-apps")
+        _app_thunderbird = (By.CSS_SELECTOR, "#app-thunderbird a")
 
         #Search box
-        _search_button_locator = "css=.search-button"
-        _search_textbox_locator = "name=q"
+        _search_button_locator = (By.CSS_SELECTOR, ".search-button")
+        _search_textbox_locator = (By.NAME, "q")
 
         #Not LogedIn
-        _login_locator = "css=#aux-nav li.account a:nth(1)"
-        _register_locator = "css=#aux-nav li.account a:nth(0)"
+        _login_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth(1)")
+        _register_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth(0)")
 
         #LogedIn
-        _account_controller_locator = 'css=#aux-nav .account .user'
-        _account_dropdown_locator = "css=#aux-nav .account ul"
-        _logout_locator = 'css=li.nomenu.logout > a'
+        _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account .user")
+        _account_dropdown_locator = (By.CSS_SELECTOR, "#aux-nav .account ul")
+        _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
 
+#===============================================================================
+# RC code
+#===============================================================================
         def site_nav(self, lookup):
             if type(lookup) != int:
                 lookup = capitalize(lookup)
