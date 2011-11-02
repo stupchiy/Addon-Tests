@@ -41,41 +41,43 @@ from pages.page import Page
 from time import strptime, mktime
 from pages.base import Base
 from pages.regions.search_filter import FilterBase
-
+from selenium.webdriver.common.by import By
 
 class SearchHome(Base):
 
-    _number_of_results_found = 'css=#search-facets > p'
+    _number_of_results_found = (By.CSS_SELECTOR, "#search-facets > p")
 
-    _no_results_locator = 'css=p.no-results'
-    _search_results_title_locator = 'css=section.primary>h1'
-    _results_locator = 'css=div.items div.item.addon'
+    _no_results_locator = (By.CSS_SELECTOR, "p.no-results")
+    _search_results_title_locator = (By.CSS_SELECTOR, "section.primary>h1")
+    _results_locator = (By.CSS_SELECTOR, "div.items div.item.addon")
 
-    _sort_by_relevance_locator = "css=#sorter > ul > li > a:contains('Relevance')"
-    _sort_by_most_users_locator = "css=#sorter > ul > li > a:contains('Most Users')"
-    _sort_by_top_reated_locator = "css=#sorter > ul > li > a:contains('Top Rated')"
-    _sort_by_newest_locator = "css=#sorter > ul > li > a:contains('Newest')"
+    _sort_by_relevance_locator = (By.CSS_SELECTOR, "#sorter > ul > li > a:contains('Relevance')")
+    _sort_by_most_users_locator = (By.CSS_SELECTOR, "#sorter > ul > li > a:contains('Most Users')")
+    _sort_by_top_reated_locator = (By.CSS_SELECTOR, "#sorter > ul > li > a:contains('Top Rated')")
+    _sort_by_newest_locator = (By.CSS_SELECTOR, "#sorter > ul > li > a:contains('Newest')")
 
-    _sort_by_name_locator = "css=#sorter >ul > li > ul > li > a:contains('Name')"
-    _sort_by_weekly_downloads_locator = "css=#sorter >ul > li > ul > li > a:contains('Weekly Downloads')"
-    _sort_by_recently_updated_locator = "css=#sorter >ul > li > ul > li > a:contains('Recently Updated')"
-    _sort_by_up_and_coming_locator = "css=#sorter >ul > li > ul > li > a:contains('Up & Coming')"
-
+    _sort_by_name_locator = (By.CSS_SELECTOR, "#sorter >ul > li > ul > li > a:contains('Name')")
+    _sort_by_weekly_downloads_locator = (By.CSS_SELECTOR, "#sorter >ul > li > ul > li > a:contains('Weekly Downloads')")
+    _sort_by_recently_updated_locator = (By.CSS_SELECTOR, "#sorter >ul > li > ul > li > a:contains('Recently Updated')")
+    _sort_by_up_and_coming_locator = (By.CSS_SELECTOR, "#sorter >ul > li > ul > li > a:contains('Up & Coming')")
+#===============================================================================
+# Webdriver Code
+#===============================================================================
     @property
     def is_no_results_present(self):
         return self.is_element_present(self._no_results_locator)
 
     @property
     def no_results_text(self):
-        return self.selenium.get_text(self._no_results_locator)
+        return self.selenium.find_element(*self._no_results_locator).text
 
     @property
     def number_of_results_text(self):
-        return self.selenium.get_text(self._number_of_results_found)
+        return self.selenium.find_element(*self._number_of_results_found).text
 
     @property
     def search_results_title(self):
-        return self.selenium.get_text(self._search_results_title_locator)
+        return self.selenium.find_element(*self._search_results_title_locator).text
 
     @property
     def filter(self):
@@ -83,11 +85,10 @@ class SearchHome(Base):
 
     @property
     def result_count(self):
-        return int(self.selenium.get_css_count(self._results_locator))
+        return len(self.selenium.find_elements(*self._results_locator))
 
     def sort_by(self, type):
-        self.selenium.click(getattr(self, '_sort_by_%s_locator' % type.replace(' ', '_').lower()))
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_elements(*getattr(self, '_sort_by_%s_locator' % type.replace(' ', '_').lower())).click()
         return self
 
     def result(self, lookup):
@@ -95,6 +96,10 @@ class SearchHome(Base):
 
     def results(self):
         return [self.SearchResult(self.testsetup, i) for i in range(self.result_count)]
+
+#===============================================================================
+# Rc Code
+#===============================================================================
 
     class SearchResult(Page):
         _name_locator = '> div.info > h3 > a'
