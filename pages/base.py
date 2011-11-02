@@ -76,8 +76,16 @@ class Base(Page):
         return self.selenium.title
 
     @property
+    def amo_logo_title(self):
+        return self.selenium.find_element(*self._amo_logo_link_locator).get_attribute('title')
+
+    @property
     def is_amo_logo_visible(self):
         return self.selenium.find_element(*self._amo_logo_link_locator).is_displayed()
+
+    @property
+    def amo_logo_image_source(self):
+        return self.selenium.find_element(*self._amo_logo_image_locator).get_attribute('src')
 
     @property
     def is_amo_logo_image_visible(self):
@@ -91,8 +99,18 @@ class Base(Page):
         self.selenium.find_element(*self._mozilla_logo_link_locator).click()
 
     @property
+    def is_prev_link_enabled(self):
+        button = self.selenium.find_element(*self._previous_link_locator).get_attribute('class')
+        return not ("disabled" in button)
+
+    @property
     def is_prev_link_visible(self):
         return self.selenium.find_element(*self._previous_link_locator).is_displayed()
+
+    @property
+    def is_next_link_enabeld(self):
+        button = self.selenium.find_element(*self._next_link_locator).get_attribute('class')
+        return not("disabled" in button)
 
     @property
     def is_next_link_visible(self):
@@ -134,24 +152,6 @@ class Base(Page):
 #===============================================================================
 # RC code
 #===============================================================================
-
-    @property
-    def amo_logo_title(self):
-        return self.selenium.get_attribute("%s@title" % self._amo_logo_link_locator)
-
-    @property
-    def amo_logo_image_source(self):
-        return self.selenium.get_attribute("%s@src" % self._amo_logo_image_locator)
-
-    @property
-    def is_prev_link_enabled(self):
-        button = self.selenium.get_attribute(self._previous_link_locator + "%s" % "@class")
-        return not ("disabled" in button)
-
-    @property
-    def is_next_link_enabeld(self):
-        button = self.selenium.get_attribute(self._next_link_locator + "%s" % "@class")
-        return not("disabled" in button)
 
     @property
     def breadcrumb_name(self):
