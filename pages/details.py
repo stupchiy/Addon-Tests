@@ -62,7 +62,7 @@ class Details(Base):
     _name_locator = (By.CSS_SELECTOR, "h1.addon")
     _title_locator = (By.XPATH , "//h1[@Class='addon']/text()[normalize-space()]")
     _version_number_locator = (By.CSS_SELECTOR, "span.version-number")
-    _authors_locator = "//h4[@class='author']/a"
+    _authors_locator = (By.XPATH , "//h4[@class='author']/a")
     _summary_locator = (By.ID, "addon-summary")
     _ratings_locator = (By.CSS_SELECTOR, "span[itemprop='rating']")
     _install_button_locator = (By.CSS_SELECTOR, "p[class='install-button'] > a")
@@ -125,7 +125,6 @@ class Details(Base):
             self.addon_name = re.sub(r'[^A-Za-z0-9\-]', '', self.addon_name).lower()
             self.addon_name = self.addon_name[:27]
             self.selenium.get("/addon/%s" % (self.addon_name))
-#            self.wait_for_element_present(self._reviews_locator)
 
     @property
     def _page_title(self):
