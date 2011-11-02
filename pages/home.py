@@ -147,7 +147,7 @@ class Home(Base):
     def get_title_of_link(self, name):
         name = name.lower().replace(" ", "_")
         locator = getattr(self, "_%s_link_locator" % name)
-        return self.selenium.find_element(*self.append_value_to_locator(locator, '@title')).get_attribute()
+        return self.selenium.find_element(*locator).get_attribute('@title')
 
     @property
     def categories_count(self):
