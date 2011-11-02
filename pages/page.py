@@ -23,6 +23,7 @@
 # Contributor(s): Vishal
 #                 Dave Hunt <dhunt@mozilla.com>
 #                 David Burns
+#                 Bebe
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -43,13 +44,16 @@ Created on Jun 21, 2010
 '''
 import re
 import time
-
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import ElementNotVisibleException
 
 class Page(object):
     '''
     Base class for all Pages
     '''
-
+#===============================================================================
+# Webdriver code
+#===============================================================================
     def __init__(self, testsetup):
         '''
         Constructor
@@ -57,40 +61,42 @@ class Page(object):
         self.testsetup = testsetup
         self.base_url = testsetup.base_url
         self.selenium = testsetup.selenium
-        self.timeout = testsetup.timeout
-        self.site_version = testsetup.site_version
 
     @property
     def is_the_current_page(self):
-        page_title = self.selenium.get_title()
+        page_title = self.selenium.title
+
         if not page_title == self._page_title:
-            try:
-                raise Exception("Expected page title to be: '"
-                    + self._page_title + "' but it was: '" + page_title + "'")
-            except Exception:
-                raise Exception('Expected page title does not match actual page title.')
+            print "Expected page title: %s" % self._page_title
+            print "Actual page title: %s" % page_title
+            raise Exception("Expected page title does not match actual page title.")
         else:
             return True
 
     def get_url_current_page(self):
-        return(self.selenium.get_location())
+        return(self.selenium.current_url)
 
-    def get_text(self, text):
-        return(self.selenium.get_text(text))
+    def is_element_present(self, *locator):
+        try:
+            return self.selenium.find_element(*locator)
+        except NoSuchElementException:
+            return False
 
-    def is_text_present(self, text):
-        return self.selenium.is_text_present(text)
-
-    def is_element_present(self, locator):
-        return self.selenium.is_element_present(locator)
+    def is_element_visible(self, *locator):
+        try:
+            return self.selenium.find_element(*locator).is_displayed()
+        except NoSuchElementException, ElementNotVisibleException:
+            return False
 
     def return_to_previous_page(self):
-        self.selenium.go_back()
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.back()
 
     def refresh(self):
         self.selenium.refresh()
-        self.selenium.wait_for_page_to_load(self.timeout)
+
+#===============================================================================
+# RC code
+#===============================================================================
 
     def wait_for_element_present(self, element):
         count = 0
