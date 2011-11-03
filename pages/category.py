@@ -21,6 +21,7 @@
 # the Initial Developer. All Rights Reserved.
 #
 # Contributor(s): Marlena Compton <mcompton@mozilla.com>
+#                 Bebe
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -37,16 +38,17 @@
 # ***** END LICENSE BLOCK *****
 
 from pages.base import Base
+from selenium.webdriver.common.by import By
 
 
 class Category(Base):
 
-    _category_title_locator = "css=div.island > h1"
+    _category_title_locator = (By.CSS_SELECTOR, "div.island > h1")
 
     @property
     def category_page_title(self):
-        return self.selenium.get_title()
+        return self.page_title()
 
     @property
     def category_header_title(self):
-        return self.selenium.get_text(self._category_title_locator)
+        return self.find_element(*self._category_title_locator).text
