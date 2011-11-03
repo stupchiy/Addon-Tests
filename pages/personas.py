@@ -48,60 +48,58 @@
 import re
 
 from pages.base import Base
+from selenium.webdriver.common.by import By
 
 
 class Personas(Base):
+#===============================================================================
+# WebDriver Code
+#===============================================================================
 
     _page_title = "Personas :: Add-ons for Firefox"
-    _personas_locator = "//div[@class='persona persona-small']"
-    _start_exploring_locator = "css=#featured-addons.personas-home a.more-info"
-    _featured_addons_locator = "css=#featured-addons.personas-home"
-    _featured_personas_locator = "css=.personas-featured .persona.persona-small"
-    _addons_column_locator = '//div[@class="addons-column"]'
+    _personas_locator = (By.XPATH, "//div[@class='persona persona-small']")
+    _start_exploring_locator = (By.CSS_SELECTOR, "#featured-addons.personas-home a.more-info")
+    _featured_addons_locator = (By.CSS_SELECTOR, "#featured-addons.personas-home")
+    _featured_personas_locator = (By.CSS_SELECTOR, "personas-featured .persona.persona-small")
+    _addons_column_locator = (By.XPATH, '//div[@class="addons-column"]')
 
-    _persona_header_locator = "css=.featured-inner>h2"
-    _personas_breadcrumb_locator = "css=ol.breadcrumbs"
-
-    def __init__(self, testsetup):
-        Base.__init__(self, testsetup)
+    _persona_header_locator = (By.CSS_SELECTOR, ".featured-inner>h2")
+    _personas_breadcrumb_locator = (By.CSS_SELECTOR, "ol.breadcrumbs")
 
     @property
     def persona_count(self):
         """ Returns the total number of persona links in the page. """
-        return self.selenium.get_xpath_count(self._personas_locator)
+        return len(self.selenium.find_elements(*self._personas_locator))
 
     def click_persona(self, index):
         """ Clicks on the persona with the given index in the page. """
-        self.selenium.click("xpath=(%s)[%d]//a" % (self._personas_locator, index))
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(self._personas_locator[0], "(%s)[%d]//a" % (self._personas_locator[1], index))
         return PersonasDetail(self.testsetup)
 
     def open_persona_detail_page(self, persona_key):
-        self.selenium.open("%s/addon/%s" % (self.site_version, persona_key))
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.get(self.base_url + "/addon/%s" % persona_key)
         return PersonasDetail(self.testsetup)
 
     @property
     def is_featured_addons_present(self):
-        return self.selenium.get_css_count(self._featured_addons_locator) > 0
+        return len(self.selenium.find_elements(*self._featured_addons_locator)) > 0
 
     def click_start_exploring(self):
-        self.selenium.click(self._start_exploring_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*self._start_exploring_locator).click()
         return PersonasBrowse(self.testsetup)
 
     @property
     def featured_personas_count(self):
-        return self.selenium.get_css_count(self._featured_personas_locator)
+        return len(self.selenium.find_elements(*self._featured_personas_locator))
 
     def _persona_in_column_locator(self, column_index):
         """ Returns a locator for personas in the column with the given index. """
-        return "%s[%d]%s" % (self._addons_column_locator, column_index, self._personas_locator)
+        return (self._addons_column_locator[0], "%s[%d]%s" % (self._addons_column_locator[1], column_index, self._personas_locator[1]))
 
     @property
     def recently_added_count(self):
         locator = self._persona_in_column_locator(1)
-        return self.selenium.get_xpath_count(locator)
+        return len(self.selenium.find_elements(*locator))
 
     @property
     def recently_added_dates(self):
@@ -112,7 +110,7 @@ class Personas(Base):
     @property
     def most_popular_count(self):
         locator = self._persona_in_column_locator(2)
-        return self.selenium.get_xpath_count(locator)
+        return len(self.selenium.find_elements(*locator))
 
     @property
     def most_popular_downloads(self):
@@ -123,7 +121,7 @@ class Personas(Base):
     @property
     def top_rated_count(self):
         locator = self._persona_in_column_locator(3)
-        return self.selenium.get_xpath_count(locator)
+        return len(self.selenium.find_elements(*locator))
 
     @property
     def top_rated_ratings(self):
@@ -133,16 +131,18 @@ class Personas(Base):
 
     @property
     def persona_header(self):
-        return self.selenium.get_text(self._persona_header_locator)
+        return self.selenium.find_element(*self._persona_header_locator).text
 
     def breadcrumb_text(self, value):
-        return self.selenium.get_text(self._personas_breadcrumb_locator + "> li:nth(%s)" % value)
+        return self.selenium.find_element(self._personas_breadcrumb_locator[0], self._personas_breadcrumb_locator[1] + "> li:nth(%s)" % value).text
 
     @property
     def breadcrumb_text_all(self):
-        return self.selenium.get_text(self._personas_breadcrumb_locator)
+        return self.selenium.find_element(*self._personas_breadcrumb_locator).text
 
-
+#===============================================================================
+# RC Code
+#===============================================================================
 class PersonasDetail(Base):
 
     _page_title_regex = '.+ :: Add-ons for Firefox'
