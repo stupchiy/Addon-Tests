@@ -91,9 +91,6 @@ class Page(object):
     def return_to_previous_page(self):
         self.selenium.back()
 
-    def refresh(self):
-        self.selenium.refresh()
-
 #===============================================================================
 # RC code
 #===============================================================================
