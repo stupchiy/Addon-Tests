@@ -38,66 +38,68 @@
 # ***** END LICENSE BLOCK *****
 
 from pages.base import Base
-
+from selenium.webdriver.common.by import By
 
 class Login(Base):
 
     _page_title = 'User Login :: Add-ons for Firefox'
-    _email_locator = 'id=id_username'
-    _password_locator = 'id=id_password'
-    _login_button_locator = 'id=login-submit'
-    _normal_login_locator = 'id=show-normal-login'
+    _email_locator = (By.ID, 'id_username')
+    _password_locator = (By.ID, 'id_password')
+    _login_button_locator = (By.ID, 'login-submit')
+    _normal_login_locator = (By.ID, 'show-normal-login')
 
     def login_user(self, user):
         credentials = self.testsetup.credentials[user]
-        self.selenium.click(self._normal_login_locator)
-        self.wait_for_element_visible(self._email_locator)
+        self.selenium.find_element(*self._normal_login_locator).click()
 
-        self.selenium.type(self._email_locator, credentials['email'])
-        self.selenium.type(self._password_locator, credentials['password'])
-        self.selenium.click(self._login_button_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        email = self.selenium.find_element(*self._email_locator)
+        email.send_keys(credentials['email'])
+
+        password = self.selenium.find_element(*self._password_locator)
+        password.send_keys(credentials['password'])
+
+        self.selenium.find_element(*self._login_button_locator).click()
 
 
 class ViewProfile(Base):
 
     _page_title = 'User Info for Test :: Add-ons for Firefox'
-    _about_locator = 'css=div.island > section.primary > h2'
+    _about_locator = (By.CSS_SELECTOR, "div.island > section.primary > h2")
 
     @property
     def about_me(self):
-        return self.selenium.get_text(self._about_locator)
+        return self.selenium.find_element(*self._about_locator).text
 
 
 class User(Base):
 
-        _username_locator = "css=div.vcard h2.fn"
+        _username_locator = (By.CSS_SELECTOR, "div.vcard h2.fn")
 
         @property
         def username(self):
-            return self.selenium.get_text(self._username_locator)
+            return self.selenium.find_element(*self._username_locator).text
 
 
 class EditProfile(Base):
 
     _page_title = 'Account Settings :: Add-ons for Firefox'
-    _account_locator = "css=#acct-account > legend"
-    _profile_locator = "css=#profile-personal > legend"
-    _details_locator = "css=#profile-detail > legend"
-    _notification_locator = "css=#acct-notify > legend"
+    _account_locator = (By.CSS_SELECTOR, "#acct-account > legend")
+    _profile_locator = (By.CSS_SELECTOR, "#profile-personal > legend")
+    _details_locator = (By.CSS_SELECTOR, "#profile-detail > legend")
+    _notification_locator = (By.CSS_SELECTOR, "#acct-notify > legend")
 
     @property
     def is_account_visible(self):
-        return self.selenium.get_text(self._account_locator)
+        return self.selenium.find_element(*self._account_locator).text
 
     @property
     def is_profile_visible(self):
-        return self.selenium.get_text(self._profile_locator)
+        return self.selenium.find_element(*self._profile_locator).text
 
     @property
     def is_details_visible(self):
-        return self.selenium.get_text(self._details_locator)
+        return self.selenium.find_element(*self._details_locator).text
 
     @property
     def is_notification_visible(self):
-        return self.selenium.get_text(self._notification_locator)
+        return self.selenium.find_element(*self._notification_locator).text
