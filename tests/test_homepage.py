@@ -68,7 +68,7 @@ class TestHome:
         """
         home_page = Home(mozwebqa)
         Assert.true(home_page.is_most_popular_list_visible)
-        Assert.contains('Most Popular', home_page.most_popular_list_heading)
+        Assert.contains('MOST POPULAR', home_page.most_popular_list_heading)
         Assert.equal(home_page.most_popular_count, 10)
 
     def test_that_clicking_on_addon_name_loads_details_page(self, mozwebqa):

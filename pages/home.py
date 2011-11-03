@@ -81,7 +81,7 @@ class Home(Base):
     def __init__(self, testsetup):
         ''' Creates a new instance of the class and gets the page ready for testing '''
         Base.__init__(self, testsetup)
-        self.selenium.get("/")
+        self.selenium.get(self.base_url)
 
     def click_featured_personas_see_all_link(self):
         self.selenium.find_element(*self._featured_personas_see_all_link).click()
