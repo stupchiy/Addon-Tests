@@ -45,7 +45,6 @@ from pages.page import Page
 from datetime import datetime
 from string import capitalize
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Base(Page):
@@ -118,7 +117,7 @@ class Base(Page):
 
     @property
     def current_page(self):
-        return int(self.selenium.find_element(*self._current_page_locator))
+        return int(self.selenium.find_element(*self._current_page_locator).text)
 
     @property
     def results_displayed(self):
@@ -129,7 +128,6 @@ class Base(Page):
 
     def go_to_first_page(self):
         self.selenium.find_element(*self._first_page_link_locator).click()
-        self.selenium.wait_for_page_to_load(self.timeout)
 
     def credentials_of_user(self, user):
         return self.parse_yaml_file(self.credentials)[user]
