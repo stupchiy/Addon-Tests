@@ -91,15 +91,6 @@ class Page(object):
     def return_to_previous_page(self):
         self.selenium.back()
 
-    def append_value_to_locator(self, locator, value):
-        """
-        returns a tuple but adds the value to the end of the second item(locator)
-        ex: append_value_to_locator(By.CSS_SELECTOR, "#themes"),'@title') 
-        results:  (By.CSS_SELECTOR, "#themes@title")
-        attention: no space will be added
-        """
-        return (locator[0], locator[1] + value)
-
 #===============================================================================
 # RC code
 #===============================================================================
