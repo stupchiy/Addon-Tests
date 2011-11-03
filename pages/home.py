@@ -121,7 +121,7 @@ class Home(Base):
 
     @property
     def is_most_popular_list_visible(self):
-        return self.is_visible(self._most_popular_list_locator)
+        return self.is_element_visible(self._most_popular_list_locator)
 
     @property
     def most_popular_list_heading(self):
@@ -129,7 +129,7 @@ class Home(Base):
 
     @property
     def is_featured_personas_visible(self):
-        return self.is_visible(self._featured_personas_locator)
+        return self.is_element_visible(self._featured_personas_locator)
 
     @property
     def featured_personas_count(self):
@@ -151,7 +151,7 @@ class Home(Base):
 
     @property
     def categories_count(self):
-        return len(self.selenium.find_elements(self._category_list_locator[0] ,"%s li" %self._category_list_locator[1]))
+        return len(self.selenium.find_elements(self._category_list_locator[0] , "%s li" % self._category_list_locator[1]))
 
     @property
     def categories(self):
