@@ -81,7 +81,7 @@ class Base(Page):
 
     @property
     def is_amo_logo_visible(self):
-        return self.selenium.find_element(*self._amo_logo_link_locator).is_displayed()
+        return self.is_element_visible(self._amo_logo_link_locator)
 
     @property
     def amo_logo_image_source(self):
@@ -89,11 +89,11 @@ class Base(Page):
 
     @property
     def is_amo_logo_image_visible(self):
-        return self.selenium.find_element(*self._amo_logo_image_locator).is_displayed()
+        return self.is_element_visible(self._amo_logo_image_locator)
 
     @property
     def is_mozilla_logo_visible(self):
-        return self.selenium.find_element(*self._mozilla_logo_link_locator).is_displayed()
+        return self.is_element_visible(self._mozilla_logo_link_locator)
 
     def click_mozilla_logo(self):
         self.selenium.find_element(*self._mozilla_logo_link_locator).click()
