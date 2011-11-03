@@ -46,70 +46,60 @@
 # ***** END LICENSE BLOCK *****
 
 from pages.base import Base
+from selenium.webdriver.common.by import By
 
 
 class Themes(Base):
 
-    _sort_by_name_locator = "css=li.extras > ul > li:nth(0) > a"
-    _sort_by_updated_locator = "css=li.extras > ul > li:nth(3) > a"
-    _sort_by_created_locator = "css=div#sorter > ul > li:nth(2) > a"
-    _sort_by_popular_locator = "css=li.extras > ul > li:nth(2) > a"
-    _sort_by_rating_locator = "css=div#sorter > ul > li:nth(1) > a"
-    _addons_root_locator = "// div[@class = 'hovercard addon theme']"
-    _addon_name_locator = _addons_root_locator + " / a / div[@class='summary'] / h3"
-    _addons_metadata_locator = _addons_root_locator + " // div[@class = 'vital']/span[@class='updated']"
-    _addons_download_locator = _addons_root_locator + " / div[@class = 'vital']/span[@class='adu']"
-    _addons_rating_locator = _addons_metadata_locator + " / span / span"
-    _category_locator = "css=#c-30 > a"
-    _categories_locator = "css=#side-categories li"
-    _category_link_locator = _categories_locator + ":nth-of-type(%s) a"
-
-    def __init__(self, testsetup):
-        Base.__init__(self, testsetup)
+    _sort_by_name_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth(0) > a")
+    _sort_by_updated_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth(3) > a")
+    _sort_by_created_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth(2) > a")
+    _sort_by_popular_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth(2) > a")
+    _sort_by_rating_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth(1) > a")
+    _addons_root_locator = (By.XPATH, "// div[@class = 'hovercard addon theme']")
+    _addon_name_locator = (By.XPATH, _addons_root_locator[1] + " / a / div[@class='summary'] / h3")
+    _addons_metadata_locator = (By.XPATH, _addons_root_locator[1] + " // div[@class = 'vital']/span[@class='updated']")
+    _addons_download_locator = (By.XPATH, _addons_root_locator[1] + " / div[@class = 'vital']/span[@class='adu']")
+    _addons_rating_locator = (By.XPATH, _addons_metadata_locator[1] + " / span / span")
+    _category_locator = (By.CSS_SELECTOR, "#c-30 > a")
+    _categories_locator = (By.CSS_SELECTOR, "#side-categories li")
+    _category_link_locator = (By.CSS_SELECTOR, _categories_locator[1] + ":nth-of-type(%s) a")
 
     def click_sort_by(self, type_):
-        self.selenium.click(getattr(self, "_sort_by_%s_locator" % type_))
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*getattr(self, "_sort_by_%s_locator" % type_)).click()
 
     def click_on_first_addon(self):
-        self.selenium.click(self._addon_name_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*self._addon_name_locator).click()
         return Theme(self.testsetup)
 
     def click_on_first_category(self):
-        self.selenium.click(self._category_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*self._category_locator).click()
         return ThemesCategory(self.testsetup)
 
     def get_category(self, lookup):
-        return self.selenium.get_text(self._category_link_locator % lookup)
-
-    @property
-    def page_title(self):
-        return self.selenium.get_title()
+        return self.selenium.find_element(*self._category_link_locator % lookup).text
 
     @property
     def themes_category(self):
-        return self.selenium.get_text(self._category_locator)
+        return self.selenium.find_element(*self._category_locator).text
 
     @property
     def categories_count(self):
-        return self.selenium.get_css_count(self._categories_locator)
+        return len(self.selenium.find_elements(* self._categories_locator))
 
     @property
     def addon_names(self):
-        addon_count = int(self.selenium.get_xpath_count(self._addon_name_locator))
-        _addon_names = [self.selenium.get_text("xpath=(" + self._addon_name_locator + ")[%s]" % str(i + 1))
+        addon_count = len(self.selenium.find_elements(*self._addon_name_locator))
+        _addon_names = [self.selenium.find_elements(By.XPATH, "(" + self._addon_name_locator + ")[%s]" % str(i + 1)).text
                         for i in xrange(addon_count)]
         return _addon_names
 
     def addon_name(self, lookup):
-        return self.get_text("xpath=//li[%s] %s" % (lookup, self._addon_name_locator))
+        return self.find_element(By.XPATH, "//li[%s] %s" % (lookup, self._addon_name_locator)).text
 
     @property
     def addon_count(self):
-        count = self.selenium.get_xpath_count(self._addon_name_locator)
-        return int(count)
+        return len(self.selenium.find_elements(*self._addon_name_locator))
 
     @property
     def addon_updated_dates(self):
@@ -138,22 +128,22 @@ class Themes(Base):
 
 class Theme(Base):
 
-    _addon_title = "css=h1.addon"
+    _addon_title = (By.CSS_SELECTOR, "h1.addon")
 
     @property
     def addon_title(self):
-        return self.selenium.get_text(self._addon_title)
+        return self.selenium.find_element(*self._addon_title).text
 
 
 class ThemesCategory(Base):
 
-    _title_locator = "css=section.primary > h1"
-    _breadcrumb_locator = "css=#breadcrumbs > ol"
+    _title_locator = (By.CSS_SELECTOR, "section.primary > h1")
+    _breadcrumb_locator = (By.CSS_SELECTOR, "#breadcrumbs > ol")
 
     @property
     def title(self):
-        return self.selenium.get_text(self._title_locator)
+        return self.selenium.find_element(*self._title_locator).text
 
     @property
     def breadcrumb(self):
-        return self.selenium.get_text(self._breadcrumb_locator)
+        return self.selenium.find_element(*self._breadcrumb_locator).text
