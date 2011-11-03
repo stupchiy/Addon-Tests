@@ -124,7 +124,7 @@ class Details(Base):
             self.addon_name = addon_name.replace(" ", "-")
             self.addon_name = re.sub(r'[^A-Za-z0-9\-]', '', self.addon_name).lower()
             self.addon_name = self.addon_name[:27]
-            self.selenium.get("/addon/%s" % (self.addon_name))
+            self.selenium.get("%s/addon/%s" % (self.base_url, self.addon_name))
 
     @property
     def _page_title(self):
@@ -374,24 +374,21 @@ class Details(Base):
     def click_other_apps(self):
         self.selenium.find_element(*self._other_applications_locator).click()
 #        self.wait_for_element_visible(self._other_apps_dropdown_menu_locator)
-#===============================================================================
-# Rc Code
-#===============================================================================
+
     @property
     def icon_url(self):
-        return self.selenium.get_attribute(self._icon_locator + "%s" % "@src")
+        return self.selenium.find_element(*self._icon_locator).get_attribute('src')
 
     @property
     def website(self):
-        return self.selenium.get_attribute("%s@href" % self._website_locator)
+        return self.selenium.find_element(*self._website_locator).get_attribute('href')
 
     def click_website_link(self):
-        self.selenium.click(self._website_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*self._website_locator).click()
 
     @property
     def support_url(self):
-        support_url = self.selenium.get_attribute(self._support_link_locator + "%s" % "@href")
+        support_url = self.selenium.find_element(*self._support_link_locator).get_attribute('href')
         match = re.findall("http", support_url)
         #staging url
         if len(match) > 1:
@@ -406,61 +403,62 @@ class Details(Base):
 
     @property
     def other_addons_by_authors_text(self):
-        self.wait_for_element_present(self._other_addons_by_author_locator)
-        return self.selenium.get_text("%s > h2" % self._other_addons_by_author_locator)
+#        self.wait_for_element_present(self._other_addons_by_author_locator)
+        return self.selenium.find_element(self._other_addons_by_author_locator[0], "%s > h2" % self._other_addons_by_author_locator[1])
 
     @property
     def other_addons_count(self):
-        self.wait_for_element_present(self._other_addons_by_author_locator)
-        return int(self.selenium.get_css_count('%s li' % self._other_addons_by_author_locator))
+#        self.wait_for_element_present(self._other_addons_by_author_locator)
+        return len(self.selenium.find_elements(self._other_addons_by_author_locator[0], '%s li' % self._other_addons_by_author_locator))
 
     def other_addons(self):
-        self.wait_for_element_present(self._other_addons_by_author_locator)
+#        self.wait_for_element_present(self._other_addons_by_author_locator)
         return [self.OtherAddons(self.testsetup, i) for i in range(self.other_addons_count)]
 
     def get_rating_counter(self, rating):
         if rating == 1:
-            locator = "%s:nth(4)" % self._rating_counter_locator
+            locator = "%s:nth(4)" % self._rating_counter_locator[1]
         elif rating == 2:
-            locator = "%s:nth(3)" % self._rating_counter_locator
+            locator = "%s:nth(3)" % self._rating_counter_locator[1]
         elif rating == 3:
-            locator = "%s:nth(2)" % self._rating_counter_locator
+            locator = "%s:nth(2)" % self._rating_counter_locator[1]
         elif rating == 4:
-            locator = "%s:nth(1)" % self._rating_counter_locator
+            locator = "%s:nth(1)" % self._rating_counter_locator[1]
         elif rating == 5:
-            locator = "%s:nth(0)" % self._rating_counter_locator
+            locator = "%s:nth(0)" % self._rating_counter_locator[1]
         else:
             raise RuntimeError("No such rating %s!" % str(rating))
-        return int(self.selenium.get_text(locator))
+        return int(self.selenium.find_element(self._rating_counter_locator[0], locator).text)
 
     @property
     def previewer(self):
         return self.ImagePreviewer(self.testsetup)
 
     def click_add_to_collection_widget(self):
-        self.selenium.click(self._add_to_collection_locator)
-        self.wait_for_element_visible(self._add_to_collection_widget_locator)
+        self.selenium.find_element(*self._add_to_collection_locator).click()
 
     @property
     def is_collection_widget_visible(self):
-        return self.selenium.is_visible(self._add_to_collection_widget_locator)
+        return self.is_element_visible(self._add_to_collection_widget_locator)
 
     @property
     def is_collection_widget_button_visible(self):
-        return self.selenium.is_visible(self._add_to_collection_widget_button_locator)
+        return self.is_element_visible(self._add_to_collection_widget_button_locator)
 
     @property
     def collection_widget_button(self):
-        return self.selenium.get_text(self._add_to_collection_widget_button_locator)
+        return self.selenium.find_element(*self._add_to_collection_widget_button_locator).text
 
     @property
     def is_collection_widget_login_link_visible(self):
-        return self.selenium.is_visible(self._add_to_collection_widget_login_link_locator)
+        return self.is_element_visible(self._add_to_collection_widget_login_link_locator)
 
     @property
     def collection_widget_login_link(self):
-        return self.selenium.get_text(self._add_to_collection_widget_login_link_locator)
-
+        return self.selenium.find_element(*self._add_to_collection_widget_login_link_locator).text
+#===============================================================================
+# Rc Code
+#===============================================================================
     class ImagePreviewer(Page):
 
         #navigation
@@ -498,6 +496,9 @@ class Details(Base):
                 return self.image_count / 3
             else:
                 return self.image_count / 3 + 1
+#===============================================================================
+# Webdriver Code
+#===============================================================================
 
     def review(self, lookup):
         return self.DetailsReviewSnippet(self.testsetup, lookup)
@@ -507,23 +508,25 @@ class Details(Base):
 
     @property
     def reviews_count(self):
-        self.wait_for_element_visible(self._reviews_locator)
-        return int(self.selenium.get_css_count(self._reviews_locator))
+#        self.wait_for_element_visible(self._reviews_locator)
+        return len(self.selenium.find_elements(*self._reviews_locator))
 
     @property
     def version_info_link(self):
-        return self.selenium.get_attribute("%s@href" % self._info_link_locator)
+        return self.selenium.find_element(*self._info_link_locator).get_ttribute("href")
 
     @property
     def is_version_info_link_visible(self):
-        return self.selenium.is_visible(self._info_link_locator)
+        return self.is_element_visible(self._info_link_locator)
 
     def click_version_info_link(self):
-        self.selenium.click(self._info_link_locator)
+        self.selenium.find_element(*self._info_link_locator).click()
 
     def click_devs_comments_title(self):
-        self.selenium.click("%s > h2 > a" % self._devs_comments_section_locator)
-
+        self.selenium.find_element(self._devs_comments_section_locator[0], "%s > h2 > a" % self._devs_comments_section_locator[1]).click()
+#===============================================================================
+# Rc Code
+#===============================================================================
     class OtherAddons(Page):
         _other_addons_locator = 'css=#author-addons li'
         _name_locator = 'div.summary h3'
@@ -590,28 +593,33 @@ class Details(Base):
             self.selenium.wait_for_page_to_load(self.timeout)
             from pages.user import User
             return User(self.testsetup)
-
+#===============================================================================
+# Webdriver Code
+#==============================================================================
+#===============================================================================
+# Rc Code
+#===============================================================================
     def click_to_write_review(self):
-        self.selenium.click(self._add_review_link_locator)
+        self.selenium.find_element(*self._add_review_link_locator).click()
         from pages.addons_site import WriteReviewBlock
         return WriteReviewBlock(self.testsetup)
 
     @property
     def development_channel_text(self):
-        return self.selenium.get_text('%s > h2' % self._development_channel_locator)
+        return self.selenium.find_element(self._development_channel_locator[0], '%s > h2' % self._development_channel_locator[1]).text
 
     @property
     def is_development_channel_header_visible(self):
-        return self.selenium.is_visible('%s > h2' % self._development_channel_locator)
+        return self.is_element_visible(self._development_channel_locator[0], '%s > h2' % self._development_channel_locator[1])
 
     def click_development_channel(self):
-        self.selenium.click('%s > h2 > a' % self._development_channel_locator)
+        self.selenium.find_element(self._development_channel_locator[0], '%s > h2 > a' % self._development_channel_locator[1]).click()
 
     @property
     def is_development_channel_expanded(self):
-        is_expanded = self.selenium.get_attribute("%s@class" % self._development_channel_locator)
+        is_expanded = self.selenium.find_element(*self._development_channel_locator).get_attribute('class')
         return "expanded" in is_expanded
 
     @property
     def is_development_channel_content_visible(self):
-        return self.selenium.is_visible('%s > div' % self._development_channel_locator)
+        return self.is_element_visible(self._development_channel_locator[0], '%s > div' % self._development_channel_locator[1])
