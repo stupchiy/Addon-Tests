@@ -105,7 +105,7 @@ class Base(Page):
 
     @property
     def is_prev_link_visible(self):
-        return self.selenium.find_element(*self._previous_link_locator).is_displayed()
+        return self.is_element_visible(self._previous_link_locator)
 
     @property
     def is_next_link_enabeld(self):
@@ -114,7 +114,7 @@ class Base(Page):
 
     @property
     def is_next_link_visible(self):
-        return self.selenium.is_visible(*self._next_link_locator).is_displayed()
+        return self.is_element_visible(self._next_link_locator)
 
     @property
     def current_page(self):
@@ -148,7 +148,7 @@ class Base(Page):
 
     @property
     def is_breadcrumb_menu_visible(self):
-        return self.selenium.find_element(*self._breadcrumbs_locator).is_displayed()
+        return self.is_element_visible(self._breadcrumbs_locator)
 #===============================================================================
 # RC code
 #===============================================================================
