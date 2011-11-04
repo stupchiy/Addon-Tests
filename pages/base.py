@@ -213,11 +213,11 @@ class Base(Page):
         _search_textbox_locator = (By.NAME, "q")
 
         #Not LogedIn
-        _login_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth(1)")
-        _register_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth(0)")
+        _login_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(2)")
+        _register_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(1)")
 
         #LogedIn
-        _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account .user")
+        _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account a.user")
         _account_dropdown_locator = (By.CSS_SELECTOR, "#aux-nav .account ul")
         _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
 
@@ -246,10 +246,11 @@ class Base(Page):
 
         @property
         def search_field_placeholder(self):
-            return self.selenium.find_element(*self._search_textbox_locator).get_attribute('@placeholder')
+            return self.selenium.find_element(*self._search_textbox_locator).get_attribute('placeholder')
 
-        def click_my_account(self):
-            self.selenium.find_element(*self._account_controller_locator).click()
+        def hover_my_account(self):
+            element = self.selenium.find_element(*self._account_controller_locator)
+            ActionChains(self.selenium).move_to_element(element).perform()
 
         def click_login(self):
             self.selenium.find_element(*self._login_locator).click()
@@ -260,14 +261,14 @@ class Base(Page):
             self.selenium.find_element(*self._logout_locator).click()
 
         def click_edit_profile(self):
-            self.click_my_account
-            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth(1) a' % self._account_dropdown_locator[1]).click()
+            self.hover_my_account()
+            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(2) a' % self._account_dropdown_locator[1]).click()
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
 
         def click_view_profile(self):
-            self.click_my_account
-            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth(0) a' % self._account_dropdown_locator[1]).click()
+            self.hover_my_account()
+            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1]).click()
             from pages.user import ViewProfile
             return ViewProfile(self.testsetup)
 
