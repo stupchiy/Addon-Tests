@@ -47,8 +47,8 @@ class Category(Base):
 
     @property
     def category_page_title(self):
-        return self.page_title()
+        return self.page_title
 
     @property
     def category_header_title(self):
-        return self.find_element(*self._category_title_locator).text
+        return self.selenium.find_element(*self._category_title_locator).text

@@ -60,7 +60,7 @@ class Details(Base):
 
     #addon informations
     _name_locator = (By.CSS_SELECTOR, "h1.addon")
-    _title_locator = (By.XPATH , "//h1[@Class='addon']/text()[normalize-space()]")
+    _title_locator = (By.CSS_SELECTOR, "#addon >hgroup> h1.addon")
     _version_number_locator = (By.CSS_SELECTOR, "span.version-number")
     _authors_locator = (By.XPATH , "//h4[@class='author']/a")
     _summary_locator = (By.ID, "addon-summary")
@@ -128,11 +128,13 @@ class Details(Base):
 
     @property
     def _page_title(self):
-        return "%s :: Add-ons for Firefox" % self.title
+        return "%s:: Add-ons for Firefox" % self.title
 
     @property
     def title(self):
-        return self.selenium.find_element(*self._title_locator).text
+        base = self.selenium.find_element(*self._title_locator).text
+        version = self.selenium.find_element(self._title_locator[0], '%s > span' % self._title_locator[1]).text
+        return base.replace(version, '')
 
     @property
     def has_reviews(self):

@@ -23,6 +23,7 @@
 # Contributor(s): Marlena Compton <mcompton@mozilla.com>
 #                 Bebe
 #                 Geo Mealer <gmealer@mozilla.com>
+#                 Teodosia Pop <teodosia.pop@softvision.ro>
 #
 # Alternatively, the contents of this file may be used under the terms of
 # either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -48,7 +49,7 @@ class TestCategory:
     def test_that_all_category_links_work(self, mozwebqa):
         "Test for Litmus 25796"
         home_page = Home(mozwebqa)
-        categories = home_page.categories()
+        categories = home_page.categories
 
         for category in categories:
             category_name = category.name
@@ -78,10 +79,10 @@ class TestCategory:
 
         # Get actual categories
         home_page = Home(mozwebqa)
-        categories = home_page.categories()
+        categories = home_page.categories
 
         # Catch extra/missing categories with a simple count check
-        Assert.equal(len(categories), len(expected_categories))
+        Assert.equal(home_page.categories_count, len(expected_categories))
 
         # Check the categories that are there against the expected list
         for category in categories:
