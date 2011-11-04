@@ -49,6 +49,7 @@ from pages.page import Page
 from pages.base import Base
 from selenium.webdriver.common.by import By
 
+
 class Home(Base):
 #===============================================================================
 # Webdriver Code
@@ -151,14 +152,14 @@ class Home(Base):
 
     @property
     def categories_count(self):
-        return len(self.selenium.find_elements(self._category_list_locator[0] , "%s li" % self._category_list_locator[1]))
+        return len(self.selenium.find_elements(self._category_list_locator[0], "%s li" % self._category_list_locator[1]))
 
     @property
     def categories(self):
-        return [self.Categories(self.testsetup, i) for i in range(self.categories_count)]
+        return [self.Categories(self.testsetup, element) for element in self.selenium.find_elements(*self._category_list_locator)]
 
-    def category(self, lookup):
-        return self.Categories(self.testsetup, lookup)
+    def category(self, element):
+        return self.Categories(self.testsetup, element)
 
     def most_popular_item(self, lookup):
         return self.MostPopularRegion(self.testsetup, lookup)
@@ -167,41 +168,26 @@ class Home(Base):
     def most_popular_items(self):
         return [self.MostPopularRegion(self.testsetup, i) for i in range(self.most_popular_count)]
 
+    class Categories(Page):
+        _categories_locator = (By.CSS_SELECTOR, '#side-categories li')
+        _link_locator = (By.CSS_SELECTOR, 'a')
+
+        def __init__(self, testsetup, element):
+            Page.__init__(self, testsetup)
+            self._root_element = element
+
+        @property
+        def name(self):
+            return self._root_element.find_element(*self._categories_locator).text
+
+        def click_link(self):
+            self._root_element.find_element(*self._link_locator).click()
+            from pages.category import Category
+            return Category(self.testsetup)
 
 #===============================================================================
 # RC code
 #===============================================================================
-
-    class Categories(Page):
-        _categories_locator = 'css=#side-categories li'
-        _link_locator = 'a'
-
-        def __init__(self, testsetup, lookup):
-            Page.__init__(self, testsetup)
-            self.lookup = lookup
-
-        def absolute_locator(self, relative_locator=""):
-            return self._root_locator + relative_locator
-
-        @property
-        def _root_locator(self):
-            if type(self.lookup) == int:
-                # lookup by index
-                return "%s:nth(%s) " % (self._categories_locator, self.lookup)
-            else:
-                # lookup by name
-                return "%s:contains(%s) " % (self._categories_locator, self.lookup)
-
-        @property
-        def name(self):
-            return self.selenium.get_text(self.absolute_locator())
-
-        def click_link(self):
-            self.selenium.click(self.absolute_locator(self._link_locator))
-            self.selenium.wait_for_page_to_load(self.timeout)
-            from pages.category import Category
-            return Category(self.testsetup)
-
     class MostPopularRegion(Page):
         _name_locator = " > span"
         _users_locator = " > small"
