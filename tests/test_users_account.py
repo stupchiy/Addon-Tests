@@ -81,6 +81,7 @@ class TestAccounts:
         Assert.equal("Details", amo_user_edit_page.is_details_visible)
         Assert.equal("Notifications", amo_user_edit_page.is_notification_visible)
 
+    @xfail(reason="Bugzilla 682801")
     def test_user_can_access_the_view_profile_page(self, mozwebqa):
         """
         Test for litmus 15400
@@ -114,7 +115,7 @@ class TestAccounts:
         final_state = view_profile_page.is_email_field_present
 
         try:
-            Assert.not_equal(initial_state, final_state, 'the initial state and final state are the same')
+            Assert.not_equal(initial_state, final_state, 'the initial state and final state are the same the hide email option remained unchanged')
             if final_state is True:
                 credentials = mozwebqa.credentials['default']
                 Assert.equal(credentials['email'], view_profile_page.email_value, 'Actual value is not equal with the expected one.')
@@ -123,9 +124,10 @@ class TestAccounts:
             Assert.fail(exception.msg)
 
         finally:
-            edit_profile_page = home_page.header.click_edit_profile()
-            edit_profile_page.change_hide_email_state()
-            edit_profile_page.click_update_account()
+            if initial_state != final_state:
+                edit_profile_page = home_page.header.click_edit_profile()
+                edit_profile_page.change_hide_email_state()
+                edit_profile_page.click_update_account()
+                view_profile_page = home_page.header.click_view_profile()
 
-            view_profile_page = home_page.header.click_view_profile()
             Assert.equal(view_profile_page.is_email_field_present, initial_state, 'Could not restore profile to initial state.')
