@@ -45,6 +45,7 @@ from pages.page import Page
 from datetime import datetime
 from string import capitalize
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Base(Page):
@@ -220,9 +221,6 @@ class Base(Page):
         _account_dropdown_locator = (By.CSS_SELECTOR, "#aux-nav .account ul")
         _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
 
-#===============================================================================
-# RC code
-#===============================================================================
         def site_nav(self, lookup):
             if type(lookup) != int:
                 lookup = capitalize(lookup)
@@ -231,101 +229,84 @@ class Base(Page):
 
         #TODO:hover other apps
         def click_other_applications(self):
-            self.selenium.click(self._other_applications_locator)
+            self.selenium.find_element(*self._other_applications_locator).click()
 
         def click_thunderbird(self):
-            self.selenium.click(self._app_thunderbird)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(*self._app_thunderbird).click()
 
         def is_thunderbird_visible(self):
             return self.is_element_present(self._app_thunderbird)
 
         def search_for(self, search_term):
-            self.selenium.type(self._search_textbox_locator, search_term)
-            self.selenium.click(self._search_button_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            search_box = self.selenium.find_element(*self._search_textbox_locator)
+            search_box.send_keys(search_term)
+            self.selenium.find_element(*self._search_button_locator).click()
             from pages.search import SearchHome
             return SearchHome(self.testsetup)
 
         @property
         def search_field_placeholder(self):
-            return self.selenium.get_attribute(self._search_textbox_locator + '@placeholder')
+            return self.selenium.find_element(*self._search_textbox_locator).get_attribute('@placeholder')
 
         def click_my_account(self):
-            self.selenium.click(self._account_controller_locator)
-            self.wait_for_element_visible(self._account_dropdown_locator)
+            self.selenium.find_element(*self._account_controller_locator).click()
 
         def click_login(self):
-            self.selenium.click(self._login_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(*self._login_locator).click()
             from pages.user import Login
             return Login(self.testsetup)
 
         def click_logout(self):
-            self.selenium.click(self._logout_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(*self._logout_locator).click()
 
         def click_edit_profile(self):
             self.click_my_account
-            self.selenium.click('%s > li:nth(1) a' % self._account_dropdown_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth(1) a' % self._account_dropdown_locator[1]).click()
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
 
         def click_view_profile(self):
             self.click_my_account
-            self.selenium.click('%s > li:nth(0) a' % self._account_dropdown_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth(0) a' % self._account_dropdown_locator[1]).click()
             from pages.user import ViewProfile
             return ViewProfile(self.testsetup)
 
         @property
         def is_user_logged_in(self):
             try:
-                return self.selenium.is_visible(self._account_controller_locator)
+                return self.is_element_visible(self._account_controller_locator)
             except:
                 return False
 
         @property
-        def other_applications_count(self):
-            return int(self.selenium.get_css_count("%s li" % self._other_apps_list_locator))
-
-        @property
         def other_applications(self):
-            return [self.OtherApplications(self.testsetup, i) for i in range(self.other_applications_count)]
+            return [self.OtherApplications(self.testsetup, element)
+                    for element in self.selenium.find_elements(self._other_apps_list_locator[0], "%s li" % self._other_apps_list_locator[1])]
+
 
         class OtherApplications(Page):
 
-            _name_locator = " > a"
-            _other_apps_locator = "css=ul.other-apps > li"
+            _name_locator = (By.CSS_SELECTOR, "a")
+            _hover_locator = (By.CSS_SELECTOR, "#other-apps")
 
-            def __init__(self, testsetup, lookup):
+            def __init__(self, testsetup, element):
                 Page.__init__(self, testsetup)
-                self.lookup = lookup
-
-            def absolute_locator(self, relative_locator):
-                return self.root_locator + relative_locator
-
-            @property
-            def root_locator(self):
-                if type(self.lookup) == int:
-                #   lookup by index
-                    return "%s:nth(%s)" % (self._other_apps_locator, self.lookup)
-                else:
-                    # lookup by name
-                    return "%s:contains(%s)" % (self._other_apps_locator, self.lookup)
+                self._root_element = element
+                self._hover_element = self.selenium.find_element(*self._hover_locator)
 
             @property
             def name(self):
-                return self.selenium.get_text(self.absolute_locator(self._name_locator))
+                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
+                return self._root_element.find_element(*self._name_locator).text
 
             @property
             def is_application_visible(self):
-                return self.is_element_present(self.absolute_locator(self._name_locator))
+                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
+                return self._root_element.is_displayed()
 
-            @property
-            def index(self):
-                return self.lookup
+#===============================================================================
+# RC code
+#===============================================================================
 
     class BreadcrumbsRegion(Page):
 
