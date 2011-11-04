@@ -103,3 +103,10 @@ class EditProfile(Base):
     @property
     def is_notification_visible(self):
         return self.selenium.find_element(*self._notification_locator).text
+
+    def click_update_account(self):
+        self.selenium.click(self._update_account_locator)
+        self.selenium.wait_for_page_to_load(self.timeout)
+
+    def change_hide_email_state(self):
+        self.selenium.click(self._hide_email_checkbox)
