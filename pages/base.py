@@ -52,11 +52,11 @@ class Base(Page):
 #===============================================================================
 # Webdriver code
 #===============================================================================
-    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(2)")
-    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(1)")
-    _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth(0)")
-    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(3)")
-    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(0)")
+    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
+    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
+    _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth-child(1)")
+    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(4)")
+    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(1)")
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
 
@@ -65,7 +65,9 @@ class Base(Page):
 
     _mozilla_logo_link_locator = (By.CSS_SELECTOR, "#global-header-tab a")
 
-    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs>ol>li")
+    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs > ol > li")
+
+    _footer_locator = (By.CSS_SELECTOR, "#footer")
 
     def login(self, user="default"):
         login = self.header.click_login()
@@ -97,6 +99,18 @@ class Base(Page):
 
     def click_mozilla_logo(self):
         self.selenium.find_element(*self._mozilla_logo_link_locator).click()
+
+    @property
+    def _footer(self):
+        return self.selenium.find_element(*self._footer_locator)
+
+    def page_forward(self):
+        ActionChains(self.selenium).move_to_element(self._footer).perform()
+        self.selenium.find_element(*self._next_link_locator).click()
+
+    def page_back(self):
+        ActionChains(self.selenium).moveToElement(self._footer).perform()
+        self.selenium.find_element(*self._previous_link_locator).click()
 
     @property
     def is_prev_link_enabled(self):
@@ -148,15 +162,12 @@ class Base(Page):
     @property
     def is_breadcrumb_menu_visible(self):
         return self.is_element_visible(self._breadcrumbs_locator)
-#===============================================================================
-# RC code
-#===============================================================================
 
     @property
     def breadcrumb_name(self):
-        return self.selenium.get_text("%s > span" % self._breadcrumbs_locator)
+        return self.selenium.find_element(By.CSS_SELECTOR, "%s > span" % self._breadcrumbs_locator[1]).text
 
-    def _extract_iso_dates(self, xpath_locator, date_format, count):
+    def _extract_iso_dates(self, xpath_locator, date_format):
         """
         Returns a list of iso formatted date strings extracted from
         the text elements matched by the given xpath_locator and
@@ -173,25 +184,20 @@ class Base(Page):
           ['2010-05-09T00:00:00','2011-06-11T00:00:00']
 
         """
-        addon_dates = [
-            self.selenium.get_text("xpath=(%s)[%d]" % (xpath_locator, i))
-            for i in xrange(1, count + 1)
-        ]
+        addon_dates = [element.text for element in self.selenium.find_elements(*xpath_locator)]
+
         iso_dates = [
             datetime.strptime(s, date_format).isoformat()
             for s in addon_dates
         ]
         return iso_dates
 
-    def _extract_integers(self, xpath_locator, regex_pattern, count):
+    def _extract_integers(self, xpath_locator, regex_pattern):
         """
         Returns a list of integers extracted from the text elements
         matched by the given xpath_locator and regex_pattern.
         """
-        addon_numbers = [
-            self.selenium.get_text("xpath=(%s)[%d]" % (xpath_locator, i))
-            for i in xrange(1, count + 1)
-        ]
+        addon_numbers = [element.text for element in self.selenium.find_elements(xpath_locator)]
         integer_numbers = [
             int(re.search(regex_pattern, str(x).replace(",", "")).group(1))
             for x in addon_numbers
