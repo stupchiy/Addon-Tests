@@ -114,10 +114,13 @@ class TestAccounts:
         final_state = view_profile_page.is_email_field_present
 
         try:
-            Assert.not_equal(initial_state, final_state)
+            Assert.not_equal(initial_state, final_state, 'the initial state and final state are the same')
             if final_state is True:
                 credentials = mozwebqa.credentials['default']
                 Assert.equal(credentials['email'], view_profile_page.email_value, 'Actual value is not equal with the expected one.')
+
+        except Exception as exception:
+            Assert.fail(exception.msg)
 
         finally:
             edit_profile_page = home_page.header.click_edit_profile()
