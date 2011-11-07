@@ -79,10 +79,11 @@ class Home(Base):
 
     _extensions_menu_link = (By.CSS_SELECTOR, "#extensions > a")
 
-    def __init__(self, testsetup):
+    def __init__(self, testsetup, open_url=True):
         ''' Creates a new instance of the class and gets the page ready for testing '''
         Base.__init__(self, testsetup)
-        self.selenium.get(self.base_url)
+        if open_url:
+            self.selenium.get(self.base_url)
 
     def click_featured_personas_see_all_link(self):
         self.selenium.find_element(*self._featured_personas_see_all_link).click()
