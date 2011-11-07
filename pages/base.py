@@ -45,17 +45,18 @@ from pages.page import Page
 from datetime import datetime
 from string import capitalize
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Base(Page):
 #===============================================================================
 # Webdriver code
 #===============================================================================
-    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(2)")
-    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(1)")
-    _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth(0)")
-    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(3)")
-    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth(0)")
+    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
+    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
+    _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth-child(1)")
+    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(4)")
+    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(1)")
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
 
@@ -64,7 +65,9 @@ class Base(Page):
 
     _mozilla_logo_link_locator = (By.CSS_SELECTOR, "#global-header-tab a")
 
-    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs>ol>li")
+    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs > ol > li")
+
+    _footer_locator = (By.CSS_SELECTOR, "#footer")
 
     def login(self, user="default"):
         login = self.header.click_login()
@@ -96,6 +99,18 @@ class Base(Page):
 
     def click_mozilla_logo(self):
         self.selenium.find_element(*self._mozilla_logo_link_locator).click()
+
+    @property
+    def _footer(self):
+        return self.selenium.find_element(*self._footer_locator)
+
+    def page_forward(self):
+        ActionChains(self.selenium).move_to_element(self._footer).perform()
+        self.selenium.find_element(*self._next_link_locator).click()
+
+    def page_back(self):
+        ActionChains(self.selenium).moveToElement(self._footer).perform()
+        self.selenium.find_element(*self._previous_link_locator).click()
 
     @property
     def is_prev_link_enabled(self):
@@ -147,15 +162,12 @@ class Base(Page):
     @property
     def is_breadcrumb_menu_visible(self):
         return self.is_element_visible(self._breadcrumbs_locator)
-#===============================================================================
-# RC code
-#===============================================================================
 
     @property
     def breadcrumb_name(self):
-        return self.selenium.get_text("%s > span" % self._breadcrumbs_locator)
+        return self.selenium.find_element(By.CSS_SELECTOR, "%s > span" % self._breadcrumbs_locator[1]).text
 
-    def _extract_iso_dates(self, xpath_locator, date_format, count):
+    def _extract_iso_dates(self, xpath_locator, date_format):
         """
         Returns a list of iso formatted date strings extracted from
         the text elements matched by the given xpath_locator and
@@ -172,25 +184,20 @@ class Base(Page):
           ['2010-05-09T00:00:00','2011-06-11T00:00:00']
 
         """
-        addon_dates = [
-            self.selenium.get_text("xpath=(%s)[%d]" % (xpath_locator, i))
-            for i in xrange(1, count + 1)
-        ]
+        addon_dates = [element.text for element in self.selenium.find_elements(*xpath_locator)]
+
         iso_dates = [
             datetime.strptime(s, date_format).isoformat()
             for s in addon_dates
         ]
         return iso_dates
 
-    def _extract_integers(self, xpath_locator, regex_pattern, count):
+    def _extract_integers(self, xpath_locator, regex_pattern):
         """
         Returns a list of integers extracted from the text elements
         matched by the given xpath_locator and regex_pattern.
         """
-        addon_numbers = [
-            self.selenium.get_text("xpath=(%s)[%d]" % (xpath_locator, i))
-            for i in xrange(1, count + 1)
-        ]
+        addon_numbers = [element.text for element in self.selenium.find_elements(xpath_locator)]
         integer_numbers = [
             int(re.search(regex_pattern, str(x).replace(",", "")).group(1))
             for x in addon_numbers
@@ -212,17 +219,14 @@ class Base(Page):
         _search_textbox_locator = (By.NAME, "q")
 
         #Not LogedIn
-        _login_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth(1)")
-        _register_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth(0)")
+        _login_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(2)")
+        _register_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(1)")
 
         #LogedIn
-        _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account .user")
+        _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account a.user")
         _account_dropdown_locator = (By.CSS_SELECTOR, "#aux-nav .account ul")
         _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
 
-#===============================================================================
-# RC code
-#===============================================================================
         def site_nav(self, lookup):
             if type(lookup) != int:
                 lookup = capitalize(lookup)
@@ -231,101 +235,85 @@ class Base(Page):
 
         #TODO:hover other apps
         def click_other_applications(self):
-            self.selenium.click(self._other_applications_locator)
+            self.selenium.find_element(*self._other_applications_locator).click()
 
         def click_thunderbird(self):
-            self.selenium.click(self._app_thunderbird)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(*self._app_thunderbird).click()
 
         def is_thunderbird_visible(self):
             return self.is_element_present(self._app_thunderbird)
 
         def search_for(self, search_term):
-            self.selenium.type(self._search_textbox_locator, search_term)
-            self.selenium.click(self._search_button_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            search_box = self.selenium.find_element(*self._search_textbox_locator)
+            search_box.send_keys(search_term)
+            self.selenium.find_element(*self._search_button_locator).click()
             from pages.search import SearchHome
             return SearchHome(self.testsetup)
 
         @property
         def search_field_placeholder(self):
-            return self.selenium.get_attribute(self._search_textbox_locator + '@placeholder')
+            return self.selenium.find_element(*self._search_textbox_locator).get_attribute('placeholder')
 
-        def click_my_account(self):
-            self.selenium.click(self._account_controller_locator)
-            self.wait_for_element_visible(self._account_dropdown_locator)
+        def hover_my_account(self):
+            element = self.selenium.find_element(*self._account_controller_locator)
+            ActionChains(self.selenium).move_to_element(element).perform()
 
         def click_login(self):
-            self.selenium.click(self._login_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(*self._login_locator).click()
             from pages.user import Login
             return Login(self.testsetup)
 
         def click_logout(self):
-            self.selenium.click(self._logout_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.selenium.find_element(*self._logout_locator).click()
 
         def click_edit_profile(self):
-            self.click_my_account
-            self.selenium.click('%s > li:nth(1) a' % self._account_dropdown_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.hover_my_account()
+            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(2) a' % self._account_dropdown_locator[1]).click()
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
 
         def click_view_profile(self):
-            self.click_my_account
-            self.selenium.click('%s > li:nth(0) a' % self._account_dropdown_locator)
-            self.selenium.wait_for_page_to_load(self.timeout)
+            self.hover_my_account()
+            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1]).click()
             from pages.user import ViewProfile
             return ViewProfile(self.testsetup)
 
         @property
         def is_user_logged_in(self):
             try:
-                return self.selenium.is_visible(self._account_controller_locator)
+                return self.is_element_visible(self._account_controller_locator)
             except:
                 return False
 
         @property
-        def other_applications_count(self):
-            return int(self.selenium.get_css_count("%s li" % self._other_apps_list_locator))
-
-        @property
         def other_applications(self):
-            return [self.OtherApplications(self.testsetup, i) for i in range(self.other_applications_count)]
+            return [self.OtherApplications(self.testsetup, element)
+                    for element in self.selenium.find_elements(self._other_apps_list_locator[0], "%s li" % self._other_apps_list_locator[1])]
+
 
         class OtherApplications(Page):
 
-            _name_locator = " > a"
-            _other_apps_locator = "css=ul.other-apps > li"
+            _name_locator = (By.CSS_SELECTOR, "a")
+            _hover_locator = (By.CSS_SELECTOR, "#other-apps")
 
-            def __init__(self, testsetup, lookup):
+            def __init__(self, testsetup, element):
                 Page.__init__(self, testsetup)
-                self.lookup = lookup
-
-            def absolute_locator(self, relative_locator):
-                return self.root_locator + relative_locator
-
-            @property
-            def root_locator(self):
-                if type(self.lookup) == int:
-                #   lookup by index
-                    return "%s:nth(%s)" % (self._other_apps_locator, self.lookup)
-                else:
-                    # lookup by name
-                    return "%s:contains(%s)" % (self._other_apps_locator, self.lookup)
+                self._root_element = element
+                self._hover_element = self.selenium.find_element(*self._hover_locator)
 
             @property
             def name(self):
-                return self.selenium.get_text(self.absolute_locator(self._name_locator))
+                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
+                return self._root_element.find_element(*self._name_locator).text
 
             @property
             def is_application_visible(self):
-                return self.is_element_present(self.absolute_locator(self._name_locator))
+                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
+                return self._root_element.is_displayed()
 
-            @property
-            def index(self):
-                return self.lookup
+#===============================================================================
+# RC code
+#===============================================================================
 
     class BreadcrumbsRegion(Page):
 

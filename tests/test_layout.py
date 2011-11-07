@@ -110,5 +110,6 @@ class TestAmoLayout:
         other_apps = home_page.header.other_applications
 
         for app in other_apps:
-            Assert.contains(app.name, expected_apps[app.index])
+            print "app name =  %s " % app.name
+            Assert.contains(app.name, expected_apps)
             Assert.true(app.is_application_visible)

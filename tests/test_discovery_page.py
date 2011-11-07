@@ -66,7 +66,7 @@ class TestDiscoveryPane:
         what_are_addons_expected = "Add-ons are applications that let you personalize "
         what_are_addons_expected += "Firefox with extra functionality or style. Try a time-saving"
         what_are_addons_expected += " sidebar, a weather notifier, or a themed look to make "
-        what_are_addons_expected += "Firefox your own. Learn More"
+        what_are_addons_expected += "Firefox your own.\nLearn More"
 
         Assert.equal(what_are_addons_expected, discovery_pane.what_are_addons_text)
 

@@ -47,15 +47,16 @@
 
 from pages.base import Base
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.common.action_chains import ActionChains
 
 class Themes(Base):
 
-    _sort_by_name_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth(0) > a")
-    _sort_by_updated_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth(3) > a")
-    _sort_by_created_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth(2) > a")
-    _sort_by_popular_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth(2) > a")
-    _sort_by_rating_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth(1) > a")
+    _sort_by_name_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth-child(1) > a")
+    _sort_by_updated_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth-child(4) > a")
+    _sort_by_created_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(3) > a")
+    _sort_by_popular_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth-child(3) > a")
+    _sort_by_rating_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(2) > a")
+    _hover_more_locator = (By.CSS_SELECTOR, "li.extras > a")
     _addons_root_locator = (By.XPATH, "// div[@class = 'hovercard addon theme']")
     _addon_name_locator = (By.XPATH, _addons_root_locator[1] + " / a / div[@class='summary'] / h3")
     _addons_metadata_locator = (By.XPATH, _addons_root_locator[1] + " // div[@class = 'vital']/span[@class='updated']")
@@ -66,6 +67,8 @@ class Themes(Base):
     _category_link_locator = (By.CSS_SELECTOR, _categories_locator[1] + ":nth-of-type(%s) a")
 
     def click_sort_by(self, type_):
+        element = self.selenium.find_element(*self._hover_more_locator)
+        ActionChains(self.selenium).move_to_element(element).perform()
         self.selenium.find_element(*getattr(self, "_sort_by_%s_locator" % type_)).click()
 
     def click_on_first_addon(self):
@@ -77,7 +80,7 @@ class Themes(Base):
         return ThemesCategory(self.testsetup)
 
     def get_category(self, lookup):
-        return self.selenium.find_element(*self._category_link_locator % lookup).text
+        return self.selenium.find_element(self._category_link_locator[0], self._category_link_locator[1] % lookup).text
 
     @property
     def themes_category(self):
@@ -89,13 +92,12 @@ class Themes(Base):
 
     @property
     def addon_names(self):
-        addon_count = len(self.selenium.find_elements(*self._addon_name_locator))
-        _addon_names = [self.selenium.find_elements(By.XPATH, "(" + self._addon_name_locator + ")[%s]" % str(i + 1)).text
-                        for i in xrange(addon_count)]
-        return _addon_names
+        return [addon.text
+                for addon in self.selenium.find_elements(*self._addon_name_locator)]
+
 
     def addon_name(self, lookup):
-        return self.find_element(By.XPATH, "//li[%s] %s" % (lookup, self._addon_name_locator)).text
+        return self.selenium.find_element(By.XPATH, "//li[%s] %s" % (lookup, self._addon_name_locator[1])).text
 
     @property
     def addon_count(self):
@@ -103,26 +105,24 @@ class Themes(Base):
 
     @property
     def addon_updated_dates(self):
-        count = self.addon_count
-        return self._extract_iso_dates(self._addons_metadata_locator, "Updated %B %d, %Y", count)
+        return self._extract_iso_dates(self._addons_metadata_locator, "Updated %B %d, %Y")
 
     @property
     def addon_created_dates(self):
-        count = self.addon_count
-        return self._extract_iso_dates(self._addons_metadata_locator, "Added %B %d, %Y", count)
+        return self._extract_iso_dates(self._addons_metadata_locator, "Added %B %d, %Y")
 
     @property
     def addon_download_number(self):
         pattern = "(\d+(?:[,]\d+)*) weekly downloads"
         downloads_locator = self._addons_download_locator
-        downloads = self._extract_integers(downloads_locator, pattern, self.addon_count)
+        downloads = self._extract_integers(downloads_locator, pattern)
         return downloads
 
     @property
     def addon_rating(self):
         pattern = "(\d)"
         ratings_locator = self._addons_rating_locator
-        ratings = self._extract_integers(ratings_locator, pattern, self.addon_count)
+        ratings = self._extract_integers(ratings_locator, pattern)
         return ratings
 
 
@@ -146,4 +146,4 @@ class ThemesCategory(Base):
 
     @property
     def breadcrumb(self):
-        return self.selenium.find_element(*self._breadcrumb_locator).text
+        return self.selenium.find_element(*self._breadcrumb_locator).text.replace('\n', ' ')
