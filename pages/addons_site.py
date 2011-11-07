@@ -48,6 +48,7 @@
 import re
 
 from pages.base import Base
+from selenium.webdriver.common.by import By
 
 
 class WriteReviewBlock(Base):
@@ -130,13 +131,13 @@ class ViewReviews(Base):
 
 class UserFAQ(Base):
 
-    _license_question_locator = "css=#license"
-    _license_answer_locator = "css=#license + dd"
+    _license_question_locator = (By.CSS_SELECTOR, '#license')
+    _license_answer_locator = (By.CSS_SELECTOR, '#license + dd')
 
     @property
     def license_question(self):
-        return self.selenium.get_text(self._license_question_locator)
+        return self.selenium.find_element(*self._license_question_locator).text
 
     @property
     def license_answer(self):
-        return self.selenium.get_text(self._license_answer_locator)
+        return self.selenium.find_element(*self._license_answer_locator).text

@@ -37,30 +37,31 @@
 # ***** END LICENSE BLOCK *****
 
 from pages.page import Page
+from selenium.webdriver.common.by import By
 
 
 class ImageViewer(Page):
 
-    _image_viewer = 'id=lightbox'
+    _image_viewer = (By.CSS_SELECTOR, '#lightbox > section')
     #controls
-    _next_locator = 'css=div.controls > a.control.next'
-    _previous_locator = 'css=div.controls > a.control.prev'
-    _caption_locator = 'css=div.caption span'
-    _close_locator = 'css=div.content > a.close'
+    _next_locator = (By.CSS_SELECTOR, 'div.controls > a.control.next')
+    _previous_locator = (By.CSS_SELECTOR, 'div.controls > a.control.prev')
+    _caption_locator = (By.CSS_SELECTOR, 'div.caption span')
+    _close_locator = (By.CSS_SELECTOR, 'div.content > a.close')
 
     #content
-    _images_locator = 'css=div.content > img'
+    _images_locator = (By.CSS_SELECTOR, 'div.content > img')
 
     @property
     def is_visible(self):
-        return self.selenium.is_visible(self._image_viewer)
+        return self.is_element_visible(self._image_viewer)
 
     def wait_for_image_viewer_to_finish_animating(self):
         self.wait_for_element_visible(self._caption_locator)
 
     @property
     def images_count(self):
-        return self.selenium.get_css_count(self._images_locator)
+        return len(self.selenium.find_element(*self._images_locator))
 
     @property
     def is_next_present(self):
@@ -71,32 +72,30 @@ class ImageViewer(Page):
         return not self.selenium.is_element_present('%s.disabled' % self._previous_locator)
 
     def is_nr_image_visible(self, img_nr):
-        return self.selenium.is_visible('%s:nth(%s)' % (self._images_locator, img_nr))
+        return self.is_element_visible(self._images_locator[0],
+                                       '%s:nth-child(%s)' % (self._images_locator[1], img_nr + 1))
 
     @property
     def image_visible(self):
         for i in range(self.images_count):
-            if 'opacity: 1' in self.selenium.get_attribute('%s:nth(%s)@style' % (self._images_locator, i)):
+            if 'opacity: 1' in self.selenium.find_element(self._images_locator[0], '%s:nth-child(%s)' % (self._images_locator[1], i + 1)).get_attribute('style'):
                 return i
 
     @property
     def image_link(self):
-        return self.selenium.get_attribute('%s:nth(%s)@src' % (self._images_locator, self.image_visible))
+        image_no = self.image_visible + 1
+        return self.selenium.find_element(self._images_locator[0],
+            '%s:nth-child(%s)' % (self._images_locator[1], image_no)).get_attribute('src')
 
     def click_next(self):
-        current_image = self.image_visible
-        self.selenium.click(self._next_locator)
-        self.wait_for_element_visible('%s:nth(%s)' % (self._images_locator, current_image + 1))
+        self.selenium.find_element(*self._next_locator).click()
 
     def click_previous(self):
-        current_image = self.image_visible
-        self.selenium.click(self._previous_locator)
-        self.wait_for_element_visible('%s:nth(%s)' % (self._images_locator, current_image - 1))
+        self.selenium.find_element(*self._previous_locator).click()
 
     def close(self):
-        self.selenium.click(self._close_locator)
-        self.wait_for_element_not_visible(self._image_viewer)
+        self.selenium.find_element(*self._close_locator).click()
 
     @property
     def caption(self):
-        return self.selenium.get_text(self._caption_locator)
+        return self.selenium.self.selenium.find_element(*self._caption_locator).text
