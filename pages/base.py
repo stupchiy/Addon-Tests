@@ -105,9 +105,11 @@ class Base(Page):
         return self.selenium.find_element(*self._footer_locator)
 
     def page_forward(self):
+        ActionChains(self.selenium).move_to_element(self._footer).perform()
         self.selenium.find_element(*self._next_link_locator).click()
 
     def page_back(self):
+        ActionChains(self.selenium).move_to_element(self._footer).perform()
         self.selenium.find_element(*self._previous_link_locator).click()
 
     @property
@@ -195,7 +197,7 @@ class Base(Page):
         Returns a list of integers extracted from the text elements
         matched by the given xpath_locator and regex_pattern.
         """
-        addon_numbers = [element.text for element in self.selenium.find_elements(xpath_locator)]
+        addon_numbers = [element.text for element in self.selenium.find_elements(*xpath_locator)]
         integer_numbers = [
             int(re.search(regex_pattern, str(x).replace(",", "")).group(1))
             for x in addon_numbers
