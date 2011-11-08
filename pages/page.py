@@ -61,6 +61,7 @@ class Page(object):
         self.testsetup = testsetup
         self.base_url = testsetup.base_url
         self.selenium = testsetup.selenium
+        self.timeout = testsetup.timeout
 
     @property
     def is_the_current_page(self):
@@ -91,13 +92,9 @@ class Page(object):
     def return_to_previous_page(self):
         self.selenium.back()
 
-#===============================================================================
-# RC code
-#===============================================================================
-
     def wait_for_element_present(self, element):
         count = 0
-        while not self.selenium.is_element_visible(element):
+        while not self.is_element_present(element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
@@ -105,7 +102,7 @@ class Page(object):
 
     def wait_for_element_not_present(self, element):
         count = 0
-        while  self.is_element_visible(element):
+        while  self.is_element_present(element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
@@ -114,7 +111,7 @@ class Page(object):
     def wait_for_element_visible(self, element):
         self.wait_for_element_present(element)
         count = 0
-        while not self.selenium.is_visible(element):
+        while not self.is_element_visible(element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
@@ -127,6 +124,12 @@ class Page(object):
             count += 1
             if count == self.timeout / 1000:
                 raise Exception(element + " is still visible")
+
+
+#===============================================================================
+# RC code
+#===============================================================================
+
 
     def wait_for_page(self, url_regex):
         count = 0

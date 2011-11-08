@@ -188,7 +188,6 @@ class TestDetails:
             Assert.contains(name, addon.name)
             addon = Details(mozwebqa, 'firebug')
 
-    @xfail(reason='xfailed until image_viewer.close() works proprerly')
     def test_details_more_images(self, mozwebqa):
         """
         Litmus 4846
@@ -213,9 +212,13 @@ class TestDetails:
 
             image_viewer = detail_page.previewer.next_set()
 
+        for img_set in range(image_set_count):
+            image_viewer = detail_page.previewer.prev_set()
+
         image_viewer = detail_page.previewer.click_image()
         Assert.true(image_viewer.is_visible)
         Assert.equal(images_count, image_viewer.images_count)
+
         for i in range(image_viewer.images_count):
             Assert.true(image_viewer.is_visible)
 

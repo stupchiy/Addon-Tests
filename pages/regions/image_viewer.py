@@ -61,31 +61,28 @@ class ImageViewer(Page):
 
     @property
     def images_count(self):
-        return len(self.selenium.find_element(*self._images_locator))
+        return len(self.selenium.find_elements(*self._images_locator))
 
     @property
     def is_next_present(self):
-        return not self.selenium.is_element_present('%s.disabled' % self._next_locator)
+        return not self.is_element_present((self._next_locator[0], '%s.disabled' % self._next_locator[1]))
 
     @property
     def is_previous_present(self):
-        return not self.selenium.is_element_present('%s.disabled' % self._previous_locator)
+        return not self.is_element_present((self._previous_locator[0], '%s.disabled' % self._previous_locator[1]))
 
     def is_nr_image_visible(self, img_nr):
-        return self.is_element_visible(self._images_locator[0],
-                                       '%s:nth-child(%s)' % (self._images_locator[1], img_nr + 1))
+        return self.is_element_visible((self._images_locator[0],
+                                       '%s:nth-child(%s)' % (self._images_locator[1], img_nr + 1)))
 
     @property
     def image_visible(self):
-        for i in range(self.images_count):
-            if 'opacity: 1' in self.selenium.find_element(self._images_locator[0], '%s:nth-child(%s)' % (self._images_locator[1], i + 1)).get_attribute('style'):
-                return i
+        return self.selenium.find_element(By.CSS_SELECTOR, 'div.content >img[style*="opacity: 1"]')
 
     @property
     def image_link(self):
-        image_no = self.image_visible + 1
-        return self.selenium.find_element(self._images_locator[0],
-            '%s:nth-child(%s)' % (self._images_locator[1], image_no)).get_attribute('src')
+        image = self.image_visible
+        return image.get_attribute('src')
 
     def click_next(self):
         self.selenium.find_element(*self._next_locator).click()
@@ -95,7 +92,8 @@ class ImageViewer(Page):
 
     def close(self):
         self.selenium.find_element(*self._close_locator).click()
+        self.wait_for_element_not_visible(self._image_viewer)
 
     @property
     def caption(self):
-        return self.selenium.self.selenium.find_element(*self._caption_locator).text
+        return self.selenium.find_element(*self._caption_locator).text
