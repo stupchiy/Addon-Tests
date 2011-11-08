@@ -105,11 +105,9 @@ class Base(Page):
         return self.selenium.find_element(*self._footer_locator)
 
     def page_forward(self):
-        ActionChains(self.selenium).move_to_element(self._footer).perform()
         self.selenium.find_element(*self._next_link_locator).click()
 
     def page_back(self):
-        ActionChains(self.selenium).moveToElement(self._footer).perform()
         self.selenium.find_element(*self._previous_link_locator).click()
 
     @property
@@ -204,9 +202,6 @@ class Base(Page):
         ]
         return integer_numbers
 
-#===============================================================================
-# Webdriver code
-#===============================================================================
     class HeaderRegion(Page):
 
         #other applications
