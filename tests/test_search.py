@@ -46,6 +46,7 @@ import pytest
 from unittestzero import Assert
 from pages.search import SearchHome
 from pages.home import Home
+from datetime import datetime
 
 xfail = pytest.mark.xfail
 
@@ -65,6 +66,7 @@ class TestSearch:
         # Go Forward 10 times
         for i in range(10):
             search_page.page_forward()
+            search_page.wait_for_updating
             results_summary = search_page.results_displayed
 
             results = re.split('\W+', results_summary)
@@ -79,6 +81,7 @@ class TestSearch:
         # Go Back 10 Times
         for i in range(10):
             search_page.page_back()
+            search_page.wait_for_updating
             results_summary = search_page.results_displayed
 
             results = re.split('\W+', results_summary)
@@ -89,6 +92,7 @@ class TestSearch:
             second_expected -= 20
             Assert.equal(str(first_expected), first_count)
             Assert.equal(str(second_expected), second_count)
+
 
     def test_that_entering_a_long_string_returns_no_results(self, mozwebqa):
         """ Litmus 4856
@@ -190,7 +194,7 @@ class TestSearch:
 
     def test_sorting_by_newest(self, mozwebqa):
         """ Litmus 17343
-            https://litmus.mozilla.org/show_test.cgi?id=17343 """
+            https://litmus.mozilla.org/show_test.cgi?id=17343"""
         Home(mozwebqa).header.search_for('firebug')
         search_page = SearchHome(mozwebqa).sort_by('Newest')
         Assert.true('sort=created' in search_page.get_url_current_page())
@@ -213,6 +217,7 @@ class TestSearch:
         Assert.true('sort=users' in search_page.get_url_current_page())
         Assert.is_sorted_descending([i.users for i in search_page.results()])
 
+    @xfail(reason="update later")
     def test_that_searching_for_a_tag_returns_results(self, mozwebqa):
         """Litmus 7848
         https://litmus.mozilla.org/show_test.cgi?id=7848"""
@@ -245,6 +250,7 @@ class TestSearch:
             Assert.equal(search_page.result_count, 20)
 
             search_page.page_forward()
+            search_page.wait_for_updating()
             first_expected += 20
             second_expected += 20
 
