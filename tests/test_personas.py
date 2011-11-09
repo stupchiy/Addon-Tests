@@ -117,13 +117,12 @@ class TestPersonas:
 
         # Step 3: Click on any persona.
         random_persona_index = random.randint(1, personas_page.persona_count)
-        print 'random_persona_index: %s' % str(random_persona_index)
+
         personas_detail_page = personas_page.click_persona(random_persona_index)
-        print 'url_current_page:     %s' % str(personas_detail_page.get_url_current_page())
         Assert.true(personas_detail_page.is_the_current_page)
 
         # Verify breadcrumb menu format, i.e. Add-ons for Firefox > Personas > {Persona Name}.
-        persona_title = personas_detail_page.personas_title
+        persona_title = personas_detail_page.title
         Assert.equal("Add-ons for Firefox", personas_detail_page.get_breadcrumb_item_text(1))
         Assert.equal("Personas", personas_detail_page.get_breadcrumb_item_text(2))
 
@@ -148,7 +147,7 @@ class TestPersonas:
             https://preview.addons.mozilla.org/en-us/firefox/addon/rainbow-firefox/"""
         personas_page = Personas(mozwebqa)
         rainbow_personas_detail_page = personas_page.open_persona_detail_page("rainbow-firefox")
-        Assert.equal("rainbow firefox", rainbow_personas_detail_page.personas_title)
+        Assert.equal("rainbow firefox", rainbow_personas_detail_page.title)
         Assert.equal("Add-ons for Firefox", rainbow_personas_detail_page.get_breadcrumb_item_text(1))
         Assert.equal("Personas", rainbow_personas_detail_page.get_breadcrumb_item_text(2))
         Assert.equal("rainbow firefox", rainbow_personas_detail_page.get_breadcrumb_item_text(3))

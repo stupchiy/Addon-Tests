@@ -77,13 +77,13 @@ class Page(object):
     def get_url_current_page(self):
         return(self.selenium.current_url)
 
-    def is_element_present(self, locator):
+    def is_element_present(self, *locator):
         try:
             return self.selenium.find_element(*locator)
         except NoSuchElementException:
             return False
 
-    def is_element_visible(self, locator):
+    def is_element_visible(self, *locator):
         try:
             return self.selenium.find_element(*locator).is_displayed()
         except NoSuchElementException, ElementNotVisibleException:
