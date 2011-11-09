@@ -174,19 +174,17 @@ class TestDetails:
         Assert.equal(len(detail_page.authors), 1)
         Assert.equal(detail_page.other_addons_by_authors_text, "Other add-ons by %s" % detail_page.authors[0])
 
-    @xfail(reason='needs further investigation, only the first out of the 5 addons are clicked')
     def test_navigating_to_other_addons(self, mozwebqa):
         """
         Litmus 11926
         https://litmus.mozilla.org/show_test.cgi?id=11926"""
         detail_page = Details(mozwebqa, 'firebug')
-        addons = detail_page.other_addons
 
-        for addon in addons:
-            name = addon.name
-            addon.click_addon_link()
-            Assert.contains(name, addon.name)
-            addon = Details(mozwebqa, 'firebug')
+        for i in range(0, len(detail_page.other_addons)):
+            name = detail_page.other_addons[i].name
+            detail_page.other_addons[i].click_addon_link()
+            Assert.contains(name, detail_page.name)
+            Details(mozwebqa, 'firebug')
 
     def test_details_more_images(self, mozwebqa):
         """
@@ -264,9 +262,9 @@ class TestDetails:
         addon_name = 'firebug'
         detail_page = Details(mozwebqa, addon_name)
 
-        for review in detail_page.reviews():
-            username = review.username
-            amo_user_page = review.click_username()
+        for i in range(0, detail_page.reviews_count):
+            username = detail_page.reviews[i].username
+            amo_user_page = detail_page.reviews[i].click_username()
             Assert.equal(username, amo_user_page.username)
             Details(mozwebqa, addon_name)
 
@@ -276,8 +274,7 @@ class TestDetails:
         https://litmus.mozilla.org/show_test.cgi?id=11922
         """
         detail_page = Details(mozwebqa, 'firebug')
-
-        Assert.equal(detail_page.breadcrumb, 'Add-ons for Firefox Extensions Firebug')
+        Assert.equal(detail_page.breadcrumb, 'Add-ons for Firefox\nExtensions Firebug')
 
     def test_that_clicking_info_link_slides_down_page_to_version_info(self, mozwebqa):
         """ Test for Litmus 25725
@@ -301,7 +298,7 @@ class TestDetails:
 
         Assert.equal(detail_page.breadcrumbs[0].name, 'Add-ons for Firefox')
         link = detail_page.breadcrumbs[0].link_value
-        detail_page.breadcrumbs[0].click()
+        detail_page.breadcrumbs[0].click_breadcrumb()
 
         Assert.true(home_page.is_the_current_page)
         Assert.true(home_page.get_url_current_page().endswith(link))
@@ -310,7 +307,7 @@ class TestDetails:
 
         Assert.equal(detail_page.breadcrumbs[1].name, 'Extensions')
         link = detail_page.breadcrumbs[1].link_value
-        detail_page.breadcrumbs[1].click()
+        detail_page.breadcrumbs[1].click_breadcrumb()
 
         amo_extenstions_page = ExtensionsHome(mozwebqa)
         Assert.true(amo_extenstions_page.is_the_current_page)
@@ -383,13 +380,10 @@ class TestDetails:
         Litmus 25722
         https://litmus.mozilla.org/show_test.cgi?searchType=by_id&id=25722
         """
-
         details_pg = Details(mozwebqa, 'Firebug')
-        collections = details_pg.part_of_collections()
 
-        for collection in collections:
-            name = collection.name
-            collection_pg = collection.click_collection()
-            Assert.equal(name, collection_pg.collection_name, "expected collection name doesn't match the page header")
-
+        for i in range(0, len(details_pg.part_of_collections)):
+            name = details_pg.part_of_collections[i].name
+            collection_pg = details_pg.part_of_collections[i].click_collection()
+            Assert.equal(name, collection_pg.collection_name, "Expected collection name does not match the page header")
             details_pg = Details(mozwebqa, 'Firebug')

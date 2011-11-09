@@ -84,7 +84,7 @@ class ViewProfile(Base):
 
 class User(Base):
 
-        _username_locator = (By.CSS_SELECTOR, "div.vcard h2.fn")
+        _username_locator = (By.CSS_SELECTOR, "div#page > h1")
 
         @property
         def username(self):

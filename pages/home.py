@@ -123,7 +123,7 @@ class Home(Base):
 
     @property
     def is_most_popular_list_visible(self):
-        return self.is_element_visible(self._most_popular_list_locator)
+        return self.is_element_visible(*self._most_popular_list_locator)
 
     @property
     def most_popular_list_heading(self):
@@ -131,7 +131,7 @@ class Home(Base):
 
     @property
     def is_featured_personas_visible(self):
-        return self.is_element_visible(self._featured_personas_locator)
+        return self.is_element_visible(*self._featured_personas_locator)
 
     @property
     def featured_personas_count(self):
