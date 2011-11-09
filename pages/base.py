@@ -49,9 +49,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 class Base(Page):
-#===============================================================================
-# Webdriver code
-#===============================================================================
+
     _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
     _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
     _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth-child(1)")
@@ -59,13 +57,12 @@ class Base(Page):
     _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(1)")
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
-
     _amo_logo_link_locator = (By.CSS_SELECTOR, ".site-title a")
     _amo_logo_image_locator = (By.CSS_SELECTOR, ".site-title img")
 
     _mozilla_logo_link_locator = (By.CSS_SELECTOR, "#global-header-tab a")
 
-    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs > ol > li")
+    _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs > ol  li")
 
     _footer_locator = (By.CSS_SELECTOR, "#footer")
 
@@ -153,7 +150,8 @@ class Base(Page):
 
     @property
     def breadcrumbs(self):
-        return [self.BreadcrumbsRegion(self.testsetup, i) for i in range(self.breadcrumbs_count)]
+        return [self.BreadcrumbsRegion(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._breadcrumbs_locator)]
 
     @property
     def breadcrumbs_count(self):
@@ -288,7 +286,6 @@ class Base(Page):
             return [self.OtherApplications(self.testsetup, element)
                     for element in self.selenium.find_elements(self._other_apps_list_locator[0], "%s li" % self._other_apps_list_locator[1])]
 
-
         class OtherApplications(Page):
 
             _name_locator = (By.CSS_SELECTOR, "a")
@@ -309,31 +306,22 @@ class Base(Page):
                 ActionChains(self.selenium).move_to_element(self._hover_element).perform()
                 return self._root_element.is_displayed()
 
-#===============================================================================
-# RC code
-#===============================================================================
-
     class BreadcrumbsRegion(Page):
 
-        _breadcrumb_locator = "css=#breadcrumbs>ol"  # Base locator
-        _link_locator = " a"
-        _link_value_locator = " a@href"
+        _breadcrumb_locator = (By.CSS_SELECTOR, '#breadcrumbs>ol')  # Base locator
+        _link_locator = (By.CSS_SELECTOR, ' a')
 
-        def __init__(self, testsetup, lookup):
+        def __init__(self, testsetup, element):
             Page.__init__(self, testsetup)
-            self.lookup = lookup
+            self._root_element = element
 
-        def absolute_locator(self, relative_locator=""):
-            return "%s>li:nth(%s)%s" % (self._breadcrumb_locator, self.lookup, relative_locator)
-
-        def click(self):
-            self.selenium.click(self.absolute_locator(self._link_locator))
-            self.selenium.wait_for_page_to_load(self.timeout)
+        def click_breadcrumb(self):
+            self._root_element.find_element(*self._link_locator).click()
 
         @property
         def name(self):
-            return self.selenium.get_text(self.absolute_locator())
+            return self._root_element.text
 
         @property
         def link_value(self):
-            return self.selenium.get_attribute(self.absolute_locator(self._link_value_locator))
+            return self._root_element.find_element(*self._link_locator).get_attribute('href')
