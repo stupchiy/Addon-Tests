@@ -75,7 +75,7 @@ class WriteReviewBlock(Base):
 
     @property
     def is_review_box_visible(self):
-        return self.is_element_visible(self._add_review_box)
+        return self.is_element_visible(*self._add_review_box)
 
 
 class ViewReviews(Base):

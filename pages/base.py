@@ -80,7 +80,7 @@ class Base(Page):
 
     @property
     def is_amo_logo_visible(self):
-        return self.is_element_visible(self._amo_logo_link_locator)
+        return self.is_element_visible(*self._amo_logo_link_locator)
 
     @property
     def amo_logo_image_source(self):
@@ -88,11 +88,11 @@ class Base(Page):
 
     @property
     def is_amo_logo_image_visible(self):
-        return self.is_element_visible(self._amo_logo_image_locator)
+        return self.is_element_visible(*self._amo_logo_image_locator)
 
     @property
     def is_mozilla_logo_visible(self):
-        return self.is_element_visible(self._mozilla_logo_link_locator)
+        return self.is_element_visible(*self._mozilla_logo_link_locator)
 
     def click_mozilla_logo(self):
         self.selenium.find_element(*self._mozilla_logo_link_locator).click()
@@ -116,7 +116,7 @@ class Base(Page):
 
     @property
     def is_prev_link_visible(self):
-        return self.is_element_visible(self._previous_link_locator)
+        return self.is_element_visible(*self._previous_link_locator)
 
     @property
     def is_next_link_enabeld(self):
@@ -125,7 +125,7 @@ class Base(Page):
 
     @property
     def is_next_link_visible(self):
-        return self.is_element_visible(self._next_link_locator)
+        return self.is_element_visible(*self._next_link_locator)
 
     @property
     def current_page(self):
@@ -159,7 +159,7 @@ class Base(Page):
 
     @property
     def is_breadcrumb_menu_visible(self):
-        return self.is_element_visible(self._breadcrumbs_locator)
+        return self.is_element_visible(*self._breadcrumbs_locator)
 
     @property
     def breadcrumb_name(self):
@@ -277,7 +277,7 @@ class Base(Page):
         @property
         def is_user_logged_in(self):
             try:
-                return self.is_element_visible(self._account_controller_locator)
+                return self.is_element_visible(*self._account_controller_locator)
             except:
                 return False
 

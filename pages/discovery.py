@@ -83,7 +83,7 @@ class DiscoveryPane(Base):
 
     @property
     def is_mission_section_visible(self):
-        return self.is_element_visible(self._mission_section_locator)
+        return self.is_element_visible(*self._mission_section_locator)
 
     def wait_for_mission_visible(self):
             self.wait_for_element_visible(self._mission_section_locator)
@@ -93,7 +93,7 @@ class DiscoveryPane(Base):
         return self.selenium.find_element(*self._mission_section_text_locator).text
 
     def mozilla_org_link_visible(self):
-        return self.is_element_visible(self._mozilla_org_link_locator)
+        return self.is_element_visible(*self._mozilla_org_link_locator)
 
     @property
     def download_count(self):
@@ -102,7 +102,7 @@ class DiscoveryPane(Base):
 
     @property
     def is_personas_section_visible(self):
-        return self.is_element_visible(self._personas_section_locator)
+        return self.is_element_visible(*self._personas_section_locator)
 
     @property
     def personas_count(self):
@@ -110,7 +110,7 @@ class DiscoveryPane(Base):
 
     @property
     def is_personas_see_all_link_visible(self):
-        return self.is_element_visible(self._personas_see_all_link)
+        return self.is_element_visible(*self._personas_see_all_link)
 
     @property
     def first_persona(self):
@@ -122,7 +122,7 @@ class DiscoveryPane(Base):
 
     @property
     def more_ways_section_visible(self):
-        return self.is_element_visible(self._more_ways_section_locator)
+        return self.is_element_visible(*self._more_ways_section_locator)
 
     @property
     def more_ways_addons(self):
@@ -134,7 +134,7 @@ class DiscoveryPane(Base):
 
     @property
     def up_and_coming_visible(self):
-        return self.is_element_visible(self._up_and_coming_section)
+        return self.is_element_visible(*self._up_and_coming_section)
 
     @property
     def up_and_coming_item_count(self):
@@ -142,7 +142,7 @@ class DiscoveryPane(Base):
 
     @property
     def is_logout_link_visible(self):
-        return self.is_element_visible(self._logout_link_locator)
+        return self.is_element_visible(*self._logout_link_locator)
 
     def click_logout(self):
         self.selenium.find_element(self._logout_link_locator[0], "%s > a" % self._logout_link_locator[1]).click()

@@ -241,40 +241,40 @@ class Details(Base):
 
     @property
     def is_register_visible(self):
-        return self.is_element_visible(self._register_link_locator)
+        return self.is_element_visible(*self._register_link_locator)
 
     @property
     def is_login_visible(self):
-        return self.is_element_visible(self._login_link_locator)
+        return self.is_element_visible(*self._login_link_locator)
 
     @property
     def is_other_apps_link_visible(self):
-        return self.is_element_visible(self._other_applications_locator)
+        return self.is_element_visible(*self._other_applications_locator)
 
     @property
     def is_other_apps_dropdown_menu_visible(self):
         self.click_other_apps()
-        return self.is_element_visible(self._other_apps_dropdown_menu_locator)
+        return self.is_element_visible(*self._other_apps_dropdown_menu_locator)
 
     @property
     def is_addon_name_visible(self):
-        return self.is_element_visible(self._name_locator)
+        return self.is_element_visible(*self._name_locator)
 
     @property
     def is_summary_visible(self):
-        return self.is_element_visible(self._summary_locator)
+        return self.is_element_visible(*self._summary_locator)
 
     @property
     def is_about_addon_visible(self):
-        return self.is_element_visible(self._about_addon_locator)
+        return self.is_element_visible(*self._about_addon_locator)
 
     @property
     def is_version_information_visible(self):
-        return self.is_element_visible(self._version_information_locator)
+        return self.is_element_visible(*self._version_information_locator)
 
     @property
     def is_version_information_heading_visible(self):
-        return self.is_element_visible(self._version_information_heading_locator)
+        return self.is_element_visible(*self._version_information_heading_locator)
 
     def click_version_information_heading(self):
         return self.selenium.find_element(self._version_information_heading_locator[0], '%s > a' % self._version_information_heading_locator[1]).click()
@@ -290,33 +290,33 @@ class Details(Base):
 
     @property
     def is_review_title_visible(self):
-        return self.is_element_visible(self._reviews_title_locator)
+        return self.is_element_visible(*self._reviews_title_locator)
 
     @property
     def is_often_used_with_header_visible(self):
-        return self.is_element_visible(self._other_addons_header_locator)
+        return self.is_element_visible(*self._other_addons_header_locator)
 
     @property
     def is_often_used_with_list_visible(self):
-        return self.is_element_visible(self._other_addons_list_locator)
+        return self.is_element_visible(*self._other_addons_list_locator)
 
     @property
     def are_tags_visible(self):
-        return self.is_element_visible(self._tags_locator)
+        return self.is_element_visible(*self._tags_locator)
 
     @property
     def is_part_of_collections_header_visible(self):
         locator = (self._part_of_collections_locator[0], '%s h2 ' % self._part_of_collections_locator[1])
-        return self.is_element_visible(locator)
+        return self.is_element_visible(*locator)
 
     @property
     def is_part_of_collections_list_visible(self):
         locator = (self._part_of_collections_locator[0], '%s ul ' % self._part_of_collections_locator[1])
-        return self.is_element_visible(locator)
+        return self.is_element_visible(*locator)
 
     @property
     def is_devs_comments_section_visible(self):
-        return self.is_element_visible(self._devs_comments_section_locator)
+        return self.is_element_visible(*self._devs_comments_section_locator)
 
     def is_devs_comments_section_expanded(self):
         is_expanded = self.selenium.find_element(*self._devs_comments_section_locator).get_attribute("class")
@@ -410,11 +410,11 @@ class Details(Base):
 
     @property
     def is_collection_widget_visible(self):
-        return self.is_element_visible(self._add_to_collection_widget_locator)
+        return self.is_element_visible(*self._add_to_collection_widget_locator)
 
     @property
     def is_collection_widget_button_visible(self):
-        return self.is_element_visible(self._add_to_collection_widget_button_locator)
+        return self.is_element_visible(*self._add_to_collection_widget_button_locator)
 
     @property
     def collection_widget_button(self):
@@ -422,7 +422,7 @@ class Details(Base):
 
     @property
     def is_collection_widget_login_link_visible(self):
-        return self.is_element_visible(self._add_to_collection_widget_login_link_locator)
+        return self.is_element_visible(*self._add_to_collection_widget_login_link_locator)
 
     @property
     def collection_widget_login_link(self):
@@ -486,7 +486,7 @@ class Details(Base):
 
     @property
     def is_version_info_link_visible(self):
-        return self.is_element_visible(self._info_link_locator)
+        return self.is_element_visible(*self._info_link_locator)
 
     def click_version_info_link(self):
         self.selenium.find_element(*self._info_link_locator).click()
@@ -541,7 +541,7 @@ class Details(Base):
     @property
     def is_development_channel_header_visible(self):
         element = (self._development_channel_locator[0], '%s > h2' % self._development_channel_locator[1])
-        return self.is_element_visible(element)
+        return self.is_element_visible(*element)
 
     def click_development_channel(self):
         self.selenium.find_element(self._development_channel_locator[0], '%s > h2 > a' % self._development_channel_locator[1]).click()
@@ -554,4 +554,4 @@ class Details(Base):
     @property
     def is_development_channel_content_visible(self):
         element = self._development_channel_locator[0], '%s > div' % self._development_channel_locator[1]
-        return self.is_element_visible(element)
+        return self.is_element_visible(*element)
