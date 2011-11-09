@@ -92,9 +92,11 @@ class Themes(Base):
 
     @property
     def addon_names(self):
-        return [addon.text
-                for addon in self.selenium.find_elements(*self._addon_name_locator)]
-
+        addon_name = []
+        for addon in self.selenium.find_elements(*self._addon_name_locator):
+            ActionChains(self.selenium).move_to_element(addon).perform()
+            addon_name.append(addon.text)
+        return addon_name
 
     def addon_name(self, lookup):
         return self.selenium.find_element(By.XPATH, "//li[%s] %s" % (lookup, self._addon_name_locator[1])).text

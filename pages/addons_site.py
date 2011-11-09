@@ -49,12 +49,13 @@ import re
 
 from pages.base import Base
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class WriteReviewBlock(Base):
 
     _add_review_input_field_locator = (By.ID, "id_body")
-    _add_review_input_rating_locator = (By.CSS_SELECTOR, "span[class='ratingwidget stars stars-0'] > label > input")
+    _add_review_input_rating_locator = (By.CSS_SELECTOR, "span[class='ratingwidget stars stars-0'] > label")
     _add_review_submit_button_locator = (By.CSS_SELECTOR, "#review-box input[type=submit]")
 
     _add_review_box = (By.CSS_SELECTOR, '#review-box')
@@ -63,8 +64,10 @@ class WriteReviewBlock(Base):
         self.selenium.find_element(*self._add_review_input_field_locator).send_keys(text)
 
     def set_review_rating(self, rating):
-        locator = (self._add_review_input_rating_locator[0], "%s[value=%s]" % (self._add_review_input_rating_locator[1], rating))
-        self.selenium.find_element(*self.locator).click()
+        locator = self.selenium.find_element(self._add_review_input_rating_locator[0],
+                                             '%s[data-stars="%s"]' % (self._add_review_input_rating_locator[1], rating))
+        ActionChains(self.selenium).move_to_element(locator).perform()
+        locator.click()
 
     def click_to_save_review(self):
         self.selenium.find_element(*self._add_review_submit_button_locator).click()
@@ -79,8 +82,9 @@ class ViewReviews(Base):
 
     _review_locator = (By.CSS_SELECTOR, "div.primary div.review")
 
-    def review(self, element=0):
+    def review(self, index=1):
         """ Returns review object with index. """
+        element = self.selenium.find_element(self._review_locator[0], '%s:nth-child(%s)' % (self._review_locator[1], index))
         return self.ReviewSnippet(self.testsetup, element)
 
     def reviews(self):
@@ -101,19 +105,19 @@ class ViewReviews(Base):
 
         @property
         def text(self):
-            return self.selenium.find_element(*self._review_text_locator).text
+            return self._root_element.find_element(*self._review_text_locator).text
 
         @property
         def rating(self):
-            return int(self.selenium.find_element(*self._review_rating_locator).text)
+            return int(self._root_element.find_element(*self._review_rating_locator).text)
 
         @property
         def author(self):
-            return self.selenium.find_element(*self._review_author_locator).text
+            return self._root_element.find_element(*self._review_author_locator).text
 
         @property
         def date(self):
-            date = self.selenium.find_element(*self._review_date_locator).text
+            date = self._root_element.find_element(*self._review_date_locator).text
             # we need to parse the string first to get date
             date = re.match('^(.+on\s)([A-Za-z]+\s[\d]+,\s[\d]+)', date)
             return date.group(2)

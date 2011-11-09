@@ -100,7 +100,7 @@ class TestReviews:
         write_review_block = details_page.click_to_write_review()
 
         # Step 4 - Write a review
-        body = 'Automatic addon review by Selenium tests'
+        body = 'Automatic addon review by Selenium tests %s' % datetime.now()
         write_review_block.enter_review_with_text(body)
         write_review_block.set_review_rating(1)
         review_page = write_review_block.click_to_save_review()

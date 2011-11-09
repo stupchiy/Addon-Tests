@@ -106,7 +106,7 @@ class Base(Page):
         self.selenium.find_element(*self._next_link_locator).click()
 
     def page_back(self):
-        ActionChains(self.selenium).moveToElement(self._footer).perform()
+        ActionChains(self.selenium).move_to_element(self._footer).perform()
         self.selenium.find_element(*self._previous_link_locator).click()
 
     @property
@@ -165,7 +165,7 @@ class Base(Page):
     def breadcrumb_name(self):
         return self.selenium.find_element(By.CSS_SELECTOR, "%s > span" % self._breadcrumbs_locator[1]).text
 
-    def _extract_iso_dates(self, xpath_locator, date_format):
+    def _extract_iso_dates(self, date_format, *locator):
         """
         Returns a list of iso formatted date strings extracted from
         the text elements matched by the given xpath_locator and
@@ -182,7 +182,7 @@ class Base(Page):
           ['2010-05-09T00:00:00','2011-06-11T00:00:00']
 
         """
-        addon_dates = [element.text for element in self.selenium.find_elements(*xpath_locator)]
+        addon_dates = [element.text for element in self.selenium.find_elements(*locator)]
 
         iso_dates = [
             datetime.strptime(s, date_format).isoformat()
@@ -190,21 +190,19 @@ class Base(Page):
         ]
         return iso_dates
 
-    def _extract_integers(self, xpath_locator, regex_pattern):
+    def _extract_integers(self, regex_pattern, *locator):
         """
         Returns a list of integers extracted from the text elements
         matched by the given xpath_locator and regex_pattern.
         """
-        addon_numbers = [element.text for element in self.selenium.find_elements(xpath_locator)]
+        addon_numbers = [element.text for element in self.selenium.find_elements(*locator)]
+
         integer_numbers = [
             int(re.search(regex_pattern, str(x).replace(",", "")).group(1))
             for x in addon_numbers
         ]
         return integer_numbers
 
-#===============================================================================
-# Webdriver code
-#===============================================================================
     class HeaderRegion(Page):
 
         #other applications

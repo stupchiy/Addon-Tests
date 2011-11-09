@@ -442,12 +442,12 @@ class Details(Base):
         def prev_set(self):
             self.selenium.find_element(*self._prev_locator).click()
 
-        def click_image(self, image_no=0):
+        def click_image(self, image_no=1):
             self.selenium.find_element(self._image_locator[0],
-                        '%s li:nth-child(%s) a' % (self._image_locator[1], image_no + 1)).click()
+                        '%s li:nth-child(%s) a' % (self._image_locator[1], image_no)).click()
             from pages.regions.image_viewer import ImageViewer
             image_viewer = ImageViewer(self.testsetup)
-            #image_viewer.wait_for_image_viewer_to_finish_animating()
+            image_viewer.wait_for_image_viewer_to_finish_animating()
             return image_viewer
 
         def image_title(self, image_no):

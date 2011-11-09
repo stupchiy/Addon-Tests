@@ -162,12 +162,9 @@ class Home(Base):
     def category(self, element):
         return self.Categories(self.testsetup, element)
 
-    def most_popular_item(self, lookup):
-        return self.MostPopularRegion(self.testsetup, lookup)
-
     @property
     def most_popular_items(self):
-        return [self.MostPopularRegion(self.testsetup, i) for i in range(self.most_popular_count)]
+        return [self.MostPopularRegion(self.testsetup, element) for element in self.selenium.find_elements(*self._most_popular_item_locator)]
 
     class Categories(Page):
         _categories_locator = (By.CSS_SELECTOR, '#side-categories li')
@@ -186,41 +183,22 @@ class Home(Base):
             from pages.category import Category
             return Category(self.testsetup)
 
-#===============================================================================
-# RC code
-#===============================================================================
     class MostPopularRegion(Page):
-        _name_locator = " > span"
-        _users_locator = " > small"
+        _name_locator = (By.CSS_SELECTOR, "span")
+        _users_locator = (By.CSS_SELECTOR, "small")
 
-        def __init__(self, testsetup, lookup):
+        def __init__(self, testsetup, element):
             Page.__init__(self, testsetup)
-            self.lookup = lookup
 
-        def absolute_locator(self, relative_locator):
-            return self.root_locator + relative_locator
-
-        @property
-        def root_locator(self):
             if type(self.lookup) == int:
-                # lookup by index
-                return "css=.toplist > li:nth(%s) > a" % self.lookup
+                self._root_element = self.selenium.find_element(By.CSS_SELECTOR, ".toplist > li:nth-child(%s) > a" % self.lookup)
             else:
-                # lookup by name
-                return "css=.toplist > li:contains(%s) > a" % self.lookup
+                self._root_element = self.selenium.find_element(By.XPATH, "//ol[@class='toplist']/li/a[span[text()='%s']]" % self.lookup)
 
         @property
         def name(self):
-            return self.selenium.get_text(self.absolute_locator(self._name_locator))
-
-        @property
-        def users_text(self):
-            return self.selenium.get_text(self.absolute_locator(self._users_locator))
+            self._root_element.find_element(*self._name_locator).text
 
         @property
         def users_number(self):
-            number_str = self.users_text.split(' ')[0]
-            number_str = number_str.replace(",", "")
-            return int(number_str)
-            from pages.category import Category
-            return Category(self.testsetup)
+            return int(self._root_element.find_element(*self._users_locator).text.split(' ')[0].replace(',', ''))
