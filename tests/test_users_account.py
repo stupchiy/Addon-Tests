@@ -107,11 +107,11 @@ class TestAccounts:
         view_profile_page = home_page.header.click_view_profile()
         initial_state = view_profile_page.is_email_field_present
 
-        edit_profile_page = home_page.header.click_edit_profile()
+        edit_profile_page = view_profile_page.header.click_edit_profile()
         edit_profile_page.change_hide_email_state()
         edit_profile_page.click_update_account()
 
-        view_profile_page = home_page.header.click_view_profile()
+        view_profile_page = edit_profile_page.header.click_view_profile()
         final_state = view_profile_page.is_email_field_present
 
         try:
@@ -125,9 +125,9 @@ class TestAccounts:
 
         finally:
             if initial_state != final_state:
-                edit_profile_page = home_page.header.click_edit_profile()
+                edit_profile_page = view_profile_page.header.click_edit_profile()
                 edit_profile_page.change_hide_email_state()
                 edit_profile_page.click_update_account()
-                view_profile_page = home_page.header.click_view_profile()
+                view_profile_page = edit_profile_page.header.click_view_profile()
 
             Assert.equal(view_profile_page.is_email_field_present, initial_state, 'Could not restore profile to initial state.')

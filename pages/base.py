@@ -59,7 +59,6 @@ class Base(Page):
     _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(1)")
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
-
     _amo_logo_link_locator = (By.CSS_SELECTOR, ".site-title a")
     _amo_logo_image_locator = (By.CSS_SELECTOR, ".site-title img")
 
@@ -279,7 +278,7 @@ class Base(Page):
         @property
         def is_user_logged_in(self):
             try:
-                return self.is_element_visible(self._account_controller_locator)
+                return self.is_element_visible(*self._account_controller_locator)
             except:
                 return False
 
@@ -287,7 +286,6 @@ class Base(Page):
         def other_applications(self):
             return [self.OtherApplications(self.testsetup, element)
                     for element in self.selenium.find_elements(self._other_apps_list_locator[0], "%s li" % self._other_apps_list_locator[1])]
-
 
         class OtherApplications(Page):
 

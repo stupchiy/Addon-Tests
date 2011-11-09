@@ -40,6 +40,7 @@
 from pages.base import Base
 from selenium.webdriver.common.by import By
 
+
 class Login(Base):
 
     _page_title = 'User Login :: Add-ons for Firefox'
@@ -65,10 +66,20 @@ class ViewProfile(Base):
 
     _page_title = 'User Info for Test :: Add-ons for Firefox'
     _about_locator = (By.CSS_SELECTOR, "div.island > section.primary > h2")
+    _email_locator = (By.CSS_SELECTOR, 'a.email')
 
     @property
     def about_me(self):
         return self.selenium.find_element(*self._about_locator).text
+
+    @property
+    def is_email_field_present(self):
+        return self.is_element_present(*self._email_locator)
+
+    @property
+    def email_value(self):
+        email = self.find_element(*self._email_locator).text
+        return email[::-1]
 
 
 class User(Base):
@@ -87,6 +98,8 @@ class EditProfile(Base):
     _profile_locator = (By.CSS_SELECTOR, "#profile-personal > legend")
     _details_locator = (By.CSS_SELECTOR, "#profile-detail > legend")
     _notification_locator = (By.CSS_SELECTOR, "#acct-notify > legend")
+    _hide_email_checkbox = (By.ID, 'id_emailhidden')
+    _update_account_locator = (By.CSS_SELECTOR, 'p.footer-submit > button.prominent')
 
     @property
     def is_account_visible(self):
@@ -105,8 +118,7 @@ class EditProfile(Base):
         return self.selenium.find_element(*self._notification_locator).text
 
     def click_update_account(self):
-        self.selenium.click(self._update_account_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
+        self.selenium.find_element(*self._update_account_locator).click()
 
     def change_hide_email_state(self):
-        self.selenium.click(self._hide_email_checkbox)
+        self.selenium.find_element(*self._hide_email_checkbox).click()
