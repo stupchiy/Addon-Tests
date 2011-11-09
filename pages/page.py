@@ -79,9 +79,13 @@ class Page(object):
 
     def is_element_present(self, *locator):
         try:
-            return self.selenium.find_element(*locator)
+            self.selenium.find_element(*locator)
+            return True
         except NoSuchElementException:
             return False
+
+    def is_element_not_present(self, *locator):
+        return not self.is_element_present(*locator)
 
     def is_element_visible(self, *locator):
         try:
