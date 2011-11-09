@@ -77,7 +77,7 @@ class SearchHome(Base):
 
     @property
     def is_no_results_present(self):
-        return self.is_element_present(self._no_results_locator)
+        return self.is_element_present(*self._no_results_locator)
 
     @property
     def no_results_text(self):

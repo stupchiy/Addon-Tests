@@ -98,7 +98,7 @@ class Page(object):
 
     def wait_for_element_present(self, element):
         count = 0
-        while not self.is_element_present(element):
+        while not self.is_element_present(*element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
@@ -106,7 +106,7 @@ class Page(object):
 
     def wait_for_element_not_present(self, element):
         count = 0
-        while  self.is_element_present(element):
+        while  self.is_element_present(*element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
@@ -115,7 +115,7 @@ class Page(object):
     def wait_for_element_visible(self, element):
         self.wait_for_element_present(element)
         count = 0
-        while not self.is_element_visible(element):
+        while not self.is_element_visible(*element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
@@ -123,7 +123,7 @@ class Page(object):
 
     def wait_for_element_not_visible(self, element):
         count = 0
-        while self.is_element_visible(element):
+        while self.is_element_visible(*element):
             time.sleep(1)
             count += 1
             if count == self.timeout / 1000:
