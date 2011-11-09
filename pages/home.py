@@ -162,12 +162,9 @@ class Home(Base):
     def category(self, element):
         return self.Categories(self.testsetup, element)
 
-    def most_popular_item(self, lookup):
-        return self.MostPopularRegion(self.testsetup, lookup)
-
     @property
     def most_popular_items(self):
-        return [self.MostPopularRegion(self.testsetup, i) for i in range(self.most_popular_count)]
+        return [self.MostPopularRegion(self.testsetup, element) for element in self.selenium.find_elements(*self._most_popular_item_locator)]
 
     class Categories(Page):
         _categories_locator = (By.CSS_SELECTOR, '#side-categories li')
@@ -190,7 +187,7 @@ class Home(Base):
         _name_locator = (By.CSS_SELECTOR, "span")
         _users_locator = (By.CSS_SELECTOR, "small")
 
-        def __init__(self, testsetup, lookup):
+        def __init__(self, testsetup, element):
             Page.__init__(self, testsetup)
 
             if type(self.lookup) == int:
