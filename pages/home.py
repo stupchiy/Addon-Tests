@@ -96,7 +96,6 @@ class Home(Base):
         return Personas(self.testsetup)
 
     def click_themes(self):
-#        self.wait_for_element_visible(self._themes_link_locator)
         self.selenium.find_element(*self._themes_link_locator).click()
         from pages.themes import Themes
         return Themes(self.testsetup)

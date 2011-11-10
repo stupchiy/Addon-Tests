@@ -62,7 +62,7 @@ class TestReviews:
 
         #Go to the last page and check that the next button is not present
         details_page.go_to_last_page()
-        Assert.false(details_page.is_next_link_enabeld)
+        Assert.false(details_page.is_next_link_enabled)
 
         #Go one page back, check that it has 20 reviews
         #that the page number decreases and that the next link is visible
