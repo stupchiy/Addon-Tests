@@ -50,12 +50,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 class Base(Page):
 
-    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
-    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
     _current_page_locator = (By.CSS_SELECTOR, ".paginator .num > a:nth-child(1)")
-    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(4)")
-    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(1)")
-    _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
     _amo_logo_link_locator = (By.CSS_SELECTOR, ".site-title a")
     _amo_logo_image_locator = (By.CSS_SELECTOR, ".site-title img")
@@ -63,7 +58,6 @@ class Base(Page):
     _mozilla_logo_link_locator = (By.CSS_SELECTOR, "#global-header-tab a")
 
     _breadcrumbs_locator = (By.CSS_SELECTOR, "#breadcrumbs > ol  li")
-
     _footer_locator = (By.CSS_SELECTOR, "#footer")
 
     def login(self, user="default"):
@@ -98,48 +92,8 @@ class Base(Page):
         self.selenium.find_element(*self._mozilla_logo_link_locator).click()
 
     @property
-    def _footer(self):
-        return self.selenium.find_element(*self._footer_locator)
-
-    def page_forward(self):
-        ActionChains(self.selenium).move_to_element(self._footer).perform()
-        self.selenium.find_element(*self._next_link_locator).click()
-
-    def page_back(self):
-        ActionChains(self.selenium).move_to_element(self._footer).perform()
-        self.selenium.find_element(*self._previous_link_locator).click()
-
-    @property
-    def is_prev_link_enabled(self):
-        button = self.selenium.find_element(*self._previous_link_locator).get_attribute('class')
-        return not ("disabled" in button)
-
-    @property
-    def is_prev_link_visible(self):
-        return self.is_element_visible(*self._previous_link_locator)
-
-    @property
-    def is_next_link_enabeld(self):
-        button = self.selenium.find_element(*self._next_link_locator).get_attribute('class')
-        return not("disabled" in button)
-
-    @property
-    def is_next_link_visible(self):
-        return self.is_element_visible(*self._next_link_locator)
-
-    @property
     def current_page(self):
         return int(self.selenium.find_element(*self._current_page_locator).text)
-
-    @property
-    def results_displayed(self):
-        return self.selenium.find_element(*self._results_displayed_text_locator).text
-
-    def go_to_last_page(self):
-        self.selenium.find_element(*self._last_page_link_locator).click()
-
-    def go_to_first_page(self):
-        self.selenium.find_element(*self._first_page_link_locator).click()
 
     def credentials_of_user(self, user):
         return self.parse_yaml_file(self.credentials)[user]

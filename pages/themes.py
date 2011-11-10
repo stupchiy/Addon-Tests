@@ -65,11 +65,13 @@ class Themes(Base):
     _category_locator = (By.CSS_SELECTOR, "#c-30 > a")
     _categories_locator = (By.CSS_SELECTOR, "#side-categories li")
     _category_link_locator = (By.CSS_SELECTOR, _categories_locator[1] + ":nth-of-type(%s) a")
+    _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
+    _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
 
     def click_sort_by(self, type_):
-        element = self.selenium.find_element(*self._hover_more_locator)
-        ActionChains(self.selenium).move_to_element(element).perform()
-        self.selenium.find_element(*getattr(self, "_sort_by_%s_locator" % type_)).click()
+        click_target = self.selenium.find_element(*getattr(self, "_sort_by_%s_locator" % type_))
+        hover_element = self.selenium.find_element(*self._hover_more_locator)
+        ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_target).click().perform()
 
     def click_on_first_addon(self):
         self.selenium.find_element(*self._addon_name_locator).click()
@@ -107,25 +109,33 @@ class Themes(Base):
 
     @property
     def addon_updated_dates(self):
-        return self._extract_iso_dates(self._addons_metadata_locator, "Updated %B %d, %Y")
+        return self._extract_iso_dates("Updated %B %d, %Y", *self._addons_metadata_locator)
 
     @property
     def addon_created_dates(self):
-        return self._extract_iso_dates(self._addons_metadata_locator, "Added %B %d, %Y")
+        return self._extract_iso_dates("Added %B %d, %Y", *self._addons_metadata_locator)
 
     @property
     def addon_download_number(self):
         pattern = "(\d+(?:[,]\d+)*) weekly downloads"
-        downloads_locator = self._addons_download_locator
-        downloads = self._extract_integers(downloads_locator, pattern)
+        downloads = self._extract_integers(pattern, *self._addons_download_locator)
         return downloads
 
     @property
     def addon_rating(self):
         pattern = "(\d)"
-        ratings_locator = self._addons_rating_locator
-        ratings = self._extract_integers(ratings_locator, pattern)
+        ratings = self._extract_integers(pattern, *self._addons_rating_locator)
         return ratings
+
+    def page_forward(self):
+        footer = self.selenium.find_element(*self._footer_locator)
+        ActionChains(self.selenium).move_to_element(footer).perform()
+        self.selenium.find_element(*self._next_link_locator).click()
+    
+    def page_back(self):
+        footer = self.selenium.find_element(*self._footer_locator)
+        ActionChains(self.selenium).move_to_element(footer).perform()
+        self.selenium.find_element(*self._previous_link_locator).click()
 
 
 class Theme(Base):

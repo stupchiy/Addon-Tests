@@ -66,7 +66,6 @@ class TestSearch:
         # Go Forward 10 times
         for i in range(10):
             search_page.page_forward()
-            search_page.wait_for_updating
             results_summary = search_page.results_displayed
 
             results = re.split('\W+', results_summary)
@@ -81,7 +80,6 @@ class TestSearch:
         # Go Back 10 Times
         for i in range(10):
             search_page.page_back()
-            search_page.wait_for_updating
             results_summary = search_page.results_displayed
 
             results = re.split('\W+', results_summary)
@@ -239,7 +237,7 @@ class TestSearch:
         first_expected = 1
         second_expected = 20
 
-        while search_page.is_next_link_enabeld:
+        while search_page.is_next_link_enabled:
             results_summary = search_page.results_displayed
             results = re.split('\W+', results_summary)
             first_count = results[1]
