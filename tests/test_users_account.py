@@ -121,7 +121,7 @@ class TestAccounts:
                 Assert.equal(credentials['email'], view_profile_page.email_value, 'Actual value is not equal with the expected one.')
 
         except Exception as exception:
-            Assert.fail(exception.msg)
+            Assert.fail(exception.message)
 
         finally:
             if initial_state != final_state:

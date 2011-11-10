@@ -190,10 +190,11 @@ class Home(Base):
         def __init__(self, testsetup, element):
             Page.__init__(self, testsetup)
 
-            if type(self.lookup) == int:
-                self._root_element = self.selenium.find_element(By.CSS_SELECTOR, ".toplist > li:nth-child(%s) > a" % self.lookup)
-            else:
-                self._root_element = self.selenium.find_element(By.XPATH, "//ol[@class='toplist']/li/a[span[text()='%s']]" % self.lookup)
+            self._root_element = element
+#            if type(self.lookup) == int:
+#                self._root_element = self.selenium.find_element(By.CSS_SELECTOR, ".toplist > li:nth-child(%s) > a" % self.lookup)
+#            else:
+#                self._root_element = self.selenium.find_element(By.XPATH, "//ol[@class='toplist']/li/a[span[text()='%s']]" % self.lookup)
 
         @property
         def name(self):
