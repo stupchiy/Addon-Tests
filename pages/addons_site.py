@@ -66,8 +66,7 @@ class WriteReviewBlock(Base):
     def set_review_rating(self, rating):
         locator = self.selenium.find_element(self._add_review_input_rating_locator[0],
                                              '%s[data-stars="%s"]' % (self._add_review_input_rating_locator[1], rating))
-        ActionChains(self.selenium).move_to_element(locator).perform()
-        locator.click()
+        ActionChains(self.selenium).move_to_element(locator).click().perform()
 
     def click_to_save_review(self):
         self.selenium.find_element(*self._add_review_submit_button_locator).click()
