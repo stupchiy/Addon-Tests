@@ -204,10 +204,6 @@ class Base(Page):
         def search_field_placeholder(self):
             return self.selenium.find_element(*self._search_textbox_locator).get_attribute('placeholder')
 
-        def hover_my_account(self):
-            element = self.selenium.find_element(*self._account_controller_locator)
-            ActionChains(self.selenium).move_to_element(element).perform()
-
         def click_login(self):
             self.selenium.find_element(*self._login_locator).click()
             from pages.user import Login
@@ -217,14 +213,18 @@ class Base(Page):
             self.selenium.find_element(*self._logout_locator).click()
 
         def click_edit_profile(self):
-            self.hover_my_account()
-            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(2) a' % self._account_dropdown_locator[1]).click()
+            hover_element = self.selenium.find_element(*self._account_controller_locator)
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(2) a' % self._account_dropdown_locator[1])
+            ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
 
-        def click_view_profile(self):
-            self.hover_my_account()
-            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1]).click()
+        def click_view_profile(self):           
+            hover_element = self.selenium.find_element(*self._account_controller_locator)
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])            
+            ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+
             from pages.user import ViewProfile
             return ViewProfile(self.testsetup)
 
@@ -248,16 +248,18 @@ class Base(Page):
             def __init__(self, testsetup, element):
                 Page.__init__(self, testsetup)
                 self._root_element = element
-                self._hover_element = self.selenium.find_element(*self._hover_locator)
 
             @property
             def name(self):
-                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
-                return self._root_element.find_element(*self._name_locator).text
+                hover_element = self.selenium.find_element(*self._hover_locator)
+                name_element = self._root_element.find_element(*self._name_locator)
+                ActionChains(self.selenium).move_to_element(hover_element).perform()
+                return name_element.text
 
             @property
             def is_application_visible(self):
-                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
+                hover_element = self.selenium.find_element(*self._hover_locator)
+                ActionChains(self.selenium).move_to_element(hover_element).perform()
                 return self._root_element.is_displayed()
 
     class BreadcrumbsRegion(Page):
