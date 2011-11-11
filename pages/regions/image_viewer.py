@@ -65,11 +65,13 @@ class ImageViewer(Page):
 
     @property
     def is_next_present(self):
-        return not self.is_element_present(self._next_locator[0], '%s.disabled' % self._next_locator[1])
+        return not self.is_element_present(self._next_locator[0],
+                                           '%s.disabled' % self._next_locator[1])
 
     @property
     def is_previous_present(self):
-        return not self.is_element_present(self._previous_locator[0], '%s.disabled' % self._previous_locator[1])
+        return not self.is_element_present(self._previous_locator[0],
+                                           '%s.disabled' % self._previous_locator[1])
 
     def is_nr_image_visible(self, img_nr):
         return self.is_element_visible(self._images_locator[0],
@@ -77,7 +79,8 @@ class ImageViewer(Page):
 
     @property
     def image_visible(self):
-        return self.selenium.find_element(By.CSS_SELECTOR, 'div.content >img[style*="opacity: 1"]')
+        return self.selenium.find_element(By.CSS_SELECTOR,
+                                          'div.content >img[style*="opacity: 1"]')
 
     @property
     def image_link(self):

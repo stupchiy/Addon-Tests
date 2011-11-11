@@ -83,12 +83,14 @@ class ViewReviews(Base):
 
     def review(self, index=1):
         """ Returns review object with index. """
-        element = self.selenium.find_element(self._review_locator[0], '%s:nth-child(%s)' % (self._review_locator[1], index))
+        element = self.selenium.find_element(self._review_locator[0],
+                                             '%s:nth-child(%s)' % (self._review_locator[1], index))
         return self.ReviewSnippet(self.testsetup, element)
 
     def reviews(self):
         """ Returns all reviews on the page. """
-        return [self.ReviewSnippet(self.testsetup, element) for element in self.selenium.find_elements(*self._review_locator)]
+        return [self.ReviewSnippet(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._review_locator)]
 
     class ReviewSnippet(Base):
 

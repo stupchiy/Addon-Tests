@@ -51,9 +51,7 @@ from selenium.webdriver.common.by import By
 
 
 class Home(Base):
-#===============================================================================
-# Webdriver Code
-#===============================================================================
+
     _page_title = "Add-ons for Firefox"
     _themes_link_locator = (By.CSS_SELECTOR, "#themes > a")
     _personas_link_locator = (By.CSS_SELECTOR, "#personas > a")
@@ -152,18 +150,21 @@ class Home(Base):
 
     @property
     def categories_count(self):
-        return len(self.selenium.find_elements(self._category_list_locator[0], "%s li" % self._category_list_locator[1]))
+        return len(self.selenium.find_elements(self._category_list_locator[0],
+                                               "%s li" % self._category_list_locator[1]))
 
     @property
     def categories(self):
-        return [self.Categories(self.testsetup, element) for element in self.selenium.find_elements(*self._category_list_locator)]
+        return [self.Categories(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._category_list_locator)]
 
     def category(self, element):
         return self.Categories(self.testsetup, element)
 
     @property
     def most_popular_items(self):
-        return [self.MostPopularRegion(self.testsetup, element) for element in self.selenium.find_elements(*self._most_popular_item_locator)]
+        return [self.MostPopularRegion(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._most_popular_item_locator)]
 
     class Categories(Page):
         _categories_locator = (By.CSS_SELECTOR, '#side-categories li')
@@ -188,12 +189,7 @@ class Home(Base):
 
         def __init__(self, testsetup, element):
             Page.__init__(self, testsetup)
-
             self._root_element = element
-#            if type(self.lookup) == int:
-#                self._root_element = self.selenium.find_element(By.CSS_SELECTOR, ".toplist > li:nth-child(%s) > a" % self.lookup)
-#            else:
-#                self._root_element = self.selenium.find_element(By.XPATH, "//ol[@class='toplist']/li/a[span[text()='%s']]" % self.lookup)
 
         @property
         def name(self):

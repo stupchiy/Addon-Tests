@@ -82,7 +82,8 @@ class Themes(Base):
         return ThemesCategory(self.testsetup)
 
     def get_category(self, lookup):
-        return self.selenium.find_element(self._category_link_locator[0], self._category_link_locator[1] % lookup).text
+        return self.selenium.find_element(self._category_link_locator[0],
+                                          self._category_link_locator[1] % lookup).text
 
     @property
     def themes_category(self):
@@ -101,7 +102,8 @@ class Themes(Base):
         return addon_name
 
     def addon_name(self, lookup):
-        return self.selenium.find_element(By.XPATH, "//li[%s] %s" % (lookup, self._addon_name_locator[1])).text
+        return self.selenium.find_element(By.XPATH,
+                                          "//li[%s] %s" % (lookup, self._addon_name_locator[1])).text
 
     @property
     def addon_count(self):
@@ -129,13 +131,15 @@ class Themes(Base):
 
     def page_forward(self):
         footer = self.selenium.find_element(*self._footer_locator)
-        ActionChains(self.selenium).move_to_element(footer).perform()
-        self.selenium.find_element(*self._next_link_locator).click()
-    
+        forward = self.selenium.find_element(*self._next_link_locator)
+
+        ActionChains(self.selenium).move_to_element(footer).move_to_element(forward).click().perform()
+
     def page_back(self):
         footer = self.selenium.find_element(*self._footer_locator)
-        ActionChains(self.selenium).move_to_element(footer).perform()
-        self.selenium.find_element(*self._previous_link_locator).click()
+        back = self.selenium.find_element(*self._previous_link_locator)
+
+        ActionChains(self.selenium).move_to_element(footer).move_to_element(back).click().perform()
 
 
 class Theme(Base):

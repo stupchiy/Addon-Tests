@@ -65,15 +65,11 @@ class SearchHome(Base):
     _sort_by_up_and_coming_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth-child(4) > a")
 
     _hover_more_locator = (By.CSS_SELECTOR, "li.extras > a")
-    
+
     _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
     _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
     _updating_locator = (By.CSS_SELECTOR, "div.updating")
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
-    
-#===============================================================================
-# Webdriver Code
-#===============================================================================
 
     def wait_for_updating_ajax(self):
         WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_not_present(*self._updating_locator))
@@ -114,7 +110,8 @@ class SearchHome(Base):
         return self.SearchResult(self.testsetup, elements[lookup])
 
     def results(self):
-        return [self.SearchResult(self.testsetup, element) for element in self.selenium.find_elements(*self._results_locator)]
+        return [self.SearchResult(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._results_locator)]
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()
@@ -128,7 +125,7 @@ class SearchHome(Base):
     def is_next_link_enabled(self):
         button = self.selenium.find_element(*self._next_link_locator).get_attribute('class')
         return not("disabled" in button)
-        
+
     @property
     def results_displayed(self):
         return self.selenium.find_element(*self._results_displayed_text_locator).text

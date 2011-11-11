@@ -49,7 +49,8 @@ class ExtensionsHome(Base):
 
     @property
     def extensions(self):
-        return [Extension(self.testsetup, element) for element in self.selenium.find_elements(*self._extensions_locator)]
+        return [Extension(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._extensions_locator)]
 
 
 class Extension(Page):
