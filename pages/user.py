@@ -67,7 +67,6 @@ class ViewProfile(Base):
     _page_title = 'User Info for Test :: Add-ons for Firefox'
     _about_locator = (By.CSS_SELECTOR, "div.island > section.primary > h2")
     _email_locator = (By.CSS_SELECTOR, 'a.email')
-    _email_locator = 'css=a.email'
 
     @property
     def about_me(self):
@@ -102,10 +101,6 @@ class EditProfile(Base):
     _hide_email_checkbox = (By.ID, 'id_emailhidden')
     _update_account_locator = (By.CSS_SELECTOR, 'p.footer-submit > button.prominent')
 
-    _hide_email_checkbox = 'id=id_emailhidden'
-
-    _update_account_locator = 'css=p.footer-submit > button.prominent'
-
     @property
     def is_account_visible(self):
         return self.selenium.find_element(*self._account_locator).text
@@ -127,17 +122,3 @@ class EditProfile(Base):
 
     def change_hide_email_state(self):
         self.selenium.find_element(*self._hide_email_checkbox).click()
-
-    @property
-    def is_hide_email_checkbox_checked(self):
-        return self.selenium.is_checked(self._hide_email_checkbox)
-
-    def check_hide_email(self):
-        self.selenium.check(self._hide_email_checkbox)
-
-    def uncheck_hide_email(self):
-        self.selenium.uncheck(self._hide_email_checkbox)
-
-    def click_update_account(self):
-        self.selenium.click(self._update_account_locator)
-        self.selenium.wait_for_page_to_load(self.timeout)
