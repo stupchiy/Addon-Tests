@@ -76,7 +76,7 @@ class SearchHome(Base):
 #===============================================================================
 
     def wait_for_updating_ajax(self):
-        WebDriverWait(self.selenium, 5).until(lambda s: self.is_element_not_present(*self._updating_locator))
+        WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_not_present(*self._updating_locator))
 
     @property
     def is_no_results_present(self):
@@ -106,7 +106,7 @@ class SearchHome(Base):
         hover_element = self.selenium.find_element(*self._hover_more_locator)
         click_element = self.selenium.find_element(*getattr(self, '_sort_by_%s_locator' % type.replace(' ', '_').lower()))
         ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
-
+        self.wait_for_updating_ajax()
         return SearchHome(self.testsetup)
 
     def result(self, lookup):
