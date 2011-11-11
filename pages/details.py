@@ -69,7 +69,9 @@ class Details(Base):
     _install_button_locator = (By.CSS_SELECTOR, "p[class='install-button'] > a")
     _contribute_button_locator = (By.CSS_SELECTOR, "a[id='contribute-button']")
     _rating_locator = (By.CSS_SELECTOR, "span[itemprop='rating']")
-    _whats_this_license_locator = (By.CSS_SELECTOR, ".source > li:nth-child(2) > a")
+    _whats_this_license_locator = "css=.license-faq"
+    _view_the_source_locator = "css=.source-code"
+    _complete_version_history_locator = "css=p.more > a"
     _description_locator = (By.CSS_SELECTOR, "div.prose")
     _register_link_locator = (By.CSS_SELECTOR, "li.account > a")
     _login_link_locator = (By.CSS_SELECTOR, "li.account > a:nth-child(2)")
@@ -78,7 +80,7 @@ class Details(Base):
 
     _about_addon_locator = (By.CSS_SELECTOR, "section.primary > h2")
     _more_about_addon_locator = (By.ID, "more-about")
-    _version_information_locator = (By.ID, "detail-relnotes")
+    _version_information_locator = "css=#detail-relnotes"
     _version_information_heading_locator = (By.CSS_SELECTOR, "#detail-relnotes > h2")
     _release_version_locator = (By.CSS_SELECTOR, "div.info > h3 > a")
     _source_code_license_information_locator = (By.CSS_SELECTOR, ".source > li > a")
@@ -288,6 +290,26 @@ class Details(Base):
     def is_version_information_section_expanded(self):
         expand_info = self.selenium.find_element(*self._version_information_locator).get_attribute("class")
         return ("expanded" in expand_info)
+
+    @property
+    def is_version_information_install_button_visible(self):
+        return self.selenium.is_visible("%s p.install-button" % self._version_information_locator)
+
+    @property
+    def is_whats_this_license_visible(self):
+        return self.selenium.is_visible(self._whats_this_license_locator)
+
+    @property
+    def is_source_code_license_information_visible(self):
+        return self.selenium.is_visible(self._source_code_license_information_locator)
+
+    @property
+    def is_view_the_source_link_visible(self):
+        return self.selenium.is_visible(self._view_the_source_locator)
+
+    @property
+    def is_complete_version_history_visible(self):
+        return self.selenium.is_visible(self._complete_version_history_locator)
 
     @property
     def does_page_scroll_to_version_information_section(self):
@@ -526,6 +548,9 @@ class Details(Base):
 
     def click_version_info_link(self):
         self.selenium.find_element(*self._info_link_locator).click()
+
+    def click_version_information_header(self):
+        self.selenium.click("%s > a" % self._version_information_heading_locator)
 
     def click_devs_comments_title(self):
         self.selenium.find_element(self._devs_comments_section_locator[0], '%s > h2 > a' % self._devs_comments_section_locator[1]).click()
