@@ -69,7 +69,9 @@ class Details(Base):
     _install_button_locator = (By.CSS_SELECTOR, "p[class='install-button'] > a")
     _contribute_button_locator = (By.CSS_SELECTOR, "a[id='contribute-button']")
     _rating_locator = (By.CSS_SELECTOR, "span[itemprop='rating']")
-    _whats_this_license_locator = (By.CSS_SELECTOR, ".source > li:nth-child(2) > a")
+    _whats_this_license_locator = (By.CSS_SELECTOR, ".license-faq")
+    _view_the_source_locator = (By.CSS_SELECTOR, ".source-code")
+    _complete_version_history_locator = (By.CSS_SELECTOR, "p.more > a")
     _description_locator = (By.CSS_SELECTOR, "div.prose")
     _register_link_locator = (By.CSS_SELECTOR, "li.account > a")
     _login_link_locator = (By.CSS_SELECTOR, "li.account > a:nth-child(2)")
@@ -78,7 +80,7 @@ class Details(Base):
 
     _about_addon_locator = (By.CSS_SELECTOR, "section.primary > h2")
     _more_about_addon_locator = (By.ID, "more-about")
-    _version_information_locator = (By.ID, "detail-relnotes")
+    _version_information_locator = (By.CSS_SELECTOR, "#detail-relnotes")
     _version_information_heading_locator = (By.CSS_SELECTOR, "#detail-relnotes > h2")
     _release_version_locator = (By.CSS_SELECTOR, "div.info > h3 > a")
     _source_code_license_information_locator = (By.CSS_SELECTOR, ".source > li > a")
@@ -137,7 +139,8 @@ class Details(Base):
     @property
     def title(self):
         base = self.selenium.find_element(*self._title_locator).text
-        version = self.selenium.find_element(self._title_locator[0], '%s > span' % self._title_locator[1]).text
+        version = self.selenium.find_element(self._title_locator[0],
+                                             '%s > span' % self._title_locator[1]).text
         return base.replace(version, '')
 
     @property
@@ -173,7 +176,8 @@ class Details(Base):
 
     @property
     def authors(self):
-        return [self.selenium.find_element(self._authors_locator[0], "%s[ % s]" % (self._authors_locator[1], (i + 1))).text
+        return [self.selenium.find_element(self._authors_locator[0],
+                                           "%s[ % s]" % (self._authors_locator[1], (i + 1))).text
             for i in range(len(self.selenium.find_elements(*self._authors_locator)))]
 
     @property
@@ -277,12 +281,34 @@ class Details(Base):
         return self.is_element_visible(*self._version_information_heading_locator)
 
     def click_version_information_heading(self):
-        return self.selenium.find_element(self._version_information_heading_locator[0], '%s > a' % self._version_information_heading_locator[1]).click()
+        return self.selenium.find_element(self._version_information_heading_locator[0],
+                                          '%s > a' % self._version_information_heading_locator[1]).click()
 
     @property
     def is_version_information_section_expanded(self):
         expand_info = self.selenium.find_element(*self._version_information_locator).get_attribute("class")
         return ("expanded" in expand_info)
+
+    @property
+    def is_version_information_install_button_visible(self):
+        return self.is_element_visible(self._version_information_locator[0],
+                                        "%s p.install-button" % self._version_information_locator[1])
+
+    @property
+    def is_whats_this_license_visible(self):
+        return self.is_element_visible(*self._whats_this_license_locator)
+
+    @property
+    def is_source_code_license_information_visible(self):
+        return self.is_element_visible(*self._source_code_license_information_locator)
+
+    @property
+    def is_view_the_source_link_visible(self):
+        return self.is_element_visible(*self._view_the_source_locator)
+
+    @property
+    def is_complete_version_history_visible(self):
+        return self.is_element_visible(*self._complete_version_history_locator)
 
     @property
     def does_page_scroll_to_version_information_section(self):
@@ -329,18 +355,20 @@ class Details(Base):
 
     @property
     def part_of_collections(self):
-        part_of_collections_element = (self._part_of_collections_locator[0], '%s section li' % self._part_of_collections_locator[1])
-        return [self.PartOfCollectionsSnippet(self.testsetup, element) for element in self.selenium.find_elements(*part_of_collections_element)]
+        part_of_collections_element = (self._part_of_collections_locator[0],
+                                       '%s section li' % self._part_of_collections_locator[1])
+        return [self.PartOfCollectionsSnippet(self.testsetup, element)
+                for element in self.selenium.find_elements(*part_of_collections_element)]
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()
-    
+
     def page_back(self):
         self.selenium.find_element(*self._previous_link_locator).click()
 
     def go_to_last_page(self):
         self.selenium.find_element(*self._last_page_link_locator).click()
-    
+
     def go_to_first_page(self):
         self.selenium.find_element(*self._first_page_link_locator).click()
 
@@ -415,7 +443,8 @@ class Details(Base):
 
     @property
     def other_addons(self):
-        return [self.OtherAddons(self.testsetup, element) for element in self.selenium.find_elements(*self._other_addons_by_author_locator)]
+        return [self.OtherAddons(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._other_addons_by_author_locator)]
 
     def get_rating_counter(self, rating):
         if rating == 1:
@@ -522,8 +551,13 @@ class Details(Base):
     def click_version_info_link(self):
         self.selenium.find_element(*self._info_link_locator).click()
 
+    def click_version_information_header(self):
+        self.selenium.find_element(self._version_information_heading_locator[0],
+                                   "%s > a" % self._version_information_heading_locator[1]).click()
+
     def click_devs_comments_title(self):
-        self.selenium.find_element(self._devs_comments_section_locator[0], '%s > h2 > a' % self._devs_comments_section_locator[1]).click()
+        self.selenium.find_element(self._devs_comments_section_locator[0],
+                                   '%s > h2 > a' % self._devs_comments_section_locator[1]).click()
 
     class OtherAddons(Page):
 
@@ -567,7 +601,8 @@ class Details(Base):
 
     @property
     def development_channel_text(self):
-        return self.selenium.find_element(self._development_channel_locator[0], '%s > h2' % self._development_channel_locator[1]).text
+        return self.selenium.find_element(self._development_channel_locator[0],
+                                          '%s > h2' % self._development_channel_locator[1]).text
 
     @property
     def is_development_channel_header_visible(self):
@@ -575,7 +610,8 @@ class Details(Base):
         return self.is_element_visible(*element)
 
     def click_development_channel(self):
-        self.selenium.find_element(self._development_channel_locator[0], '%s > h2 > a' % self._development_channel_locator[1]).click()
+        self.selenium.find_element(self._development_channel_locator[0],
+                                   '%s > h2 > a' % self._development_channel_locator[1]).click()
 
     @property
     def is_development_channel_expanded(self):
