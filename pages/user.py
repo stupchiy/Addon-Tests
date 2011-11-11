@@ -67,7 +67,6 @@ class ViewProfile(Base):
     _page_title = 'User Info for Test :: Add-ons for Firefox'
     _about_locator = (By.CSS_SELECTOR, "div.island > section.primary > h2")
     _email_locator = (By.CSS_SELECTOR, 'a.email')
-    _email_locator = 'css=a.email'
 
     @property
     def about_me(self):
@@ -101,10 +100,6 @@ class EditProfile(Base):
     _notification_locator = (By.CSS_SELECTOR, "#acct-notify > legend")
     _hide_email_checkbox = (By.ID, 'id_emailhidden')
     _update_account_locator = (By.CSS_SELECTOR, 'p.footer-submit > button.prominent')
-
-    _hide_email_checkbox = 'id=id_emailhidden'
-
-    _update_account_locator = 'css=p.footer-submit > button.prominent'
 
     @property
     def is_account_visible(self):
