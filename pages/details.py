@@ -257,11 +257,6 @@ class Details(Base):
         return self.is_element_visible(*self._other_applications_locator)
 
     @property
-    def is_other_apps_dropdown_menu_visible(self):
-        self.click_other_apps()
-        return self.is_element_visible(*self._other_apps_dropdown_menu_locator)
-
-    @property
     def is_addon_name_visible(self):
         return self.is_element_visible(*self._name_locator)
 

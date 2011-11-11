@@ -162,7 +162,6 @@ class Base(Page):
         #other applications
         _other_applications_locator = (By.ID, "other-apps")
         _other_apps_list_locator = (By.CSS_SELECTOR, "ul.other-apps")
-        _app_thunderbird = (By.CSS_SELECTOR, "#app-thunderbird a")
 
         #Search box
         _search_button_locator = (By.CSS_SELECTOR, ".search-button")
@@ -183,15 +182,16 @@ class Base(Page):
             from pages.regions.header_menu import HeaderMenu
             return HeaderMenu(self.testsetup, lookup)
 
-        #TODO:hover other apps
-        def click_other_applications(self):
-            self.selenium.find_element(*self._other_applications_locator).click()
+        def click_other_application(self, other_app):
+            hover_locator = self.selenium.find_element(*self._other_applications_locator)
+            app_locator = self.selenium.find_element(By.XPATH, "//ul[@class='other-apps']/li[a[text()='%s']]" % other_app)
+            ActionChains(self.selenium).move_to_element(hover_locator).move_to_element(app_locator).click().perform()
 
-        def click_thunderbird(self):
-            self.selenium.find_element(*self._app_thunderbird).click()
-
-        def is_thunderbird_visible(self):
-            return self.is_element_present(self._app_thunderbird)
+        def is_other_application_visible(self, other_app):
+            hover_locator = self.selenium.find_element(*self._other_applications_locator)
+            ActionChains(self.selenium).move_to_element(hover_locator).perform()
+            app_locator = (By.XPATH, "//ul[@class='other-apps']/li/a[text()='%s']" % other_app)
+            return self.is_element_visible(*app_locator)
 
         def search_for(self, search_term):
             search_box = self.selenium.find_element(*self._search_textbox_locator)
@@ -234,33 +234,6 @@ class Base(Page):
                 return self.is_element_visible(*self._account_controller_locator)
             except:
                 return False
-
-        @property
-        def other_applications(self):
-            return [self.OtherApplications(self.testsetup, element)
-                    for element in self.selenium.find_elements(self._other_apps_list_locator[0], "%s li" % self._other_apps_list_locator[1])]
-
-        class OtherApplications(Page):
-
-            _name_locator = (By.CSS_SELECTOR, "a")
-            _hover_locator = (By.CSS_SELECTOR, "#other-apps")
-
-            def __init__(self, testsetup, element):
-                Page.__init__(self, testsetup)
-                self._root_element = element
-
-            @property
-            def name(self):
-                hover_element = self.selenium.find_element(*self._hover_locator)
-                name_element = self._root_element.find_element(*self._name_locator)
-                ActionChains(self.selenium).move_to_element(hover_element).perform()
-                return name_element.text
-
-            @property
-            def is_application_visible(self):
-                hover_element = self.selenium.find_element(*self._hover_locator)
-                ActionChains(self.selenium).move_to_element(hover_element).perform()
-                return self._root_element.is_displayed()
 
     class BreadcrumbsRegion(Page):
 
