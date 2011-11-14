@@ -290,6 +290,26 @@ class Details(Base):
         return ("expanded" in expand_info)
 
     @property
+    def is_version_information_install_button_visible(self):
+        return self.selenium.is_visible("%s p.install-button" % self._version_information_locator)
+
+    @property
+    def is_whats_this_license_visible(self):
+        return self.selenium.is_visible(self._whats_this_license_locator)
+
+    @property
+    def is_source_code_license_information_visible(self):
+        return self.selenium.is_visible(self._source_code_license_information_locator)
+
+    @property
+    def is_view_the_source_link_visible(self):
+        return self.selenium.is_visible(self._view_the_source_locator)
+
+    @property
+    def is_complete_version_history_visible(self):
+        return self.selenium.is_visible(self._complete_version_history_locator)
+
+    @property
     def does_page_scroll_to_version_information_section(self):
         return (self.selenium.execute_script('return window.pageYOffset')) > 1000
 
@@ -339,13 +359,13 @@ class Details(Base):
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()
-    
+
     def page_back(self):
         self.selenium.find_element(*self._previous_link_locator).click()
 
     def go_to_last_page(self):
         self.selenium.find_element(*self._last_page_link_locator).click()
-    
+
     def go_to_first_page(self):
         self.selenium.find_element(*self._first_page_link_locator).click()
 
@@ -526,6 +546,9 @@ class Details(Base):
 
     def click_version_info_link(self):
         self.selenium.find_element(*self._info_link_locator).click()
+
+    def click_version_information_header(self):
+        self.selenium.click("%s > a" % self._version_information_heading_locator)
 
     def click_devs_comments_title(self):
         self.selenium.find_element(self._devs_comments_section_locator[0], '%s > h2 > a' % self._devs_comments_section_locator[1]).click()
