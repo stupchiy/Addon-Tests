@@ -73,7 +73,6 @@ class TestDiscoveryPane:
     def test_that_mission_statement_is_on_addons_home_page(self, mozwebqa):
         """ TestCase for Litmus 15065 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
-        discovery_pane.wait_for_mission_visible
         Assert.true(discovery_pane.is_mission_section_visible)
         expected_text = "Thanks for using Firefox and supporting Mozilla's mission!"
 
