@@ -145,7 +145,8 @@ class DiscoveryPane(Base):
         return self.is_element_visible(*self._logout_link_locator)
 
     def click_logout(self):
-        self.selenium.find_element(self._logout_link_locator[0], "%s > a" % self._logout_link_locator[1]).click()
+        self.selenium.find_element(self._logout_link_locator[0],
+                                   "%s > a" % self._logout_link_locator[1]).click()
         from pages.home import Home
         return Home(self.testsetup, open_url=False)
 

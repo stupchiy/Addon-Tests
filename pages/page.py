@@ -51,9 +51,7 @@ class Page(object):
     '''
     Base class for all Pages
     '''
-#===============================================================================
-# Webdriver code
-#===============================================================================
+
     def __init__(self, testsetup):
         '''
         Constructor
@@ -128,17 +126,3 @@ class Page(object):
             count += 1
             if count == self.timeout / 1000:
                 raise Exception(element + " is still visible")
-
-
-#===============================================================================
-# RC code
-#===============================================================================
-
-
-    def wait_for_page(self, url_regex):
-        count = 0
-        while (re.search(url_regex, self.selenium.get_location(), re.IGNORECASE)) is None:
-            time.sleep(1)
-            count += 1
-            if count == self.timeout / 1000:
-                raise Exception("Sites Page has not loaded")

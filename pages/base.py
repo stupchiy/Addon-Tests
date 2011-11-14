@@ -117,7 +117,8 @@ class Base(Page):
 
     @property
     def breadcrumb_name(self):
-        return self.selenium.find_element(By.CSS_SELECTOR, "%s > span" % self._breadcrumbs_locator[1]).text
+        return self.selenium.find_element(By.CSS_SELECTOR,
+                                          "%s > span" % self._breadcrumbs_locator[1]).text
 
     def _extract_iso_dates(self, date_format, *locator):
         """
@@ -162,7 +163,6 @@ class Base(Page):
         #other applications
         _other_applications_locator = (By.ID, "other-apps")
         _other_apps_list_locator = (By.CSS_SELECTOR, "ul.other-apps")
-        _app_thunderbird = (By.CSS_SELECTOR, "#app-thunderbird a")
 
         #Search box
         _search_button_locator = (By.CSS_SELECTOR, ".search-button")
@@ -183,15 +183,17 @@ class Base(Page):
             from pages.regions.header_menu import HeaderMenu
             return HeaderMenu(self.testsetup, lookup)
 
-        #TODO:hover other apps
-        def click_other_applications(self):
-            self.selenium.find_element(*self._other_applications_locator).click()
+        def click_other_application(self, other_app):
+            hover_locator = self.selenium.find_element(*self._other_applications_locator)
+            app_locator = self.selenium.find_element(By.XPATH,
+                                                     "//ul[@class='other-apps']/li[a[text()='%s']]" % other_app)
+            ActionChains(self.selenium).move_to_element(hover_locator).move_to_element(app_locator).click().perform()
 
-        def click_thunderbird(self):
-            self.selenium.find_element(*self._app_thunderbird).click()
-
-        def is_thunderbird_visible(self):
-            return self.is_element_present(self._app_thunderbird)
+        def is_other_application_visible(self, other_app):
+            hover_locator = self.selenium.find_element(*self._other_applications_locator)
+            ActionChains(self.selenium).move_to_element(hover_locator).perform()
+            app_locator = (By.XPATH, "//ul[@class='other-apps']/li/a[text()='%s']" % other_app)
+            return self.is_element_visible(*app_locator)
 
         def search_for(self, search_term):
             search_box = self.selenium.find_element(*self._search_textbox_locator)
@@ -204,10 +206,6 @@ class Base(Page):
         def search_field_placeholder(self):
             return self.selenium.find_element(*self._search_textbox_locator).get_attribute('placeholder')
 
-        def hover_my_account(self):
-            element = self.selenium.find_element(*self._account_controller_locator)
-            ActionChains(self.selenium).move_to_element(element).perform()
-
         def click_login(self):
             self.selenium.find_element(*self._login_locator).click()
             from pages.user import Login
@@ -217,14 +215,20 @@ class Base(Page):
             self.selenium.find_element(*self._logout_locator).click()
 
         def click_edit_profile(self):
-            self.hover_my_account()
-            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(2) a' % self._account_dropdown_locator[1]).click()
+            hover_element = self.selenium.find_element(*self._account_controller_locator)
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0],
+                                                       '%s > li:nth-child(2) a' % self._account_dropdown_locator[1])
+            ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
 
         def click_view_profile(self):
-            self.hover_my_account()
-            self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1]).click()
+            hover_element = self.selenium.find_element(*self._account_controller_locator)
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0],
+                                                       '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])
+            ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+
             from pages.user import ViewProfile
             return ViewProfile(self.testsetup)
 
@@ -234,31 +238,6 @@ class Base(Page):
                 return self.is_element_visible(*self._account_controller_locator)
             except:
                 return False
-
-        @property
-        def other_applications(self):
-            return [self.OtherApplications(self.testsetup, element)
-                    for element in self.selenium.find_elements(self._other_apps_list_locator[0], "%s li" % self._other_apps_list_locator[1])]
-
-        class OtherApplications(Page):
-
-            _name_locator = (By.CSS_SELECTOR, "a")
-            _hover_locator = (By.CSS_SELECTOR, "#other-apps")
-
-            def __init__(self, testsetup, element):
-                Page.__init__(self, testsetup)
-                self._root_element = element
-                self._hover_element = self.selenium.find_element(*self._hover_locator)
-
-            @property
-            def name(self):
-                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
-                return self._root_element.find_element(*self._name_locator).text
-
-            @property
-            def is_application_visible(self):
-                ActionChains(self.selenium).move_to_element(self._hover_element).perform()
-                return self._root_element.is_displayed()
 
     class BreadcrumbsRegion(Page):
 
