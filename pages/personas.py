@@ -52,9 +52,6 @@ from selenium.webdriver.common.by import By
 
 
 class Personas(Base):
-#===============================================================================
-# WebDriver Code
-#===============================================================================
 
     _page_title = "Personas :: Add-ons for Firefox"
     _personas_locator = (By.XPATH, "//div[@class='persona persona-small']")
@@ -73,7 +70,8 @@ class Personas(Base):
 
     def click_persona(self, index):
         """ Clicks on the persona with the given index in the page. """
-        self.selenium.find_element(self._personas_locator[0], "(%s)[%d]//a" % (self._personas_locator[1], index)).click()
+        self.selenium.find_element(self._personas_locator[0],
+                                   "(%s)[%d]//a" % (self._personas_locator[1], index)).click()
         return PersonasDetail(self.testsetup)
 
     def open_persona_detail_page(self, persona_key):
@@ -134,7 +132,8 @@ class Personas(Base):
         return self.selenium.find_element(*self._persona_header_locator).text
 
     def breadcrumb_text(self, value):
-        return self.selenium.find_element(self._personas_breadcrumb_locator[0], self._personas_breadcrumb_locator[1] + "> li:nth-child(%s)" % (value + 1)).text
+        return self.selenium.find_element(self._personas_breadcrumb_locator[0],
+                                          self._personas_breadcrumb_locator[1] + "> li:nth-child(%s)" % (value + 1)).text
 
     @property
     def breadcrumb_text_all(self):

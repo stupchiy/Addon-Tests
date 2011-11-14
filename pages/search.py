@@ -111,7 +111,8 @@ class SearchHome(Base):
         return self.SearchResult(self.testsetup, elements[lookup])
 
     def results(self):
-        return [self.SearchResult(self.testsetup, element) for element in self.selenium.find_elements(*self._results_locator)]
+        return [self.SearchResult(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._results_locator)]
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()

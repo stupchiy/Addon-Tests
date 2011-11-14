@@ -216,7 +216,7 @@ class Details(Base):
     @property
     def version_information(self):
         return self.selenium.find_element(self._version_information_heading_locator[0],
-                    '%s > a' % self._version_information_heading_locator[1]).get_attribute('href')
+                                          '%s > a' % self._version_information_heading_locator[1]).get_attribute('href')
 
     @property
     def release_version(self):
@@ -332,12 +332,14 @@ class Details(Base):
 
     @property
     def is_part_of_collections_header_visible(self):
-        locator = (self._part_of_collections_locator[0], '%s h2 ' % self._part_of_collections_locator[1])
+        locator = (self._part_of_collections_locator[0],
+                   '%s h2 ' % self._part_of_collections_locator[1])
         return self.is_element_visible(*locator)
 
     @property
     def is_part_of_collections_list_visible(self):
-        locator = (self._part_of_collections_locator[0], '%s ul ' % self._part_of_collections_locator[1])
+        locator = (self._part_of_collections_locator[0],
+                   '%s ul ' % self._part_of_collections_locator[1])
         return self.is_element_visible(*locator)
 
     @property
@@ -606,7 +608,8 @@ class Details(Base):
 
     @property
     def is_development_channel_header_visible(self):
-        element = (self._development_channel_locator[0], '%s > h2' % self._development_channel_locator[1])
+        element = (self._development_channel_locator[0],
+                   '%s > h2' % self._development_channel_locator[1])
         return self.is_element_visible(*element)
 
     def click_development_channel(self):
@@ -620,5 +623,6 @@ class Details(Base):
 
     @property
     def is_development_channel_content_visible(self):
-        element = self._development_channel_locator[0], '%s > div' % self._development_channel_locator[1]
+        element = (self._development_channel_locator[0],
+                   '%s > div' % self._development_channel_locator[1])
         return self.is_element_visible(*element)

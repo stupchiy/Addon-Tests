@@ -117,7 +117,8 @@ class Base(Page):
 
     @property
     def breadcrumb_name(self):
-        return self.selenium.find_element(By.CSS_SELECTOR, "%s > span" % self._breadcrumbs_locator[1]).text
+        return self.selenium.find_element(By.CSS_SELECTOR,
+                                          "%s > span" % self._breadcrumbs_locator[1]).text
 
     def _extract_iso_dates(self, date_format, *locator):
         """
@@ -182,7 +183,8 @@ class Base(Page):
 
         def click_other_application(self, other_app):
             hover_locator = self.selenium.find_element(*self._other_applications_locator)
-            app_locator = self.selenium.find_element(By.XPATH, "//ul[@class='other-apps']/li[a[text()='%s']]" % other_app)
+            app_locator = self.selenium.find_element(By.XPATH,
+                                                     "//ul[@class='other-apps']/li[a[text()='%s']]" % other_app)
             ActionChains(self.selenium).move_to_element(hover_locator).move_to_element(app_locator).click().perform()
 
         def is_other_application_visible(self, other_app):
@@ -212,7 +214,8 @@ class Base(Page):
 
         def click_edit_profile(self):
             hover_element = self.selenium.find_element(*self._account_controller_locator)
-            click_element = self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(2) a' % self._account_dropdown_locator[1])
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0],
+                                                       '%s > li:nth-child(2) a' % self._account_dropdown_locator[1])
             ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
 
             from pages.user import EditProfile
@@ -220,7 +223,8 @@ class Base(Page):
 
         def click_view_profile(self):
             hover_element = self.selenium.find_element(*self._account_controller_locator)
-            click_element = self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0],
+                                                       '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])
             ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
 
             from pages.user import ViewProfile
