@@ -54,7 +54,7 @@ class TestAmoLayout:
         home_page = Home(mozwebqa)
 
         home_page.header.click_other_application(app_under_test)
-        Assert.contains(str.lower(app_under_test), home_page.get_url_current_page())
+        Assert.contains(app_under_test.lower(), home_page.get_url_current_page())
 
         Assert.false(home_page.header.is_other_application_visible(app_under_test))
 
