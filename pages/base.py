@@ -178,8 +178,6 @@ class Base(Page):
         _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
 
         def site_nav(self, lookup):
-            if type(lookup) != int:
-                lookup = capitalize(lookup)
             from pages.regions.header_menu import HeaderMenu
             return HeaderMenu(self.testsetup, lookup)
 
