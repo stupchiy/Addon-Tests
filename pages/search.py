@@ -46,6 +46,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
 
+
 class SearchHome(Base):
 
     _number_of_results_found = (By.CSS_SELECTOR, "#search-facets > p")
@@ -65,17 +66,13 @@ class SearchHome(Base):
     _sort_by_up_and_coming_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth-child(4) > a")
 
     _hover_more_locator = (By.CSS_SELECTOR, "li.extras > a")
-    
+
     _next_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(3)")
     _previous_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(2)")
     _updating_locator = (By.CSS_SELECTOR, "div.updating")
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
-    
-#===============================================================================
-# Webdriver Code
-#===============================================================================
 
-    def wait_for_updating_ajax(self):
+    def _wait_for_results_refresh(self):
         WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_not_present(*self._updating_locator))
 
     @property
@@ -106,7 +103,7 @@ class SearchHome(Base):
         hover_element = self.selenium.find_element(*self._hover_more_locator)
         click_element = self.selenium.find_element(*getattr(self, '_sort_by_%s_locator' % type.replace(' ', '_').lower()))
         ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
-        self.wait_for_updating_ajax()
+        self._wait_for_results_refresh()
         return SearchHome(self.testsetup)
 
     def result(self, lookup):
@@ -118,17 +115,17 @@ class SearchHome(Base):
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()
-        self.wait_for_updating_ajax()
+        self._wait_for_results_refresh()
 
     def page_back(self):
         self.selenium.find_element(*self._previous_link_locator).click()
-        self.wait_for_updating_ajax()
+        self._wait_for_results_refresh()
 
     @property
     def is_next_link_enabled(self):
         button = self.selenium.find_element(*self._next_link_locator).get_attribute('class')
         return not("disabled" in button)
-        
+
     @property
     def results_displayed(self):
         return self.selenium.find_element(*self._results_displayed_text_locator).text

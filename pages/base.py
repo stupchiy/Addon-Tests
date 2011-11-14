@@ -177,8 +177,6 @@ class Base(Page):
         _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
 
         def site_nav(self, lookup):
-            if type(lookup) != int:
-                lookup = capitalize(lookup)
             from pages.regions.header_menu import HeaderMenu
             return HeaderMenu(self.testsetup, lookup)
 
@@ -220,9 +218,9 @@ class Base(Page):
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
 
-        def click_view_profile(self):           
+        def click_view_profile(self):
             hover_element = self.selenium.find_element(*self._account_controller_locator)
-            click_element = self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])            
+            click_element = self.selenium.find_element(self._account_dropdown_locator[0], '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])
             ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
 
             from pages.user import ViewProfile
