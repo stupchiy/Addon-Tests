@@ -57,7 +57,7 @@ class SearchHome(Base):
 
     _sort_by_relevance_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(1) > a")
     _sort_by_most_users_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(2) > a")
-    _sort_by_top_reated_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(3) > a")
+    _sort_by_top_rated_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(3) > a")
     _sort_by_newest_locator = (By.CSS_SELECTOR, "div#sorter > ul > li:nth-child(4) > a")
 
     _sort_by_name_locator = (By.CSS_SELECTOR, "li.extras > ul > li:nth-child(1) > a")
@@ -73,7 +73,7 @@ class SearchHome(Base):
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
     def _wait_for_results_refresh(self):
-        WebDriverWait(self.selenium, 10).until(lambda s: self.is_element_not_present(*self._updating_locator))
+        WebDriverWait(self.selenium, 10).until(lambda s: not self.is_element_present(*self._updating_locator))
 
     @property
     def is_no_results_present(self):
