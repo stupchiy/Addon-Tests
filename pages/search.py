@@ -73,7 +73,7 @@ class SearchHome(Base):
     _results_displayed_text_locator = (By.CSS_SELECTOR, ".paginator .pos")
 
     def _wait_for_results_refresh(self):
-        WebDriverWait(self.selenium, 10).until(lambda s: not self.is_element_present(*self._updating_locator))
+        WebDriverWait(self.selenium, self.timeout).until(lambda s: not self.is_element_present(*self._updating_locator))
 
     @property
     def is_no_results_present(self):
