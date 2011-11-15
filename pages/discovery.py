@@ -47,6 +47,7 @@
 
 from pages.base import Base
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 
 class DiscoveryPane(Base):
 
@@ -85,9 +86,6 @@ class DiscoveryPane(Base):
     def is_mission_section_visible(self):
         return self.is_element_visible(*self._mission_section_locator)
 
-    def wait_for_mission_visible(self):
-            self.wait_for_element_visible(self._mission_section_locator)
-
     @property
     def mission_section(self):
         return self.selenium.find_element(*self._mission_section_text_locator).text
@@ -97,7 +95,6 @@ class DiscoveryPane(Base):
 
     @property
     def download_count(self):
-#        self.wait_for_element_visible(self._download_count_text_locator)
         return self.selenium.find_element(*self._download_count_text_locator).text
 
     @property

@@ -76,14 +76,15 @@ class Page(object):
         return(self.selenium.current_url)
 
     def is_element_present(self, *locator):
+        self.selenium.implicitly_wait(0)
         try:
             self.selenium.find_element(*locator)
             return True
         except NoSuchElementException:
             return False
-
-    def is_element_not_present(self, *locator):
-        return not self.is_element_present(*locator)
+        finally:
+            # set back to where you once belonged
+            self.selenium.implicitly_wait(self.testsetup.default_implicit_wait)
 
     def is_element_visible(self, *locator):
         try:
@@ -93,36 +94,3 @@ class Page(object):
 
     def return_to_previous_page(self):
         self.selenium.back()
-
-    def wait_for_element_present(self, element):
-        count = 0
-        while not self.is_element_present(*element):
-            time.sleep(1)
-            count += 1
-            if count == self.timeout / 1000:
-                raise Exception(element + ' has not loaded')
-
-    def wait_for_element_not_present(self, element):
-        count = 0
-        while  self.is_element_present(*element):
-            time.sleep(1)
-            count += 1
-            if count == self.timeout / 1000:
-                raise Exception(element + ' is still loaded')
-
-    def wait_for_element_visible(self, element):
-        self.wait_for_element_present(element)
-        count = 0
-        while not self.is_element_visible(*element):
-            time.sleep(1)
-            count += 1
-            if count == self.timeout / 1000:
-                raise Exception(element + " is not visible")
-
-    def wait_for_element_not_visible(self, element):
-        count = 0
-        while self.is_element_visible(*element):
-            time.sleep(1)
-            count += 1
-            if count == self.timeout / 1000:
-                raise Exception(element + " is still visible")
