@@ -224,7 +224,7 @@ class TestSearch:
         result_count = search_page.filter.results_count
         Assert.greater(result_count, 0)
 
-        search_page.filter.tag('development').click()
+        search_page.filter.tag('development').click_tag()
         Assert.greater_equal(result_count, search_page.filter.results_count)
 
     def test_that_search_results_return_20_results_per_page(self, mozwebqa):
