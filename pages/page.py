@@ -42,8 +42,6 @@
 Created on Jun 21, 2010
 
 '''
-import re
-import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException
 

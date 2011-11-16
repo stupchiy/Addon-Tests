@@ -44,9 +44,7 @@ import re
 import pytest
 
 from unittestzero import Assert
-from pages.search import SearchHome
 from pages.home import Home
-from datetime import datetime
 
 xfail = pytest.mark.xfail
 
