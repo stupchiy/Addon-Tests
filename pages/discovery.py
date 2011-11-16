@@ -47,13 +47,10 @@
 
 from pages.base import Base
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 
 class DiscoveryPane(Base):
 
-    _what_are_addons_section_locator = (By.ID, 'intro')
     _what_are_addons_text_locator = (By.CSS_SELECTOR, '#intro p')
-    _mission_section_locator = (By.ID, 'mission')
     _mission_section_text_locator = (By.CSS_SELECTOR, '#mission > p')
     _learn_more_locator = (By.ID, 'learn-more')
     _mozilla_org_link_locator = (By.CSS_SELECTOR, "#mission a")
@@ -64,10 +61,8 @@ class DiscoveryPane(Base):
     _more_ways_section_locator = (By.ID, "more-ways")
     _more_ways_addons_locator = (By.ID, "more-addons")
     _more_ways_personas_locator = (By.ID, "more-personas")
-    _up_and_coming_section = (By.ID, "up-and-coming")
     _up_and_coming_item = (By.XPATH , "//section[@id='up-and-coming']/ul/li/a[@class='addon-title']")
-    _logout_link_locator = (By.CSS_SELECTOR, "#logout")
-    _user_area_locator = (By.CSS_SELECTOR , "#my-account")
+    _logout_link_locator = (By.CSS_SELECTOR, "#logout > a")
 
     def __init__(self, testsetup, path):
         Base.__init__(self, testsetup)
@@ -81,10 +76,6 @@ class DiscoveryPane(Base):
 
     def click_learn_more(self):
         self.selenium.find_element(*self._learn_more_locator).click()
-
-    @property
-    def is_mission_section_visible(self):
-        return self.is_element_visible(*self._mission_section_locator)
 
     @property
     def mission_section(self):
@@ -130,23 +121,13 @@ class DiscoveryPane(Base):
         return self.selenium.find_element(*self._more_ways_personas_locator).text
 
     @property
-    def up_and_coming_visible(self):
-        return self.is_element_visible(*self._up_and_coming_section)
-
-    @property
     def up_and_coming_item_count(self):
         return len(self.selenium.find_elements(*self._up_and_coming_item))
 
-    @property
-    def is_logout_link_visible(self):
-        return self.is_element_visible(*self._logout_link_locator)
-
     def click_logout(self):
-        self.selenium.find_element(self._logout_link_locator[0],
-                                   "%s > a" % self._logout_link_locator[1]).click()
+        self.selenium.find_element(*self._logout_link_locator).click()
         from pages.home import Home
         return Home(self.testsetup, open_url=False)
-
 
 
 class DiscoveryPersonasDetail(Base):
