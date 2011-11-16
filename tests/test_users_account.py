@@ -76,10 +76,10 @@ class TestAccounts:
         Assert.contains("/users/edit", amo_user_edit_page.get_url_current_page())
         Assert.true(amo_user_edit_page.is_the_current_page)
 
-        Assert.equal("My Account", amo_user_edit_page.is_account_visible)
-        Assert.equal("Profile", amo_user_edit_page.is_profile_visible)
-        Assert.equal("Details", amo_user_edit_page.is_details_visible)
-        Assert.equal("Notifications", amo_user_edit_page.is_notification_visible)
+        Assert.equal("My Account", amo_user_edit_page.account_header_text)
+        Assert.equal("Profile", amo_user_edit_page.profile_header_text)
+        Assert.equal("Details", amo_user_edit_page.details_header_text)
+        Assert.equal("Notifications", amo_user_edit_page.notification_header_text)
 
     @xfail(reason="Bugzilla 682801")
     def test_user_can_access_the_view_profile_page(self, mozwebqa):
