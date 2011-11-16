@@ -67,7 +67,6 @@ class TestHome:
         https://litmus.mozilla.org/show_test.cgi?id=25807
         """
         home_page = Home(mozwebqa)
-        Assert.true(home_page.is_most_popular_list_visible)
         Assert.contains('MOST POPULAR', home_page.most_popular_list_heading)
         Assert.equal(home_page.most_popular_count, 10)
 
@@ -85,7 +84,6 @@ class TestHome:
         """
         home_page = Home(mozwebqa)
 
-        Assert.true(home_page.is_featured_personas_visible, "Featured Personas region is not visible")
         Assert.equal(home_page.fetaured_personas_title, u"Featured Personas See all \xbb", "Featured Personas region title doesn't match")
 
         Assert.equal(home_page.featured_personas_count, 6)
@@ -117,7 +115,6 @@ class TestHome:
         """
         home_page = Home(mozwebqa)
         Assert.true(home_page.is_most_popular_list_visible)
-        most_popular_items = home_page.most_popular_items
         Assert.is_sorted_descending([i.users_number for i in most_popular_items])
 
     def test_that_verifies_upper_menu_navigation_items(self, mozwebqa):
