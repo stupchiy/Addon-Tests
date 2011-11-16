@@ -54,11 +54,14 @@ from selenium.webdriver.common.by import By
 class Personas(Base):
 
     _page_title = "Personas :: Add-ons for Firefox"
-    _personas_locator = (By.XPATH, "//div[@class='persona persona-small']")
+    _personas_locator = (By.CSS_SELECTOR, 'div.persona.persona-small a')
     _start_exploring_locator = (By.CSS_SELECTOR, "#featured-addons.personas-home a.more-info")
     _featured_addons_locator = (By.CSS_SELECTOR, "#featured-addons.personas-home")
+
     _featured_personas_locator = (By.CSS_SELECTOR, ".personas-featured .persona.persona-small")
-    _addons_column_locator = (By.XPATH, '//div[@class="addons-column"]')
+    _recently_added_locator = (By.XPATH, "//div[@class='addons-column'][1]//div[@class='persona persona-small']")
+    _most_popular_locator = (By.XPATH, "//div[@class='addons-column'][2]//div[@class='persona persona-small']")
+    _top_rated_locator = (By.XPATH, "//div[@class='addons-column'][3]//div[@class='persona persona-small']")
 
     _persona_header_locator = (By.CSS_SELECTOR, ".featured-inner > h2")
     _personas_breadcrumb_locator = (By.CSS_SELECTOR, "ol.breadcrumbs")
@@ -70,62 +73,51 @@ class Personas(Base):
 
     def click_persona(self, index):
         """ Clicks on the persona with the given index in the page. """
-        self.selenium.find_element(self._personas_locator[0],
-                                   "(%s)[%d]//a" % (self._personas_locator[1], index)).click()
+        self.selenium.find_elements(*self._personas_locator)[index].click()
         return PersonasDetail(self.testsetup)
 
     def open_persona_detail_page(self, persona_key):
         self.selenium.get(self.base_url + "/addon/%s" % persona_key)
         return PersonasDetail(self.testsetup)
 
-    @property
-    def is_featured_addons_present(self):
-        return len(self.selenium.find_elements(*self._featured_addons_locator)) > 0
-
     def click_start_exploring(self):
         self.selenium.find_element(*self._start_exploring_locator).click()
         return PersonasBrowse(self.testsetup)
 
     @property
+    def is_featured_addons_present(self):
+        return len(self.selenium.find_elements(*self._featured_addons_locator)) > 0
+
+    @property
     def featured_personas_count(self):
         return len(self.selenium.find_elements(*self._featured_personas_locator))
 
-    def _persona_in_column_locator(self, column_index):
-        """ Returns a locator for personas in the column with the given index. """
-        return (self._addons_column_locator[0], "%s[%d]%s" % (self._addons_column_locator[1], column_index, self._personas_locator[1]))
-
     @property
     def recently_added_count(self):
-        locator = self._persona_in_column_locator(1)
-        return len(self.selenium.find_elements(*locator))
+        return len(self.selenium.find_elements(*self._recently_added_locator))
 
     @property
     def recently_added_dates(self):
-        locator = self._persona_in_column_locator(1)
-        iso_dates = self._extract_iso_dates("Added %B %d, %Y", *locator)
+        iso_dates = self._extract_iso_dates("Added %B %d, %Y", *self._recently_added_locator)
         return iso_dates
 
     @property
     def most_popular_count(self):
-        locator = self._persona_in_column_locator(2)
-        return len(self.selenium.find_elements(*locator))
+        return len(self.selenium.find_elements(*self._most_popular_locator))
 
     @property
     def most_popular_downloads(self):
-        locator = self._persona_in_column_locator(2)
         pattern = "(\d+(?:[,]\d+)*)\s+users"
-        return self._extract_integers(pattern, *locator)
+        return self._extract_integers(pattern, *self._most_popular_locator)
 
     @property
     def top_rated_count(self):
-        locator = self._persona_in_column_locator(3)
-        return len(self.selenium.find_elements(*locator))
+        return len(self.selenium.find_elements(*self._top_rated_locator))
 
     @property
     def top_rated_ratings(self):
-        locator = self._persona_in_column_locator(3)
         pattern = "Rated\s+(\d)\s+.*"
-        return self._extract_integers(pattern, *locator)
+        return self._extract_integers(pattern, *self._top_rated_locator)
 
     @property
     def persona_header(self):
@@ -179,7 +171,6 @@ class PersonasBrowse(Base):
     def is_the_current_page(self):
         # This overrides the method in the Page super class.
         if not (self.is_element_present(*self._personas_grid_locator)):
-            self.record_error()
             raise Exception('Expected the current page to be the personas browse page.')
         return True
 
