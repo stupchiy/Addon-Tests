@@ -59,7 +59,9 @@ class FilterBase(Page):
         def __init__(self, testsetup, lookup):
             Page.__init__(self, testsetup)
             # expand the thing here to represent the proper user action
-            self.selenium.find_element(*self._all_tags_locator).click()
+            is_expanded = self.selenium.find_element(*self._all_tags_locator).get_attribute('class')
+            if ('active' not in is_expanded):
+                self.selenium.find_element(*self._all_tags_locator).click()
             self._root_element = self.selenium.find_element(self._base_locator[0],
                                     "%s[a[contains(@data-params, '%s')]]" % (self._base_locator[1], lookup))
 
