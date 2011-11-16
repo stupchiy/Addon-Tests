@@ -46,9 +46,5 @@ class Category(Base):
     _category_title_locator = (By.CSS_SELECTOR, "div.island > h1")
 
     @property
-    def category_page_title(self):
-        return self.page_title
-
-    @property
     def category_header_title(self):
         return self.selenium.find_element(*self._category_title_locator).text
