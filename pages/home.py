@@ -60,7 +60,6 @@ class Home(Base):
     _other_applications_link_locator = (By.ID, "other-apps")
 
     #Most Popular List
-    _most_popular_list_locator = (By.CSS_SELECTOR, "#homepage > .secondary")
     _most_popular_item_locator = (By.CSS_SELECTOR, "ol.toplist li")
     _most_popular_list_heading_locator = (By.CSS_SELECTOR, "#homepage > .secondary h2")
 
