@@ -44,9 +44,7 @@ import re
 import pytest
 
 from unittestzero import Assert
-from pages.search import SearchHome
 from pages.home import Home
-from datetime import datetime
 
 xfail = pytest.mark.xfail
 
@@ -133,10 +131,8 @@ class TestSearch:
         home_page = Home(mozwebqa)
         search_page = home_page.header.search_for("")
 
-        Assert.false(search_page.is_text_present("Search is currently unavailable"))
-        Assert.false(search_page.is_text_present("No results found."))
-        results_summary = search_page.results_summary
-        Assert.false("0 - 0 of 0" in results_summary)
+        Assert.false(search_page.is_no_results_present)
+        Assert.greater(search_page.result_count, 0)
 
     def test_that_page_with_search_results_has_correct_title(self, mozwebqa):
         """ Litmus 17338

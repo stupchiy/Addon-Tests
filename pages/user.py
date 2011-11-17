@@ -39,11 +39,13 @@
 
 from pages.base import Base
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 
 class Login(Base):
 
     _page_title = 'User Login :: Add-ons for Firefox'
+
     _email_locator = (By.ID, 'id_username')
     _password_locator = (By.ID, 'id_password')
     _login_button_locator = (By.ID, 'login-submit')
@@ -59,12 +61,13 @@ class Login(Base):
         password = self.selenium.find_element(*self._password_locator)
         password.send_keys(credentials['password'])
 
-        self.selenium.find_element(*self._login_button_locator).click()
+        password.send_keys(Keys.RETURN)
 
 
 class ViewProfile(Base):
 
     _page_title = 'User Info for Test :: Add-ons for Firefox'
+
     _about_locator = (By.CSS_SELECTOR, "div.island > section.primary > h2")
     _email_locator = (By.CSS_SELECTOR, 'a.email')
 
@@ -94,6 +97,7 @@ class User(Base):
 class EditProfile(Base):
 
     _page_title = 'Account Settings :: Add-ons for Firefox'
+
     _account_locator = (By.CSS_SELECTOR, "#acct-account > legend")
     _profile_locator = (By.CSS_SELECTOR, "#profile-personal > legend")
     _details_locator = (By.CSS_SELECTOR, "#profile-detail > legend")
@@ -102,19 +106,19 @@ class EditProfile(Base):
     _update_account_locator = (By.CSS_SELECTOR, 'p.footer-submit > button.prominent')
 
     @property
-    def is_account_visible(self):
+    def account_header_text(self):
         return self.selenium.find_element(*self._account_locator).text
 
     @property
-    def is_profile_visible(self):
+    def profile_header_text(self):
         return self.selenium.find_element(*self._profile_locator).text
 
     @property
-    def is_details_visible(self):
+    def details_header_text(self):
         return self.selenium.find_element(*self._details_locator).text
 
     @property
-    def is_notification_visible(self):
+    def notification_header_text(self):
         return self.selenium.find_element(*self._notification_locator).text
 
     def click_update_account(self):

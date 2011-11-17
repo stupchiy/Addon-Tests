@@ -60,7 +60,6 @@ class Home(Base):
     _other_applications_link_locator = (By.ID, "other-apps")
 
     #Most Popular List
-    _most_popular_list_locator = (By.CSS_SELECTOR, "#homepage > .secondary")
     _most_popular_item_locator = (By.CSS_SELECTOR, "ol.toplist li")
     _most_popular_list_heading_locator = (By.CSS_SELECTOR, "#homepage > .secondary h2")
 
@@ -69,7 +68,6 @@ class Home(Base):
     _explore_most_top_rated_link_locator = (By.CSS_SELECTOR, "#side-nav .s-rating a")
 
     _featured_personas_see_all_link = (By.CSS_SELECTOR, "#featured-personas h2 a")
-    _featured_personas_locator = (By.ID, "featured-personas")
     _featured_personas_title_locator = (By.CSS_SELECTOR, "#featured-personas h2")
     _featured_personas_items_locator = (By.CSS_SELECTOR, "#featured-personas li")
 
@@ -119,16 +117,8 @@ class Home(Base):
         return len(self.selenium.find_elements(*self._most_popular_item_locator))
 
     @property
-    def is_most_popular_list_visible(self):
-        return self.is_element_visible(*self._most_popular_list_locator)
-
-    @property
     def most_popular_list_heading(self):
         return self.selenium.find_element(*self._most_popular_list_heading_locator).text
-
-    @property
-    def is_featured_personas_visible(self):
-        return self.is_element_visible(*self._featured_personas_locator)
 
     @property
     def featured_personas_count(self):

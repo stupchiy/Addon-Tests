@@ -166,14 +166,14 @@ class Base(Page):
 
         def click_other_application(self, other_app):
             hover_locator = self.selenium.find_element(*self._other_applications_locator)
-            app_locator = self.selenium.find_element(By.XPATH,
-                                                     "//ul[@class='other-apps']/li[a[text()='%s']]" % other_app)
+            app_locator = self.selenium.find_element(By.CSS_SELECTOR,
+                                                     "#app-%s" % other_app.lower())
             ActionChains(self.selenium).move_to_element(hover_locator).move_to_element(app_locator).click().perform()
 
         def is_other_application_visible(self, other_app):
             hover_locator = self.selenium.find_element(*self._other_applications_locator)
+            app_locator = (By.CSS_SELECTOR, "#app-%s" % other_app.lower())
             ActionChains(self.selenium).move_to_element(hover_locator).perform()
-            app_locator = (By.XPATH, "//ul[@class='other-apps']/li/a[text()='%s']" % other_app)
             return self.is_element_visible(*app_locator)
 
         def search_for(self, search_term):

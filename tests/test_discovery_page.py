@@ -73,7 +73,6 @@ class TestDiscoveryPane:
     def test_that_mission_statement_is_on_addons_home_page(self, mozwebqa):
         """ TestCase for Litmus 15065 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
-        Assert.true(discovery_pane.is_mission_section_visible)
         expected_text = "Thanks for using Firefox and supporting Mozilla's mission!"
 
         mission_text = discovery_pane.mission_section
@@ -109,7 +108,6 @@ class TestDiscoveryPane:
     def test_that_up_and_coming_is_present_and_had_5_items(self, mozwebqa):
         """ TestCase for Litmus 15074 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
-        Assert.true(discovery_pane.up_and_coming_visible)
         Assert.equal(5, discovery_pane.up_and_coming_item_count)
 
     def test_the_logout_link_for_logged_in_users(self, mozwebqa):
@@ -123,7 +121,6 @@ class TestDiscoveryPane:
         Assert.true(home_page.header.is_user_logged_in)
 
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
-        Assert.true(discovery_pane.is_logout_link_visible)
         home_page = discovery_pane.click_logout()
         Assert.true(home_page.is_the_current_page)
         Assert.false(home_page.header.is_user_logged_in)
