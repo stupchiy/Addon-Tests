@@ -290,8 +290,6 @@ class TestDetails:
         home_page = Home(mozwebqa)
         detail_page = Details(mozwebqa, 'firebug')
 
-        Assert.true(detail_page.is_breadcrumb_menu_visible)
-
         Assert.equal(detail_page.breadcrumbs[0].name, 'Add-ons for Firefox')
         link = detail_page.breadcrumbs[0].link_value
         detail_page.breadcrumbs[0].click_breadcrumb()

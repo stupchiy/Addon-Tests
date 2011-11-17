@@ -64,7 +64,6 @@ class TestAmoLayout:
         https://litmus.mozilla.org/show_test.cgi?id=22924
         """
         home_page = Home(mozwebqa)
-        Assert.true(home_page.is_amo_logo_visible)
         Assert.equal(home_page.amo_logo_title, "Return to the Firefox Add-ons homepage")
 
     def test_that_checks_the_image_for_amo_logo(self, mozwebqa):
@@ -73,7 +72,6 @@ class TestAmoLayout:
         https://litmus.mozilla.org/show_test.cgi?id=25742
         """
         home_page = Home(mozwebqa)
-        Assert.true(home_page.is_amo_logo_image_visible)
         Assert.contains("-cdn.allizom.org/media/img/app-icons/med/firefox.png", home_page.amo_logo_image_source)
 
     def test_that_clicking_mozilla_logo_loads_mozilla_dot_org(self, mozwebqa):
