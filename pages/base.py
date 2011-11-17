@@ -73,16 +73,8 @@ class Base(Page):
         return self.selenium.find_element(*self._amo_logo_link_locator).get_attribute('title')
 
     @property
-    def is_amo_logo_visible(self):
-        return self.is_element_visible(*self._amo_logo_link_locator)
-
-    @property
     def amo_logo_image_source(self):
         return self.selenium.find_element(*self._amo_logo_image_locator).get_attribute('src')
-
-    @property
-    def is_amo_logo_image_visible(self):
-        return self.is_element_visible(*self._amo_logo_image_locator)
 
     @property
     def is_mozilla_logo_visible(self):
@@ -106,14 +98,6 @@ class Base(Page):
     def breadcrumbs(self):
         return [self.BreadcrumbsRegion(self.testsetup, element)
                 for element in self.selenium.find_elements(*self._breadcrumbs_locator)]
-
-    @property
-    def breadcrumbs_count(self):
-        return len(self.selenium.find_elements(*self._breadcrumbs_locator))
-
-    @property
-    def is_breadcrumb_menu_visible(self):
-        return self.is_element_visible(*self._breadcrumbs_locator)
 
     @property
     def breadcrumb_name(self):
@@ -162,17 +146,16 @@ class Base(Page):
 
         #other applications
         _other_applications_locator = (By.ID, "other-apps")
-        _other_apps_list_locator = (By.CSS_SELECTOR, "ul.other-apps")
 
         #Search box
         _search_button_locator = (By.CSS_SELECTOR, ".search-button")
         _search_textbox_locator = (By.NAME, "q")
 
-        #Not LogedIn
+        #Not LoggedIn
         _login_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(2)")
         _register_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(1)")
 
-        #LogedIn
+        #LoggedIn
         _account_controller_locator = (By.CSS_SELECTOR, "#aux-nav .account a.user")
         _account_dropdown_locator = (By.CSS_SELECTOR, "#aux-nav .account ul")
         _logout_locator = (By.CSS_SELECTOR, "li.nomenu.logout > a")
