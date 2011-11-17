@@ -130,7 +130,6 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-        addon_name = details_page.addon_link_name
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
@@ -139,10 +138,11 @@ class TestReviews:
         body = 'Automatic addon review by Selenium tests'
         write_review_block.enter_review_with_text(body)
         write_review_block.set_review_rating(1)
-        write_review_block.click_to_save_review()
+        view_reviews = write_review_block.click_to_save_review()
 
         # Step 6 - Ensure rating increased by one
-        details_page = Details(mozwebqa, addon_name)
+        view_reviews.breadcrumbs[2].click_breadcrumb()
+        details_page = Details(mozwebqa)
         new_rating_counter = details_page.get_rating_counter(1)
         Assert.equal(new_rating_counter, 1)
 
@@ -162,7 +162,7 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-        addon_name = details_page.addon_link_name
+
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
@@ -171,10 +171,11 @@ class TestReviews:
         body = 'Automatic addon review by Selenium tests'
         write_review_block.enter_review_with_text(body)
         write_review_block.set_review_rating(2)
-        write_review_block.click_to_save_review()
+        view_reviews = write_review_block.click_to_save_review()
 
         # Step 6 - Ensure rating increased by one
-        details_page = Details(mozwebqa, addon_name)
+        view_reviews.breadcrumbs[2].click_breadcrumb()
+        details_page = Details(mozwebqa)
         new_rating_counter = details_page.get_rating_counter(2)
         Assert.equal(new_rating_counter, 1)
 
@@ -193,7 +194,7 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-        addon_name = details_page.addon_link_name
+
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
@@ -202,10 +203,11 @@ class TestReviews:
         body = 'Automatic addon review by Selenium tests'
         write_review_block.enter_review_with_text(body)
         write_review_block.set_review_rating(3)
-        write_review_block.click_to_save_review()
+        view_reviews = write_review_block.click_to_save_review()
 
         # Step 6 - Ensure rating increased by one
-        details_page = Details(mozwebqa, addon_name)
+        view_reviews.breadcrumbs[2].click_breadcrumb()
+        details_page = Details(mozwebqa)
         new_rating_counter = details_page.get_rating_counter(3)
         Assert.equal(new_rating_counter, 1)
 
@@ -224,7 +226,7 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-        addon_name = details_page.addon_link_name
+
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
@@ -233,10 +235,11 @@ class TestReviews:
         body = 'Automatic addon review by Selenium tests'
         write_review_block.enter_review_with_text(body)
         write_review_block.set_review_rating(4)
-        write_review_block.click_to_save_review()
+        view_reviews = write_review_block.click_to_save_review()
 
         # Step 6 - Ensure rating increased by one
-        details_page = Details(mozwebqa, addon_name)
+        view_reviews.breadcrumbs[2].click_breadcrumb()
+        details_page = Details(mozwebqa)
         new_rating_counter = details_page.get_rating_counter(4)
         Assert.equal(new_rating_counter, 1)
 
@@ -255,7 +258,7 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-        addon_name = details_page.addon_link_name
+
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
@@ -264,9 +267,10 @@ class TestReviews:
         body = 'Automatic addon review by Selenium tests'
         write_review_block.enter_review_with_text(body)
         write_review_block.set_review_rating(5)
-        write_review_block.click_to_save_review()
+        view_reviews = write_review_block.click_to_save_review()
 
         # Step 6 - Ensure rating increased by one
-        details_page = Details(mozwebqa, addon_name)
+        view_reviews.breadcrumbs[2].click_breadcrumb()
+        details_page = Details(mozwebqa)
         new_rating_counter = details_page.get_rating_counter(5)
         Assert.equal(new_rating_counter, 1)
