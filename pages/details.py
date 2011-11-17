@@ -130,6 +130,11 @@ class Details(Base):
         return "%s:: Add-ons for Firefox" % self.title
 
     @property
+    def addon_link_name(self):
+        url = self.get_url_current_page()
+        return url.split('/')[6]
+
+    @property
     def title(self):
         base = self.selenium.find_element(*self._title_locator).text
         return base.replace(self.version_number, '')
@@ -366,8 +371,7 @@ class Details(Base):
                 for element in self.selenium.find_elements(*self._other_addons_by_author_locator)]
 
     def get_rating_counter(self, rating):
-        locator = (self._rating_counter_locator[0], "%s:nth(%s)" % (self._rating_counter_locator[1], (5 - rating)))
-        return int(self.selenium.find_element(*locator).text)
+        return int(self.selenium.find_elements(*self._rating_counter_locator)[(5 - rating)].text)
 
     @property
     def previewer(self):
