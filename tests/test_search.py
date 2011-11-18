@@ -124,7 +124,6 @@ class TestSearch:
 
         Assert.true(int(results_text_summary.split()[0]) > 1)
 
-    @xfail(reason="disabled due to bug 619052")
     def test_that_blank_search_returns_results(self, mozwebqa):
         """ Litmus 11759
             https://litmus.mozilla.org/show_test.cgi?id=11759 """
@@ -176,14 +175,17 @@ class TestSearch:
         Assert.greater(search_page.result_count, 0)
         Assert.true(int(search_page.number_of_results_text.split()[0]) > 0)
 
-    @xfail(reason="disabled due to bug 698429")
     def test_sorting_by_downloads(self, mozwebqa):
         """ Litmus 17342
             https://litmus.mozilla.org/show_test.cgi?id=17342 """
         search_page = Home(mozwebqa).header.search_for('firebug')
         search_page.sort_by('Weekly Downloads')
         Assert.true('sort=downloads' in search_page.get_url_current_page())
-        Assert.is_sorted_descending([i.downloads for i in search_page.results()])
+        downloads = [i.downloads for i in search_page.results()]
+        Assert.is_sorted_descending(downloads)
+        search_page.page_forward()
+        downloads.extend([i.downloads for i in search_page.results()])
+        Assert.is_sorted_descending(downloads)
 
     def test_sorting_by_newest(self, mozwebqa):
         """ Litmus 17343
@@ -193,14 +195,17 @@ class TestSearch:
         Assert.true('sort=created' in search_page.get_url_current_page())
         Assert.is_sorted_descending([i.created_date for i in search_page.results()])
 
-    @xfail(reason="See bug 698646")
     def test_sorting_by_most_recently_updated(self, mozwebqa):
         """ Litmus 17345
             https://litmus.mozilla.org/show_test.cgi?id=17345 """
         search_page = Home(mozwebqa).header.search_for('firebug')
         search_page.sort_by('Recently Updated')
         Assert.true('sort=updated' in search_page.get_url_current_page())
-        Assert.is_sorted_descending([i.updated_date for i in search_page.results()])
+        results = [i.updated_date for i in search_page.results()]
+        Assert.is_sorted_descending(results)
+        search_page.page_forward()
+        results.extend([i.updated_date for i in search_page.results()])
+        Assert.is_sorted_descending(results)
 
     def test_sorting_by_number_of_most_users(self, mozwebqa):
         """Litmus 24867
@@ -210,7 +215,6 @@ class TestSearch:
         Assert.true('sort=users' in search_page.get_url_current_page())
         Assert.is_sorted_descending([i.users for i in search_page.results()])
 
-    @xfail(reason="update later")
     def test_that_searching_for_a_tag_returns_results(self, mozwebqa):
         """Litmus 7848
         https://litmus.mozilla.org/show_test.cgi?id=7848"""

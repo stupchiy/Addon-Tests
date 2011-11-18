@@ -81,7 +81,6 @@ class TestAccounts:
         Assert.equal("Details", amo_user_edit_page.details_header_text)
         Assert.equal("Notifications", amo_user_edit_page.notification_header_text)
 
-    @xfail(reason="Bugzilla 682801")
     def test_user_can_access_the_view_profile_page(self, mozwebqa):
         """
         Test for litmus 15400
