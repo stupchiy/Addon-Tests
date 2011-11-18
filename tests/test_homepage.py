@@ -114,7 +114,7 @@ class TestHome:
         https://litmus.mozilla.org/show_test.cgi?searchType=by_id&id=25808
         """
         home_page = Home(mozwebqa)
- 
+
         most_popular_items = home_page.most_popular_items
         Assert.is_sorted_descending([i.users_number for i in most_popular_items])
 
