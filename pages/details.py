@@ -366,8 +366,8 @@ class Details(Base):
                 for element in self.selenium.find_elements(*self._other_addons_by_author_locator)]
 
     def get_rating_counter(self, rating):
-        locator = (self._rating_counter_locator[0], "%s:nth(%s)" % (self._rating_counter_locator[1], (5 - rating)))
-        return int(self.selenium.find_element(*locator).text)
+        elements = self.selenium.find_elements(*self._rating_counter_locator)
+        return int(elements[5 - rating].text)
 
     @property
     def previewer(self):

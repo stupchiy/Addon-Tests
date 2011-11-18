@@ -46,11 +46,19 @@ class ExtensionsHome(Base):
 
     _page_title = 'Featured Extensions :: Add-ons for Firefox'
     _extensions_locator = (By.CSS_SELECTOR, "div.items div.item")
+    _last_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(4)")
+    _first_page_link_locator = (By.CSS_SELECTOR, ".paginator .rel > a:nth-child(1)")
 
     @property
     def extensions(self):
         return [Extension(self.testsetup, element)
                 for element in self.selenium.find_elements(*self._extensions_locator)]
+
+    def go_to_last_page(self):
+        self.selenium.find_element(*self._last_page_link_locator).click()
+
+    def go_to_first_page(self):
+        self.selenium.find_element(*self._first_page_link_locator).click()
 
 
 class Extension(Page):
@@ -63,3 +71,8 @@ class Extension(Page):
         @property
         def name(self):
             return self._root_element.find_element(*self._name_locator).text
+
+        def click(self):
+            self._root_element.find_element(*self._name_locator).click()
+            from pages.details import Details
+            return Details(self.testsetup)

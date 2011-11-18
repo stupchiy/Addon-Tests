@@ -143,7 +143,6 @@ class PersonasDetail(Base):
     def is_the_current_page(self):
         # This overrides the method in the Page super class.
         if not (re.match(self._page_title_regex, self.selenium.title)):
-            self.record_error()
             raise Exception('Expected the current page to be the personas detail page.')
         return True
 
