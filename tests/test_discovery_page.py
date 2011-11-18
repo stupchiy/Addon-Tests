@@ -42,13 +42,10 @@
 
 
 import re
-import pytest
 
 from unittestzero import Assert
 from pages.discovery import DiscoveryPane
 from pages.home import Home
-
-xfail = pytest.mark.xfail
 
 
 class TestDiscoveryPane:
@@ -88,7 +85,6 @@ class TestDiscoveryPane:
         Assert.equal(5, discovery_pane.personas_count)
         Assert.true(discovery_pane.is_personas_see_all_link_visible)
 
-    @xfail(reason="Disabled until bug 674374 is fixed.")
     def test_that_featured_personas_go_to_their_landing_page_when_clicked(self, mozwebqa):
         """ TestCase for Litmus 15081 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
