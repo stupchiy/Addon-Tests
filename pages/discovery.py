@@ -102,10 +102,10 @@ class DiscoveryPane(Base):
 
     @property
     def first_persona(self):
-        return self.selenium.find_elements(*self._personas_locator)[1].text
+        return self.selenium.find_elements(*self._personas_locator)[0].text
 
     def click_on_first_persona(self):
-        self.selenium.find_elements(*self._personas_locator)[1].click()
+        self.selenium.find_elements(*self._personas_locator)[0].click()
         return DiscoveryPersonasDetail(self.testsetup)
 
     @property
