@@ -41,7 +41,6 @@ import pytest
 from unittestzero import Assert
 from pages.home import Home
 
-xfail = pytest.mark.xfail
 nondestructive = pytest.mark.nondestructive
 destructive = pytest.mark.destructive
 
@@ -86,7 +85,6 @@ class TestAccounts:
         Assert.equal("Notifications", amo_user_edit_page.notification_header_text)
 
     @nondestructive
-    @xfail(reason="Bugzilla 682801")
     def test_user_can_access_the_view_profile_page(self, mozwebqa):
         """
         Test for litmus 15400

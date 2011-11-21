@@ -43,7 +43,6 @@ import re
 
 from pages.page import Page
 from datetime import datetime
-from string import capitalize
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 

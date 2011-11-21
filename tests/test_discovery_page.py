@@ -48,8 +48,8 @@ from unittestzero import Assert
 from pages.discovery import DiscoveryPane
 from pages.home import Home
 
-xfail = pytest.mark.xfail
 nondestructive = pytest.mark.nondestructive
+
 
 class TestDiscoveryPane:
     """ This only works with Firefox 4 """
@@ -92,7 +92,6 @@ class TestDiscoveryPane:
         Assert.true(discovery_pane.is_personas_see_all_link_visible)
 
     @nondestructive
-    @xfail(reason="Disabled until bug 674374 is fixed.")
     def test_that_featured_personas_go_to_their_landing_page_when_clicked(self, mozwebqa):
         """ TestCase for Litmus 15081 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
