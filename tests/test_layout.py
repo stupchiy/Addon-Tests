@@ -40,12 +40,16 @@
 # ***** END LICENSE BLOCK *****
 
 from unittestzero import Assert
+import pytest
 
 from pages.home import Home
+
+nondestructive = pytest.mark.nondestructive
 
 
 class TestAmoLayout:
 
+    @nondestructive
     def test_other_applications_thunderbird(self, mozwebqa):
         """ Test for litmus 5037
             https://litmus.mozilla.org/show_test.cgi?id=5037
@@ -58,6 +62,7 @@ class TestAmoLayout:
 
         Assert.false(home_page.header.is_other_application_visible(app_under_test))
 
+    @nondestructive
     def test_that_checks_the_tooltip_for_amo_logo(self, mozwebqa):
         """
         Litmus 22924
@@ -66,6 +71,7 @@ class TestAmoLayout:
         home_page = Home(mozwebqa)
         Assert.equal(home_page.amo_logo_title, "Return to the Firefox Add-ons homepage")
 
+    @nondestructive
     def test_that_checks_the_image_for_amo_logo(self, mozwebqa):
         """
         Litmus 25742
@@ -74,6 +80,7 @@ class TestAmoLayout:
         home_page = Home(mozwebqa)
         Assert.contains("-cdn.allizom.org/media/img/app-icons/med/firefox.png", home_page.amo_logo_image_source)
 
+    @nondestructive
     def test_that_clicking_mozilla_logo_loads_mozilla_dot_org(self, mozwebqa):
         """
         Litmus 22922
@@ -84,6 +91,7 @@ class TestAmoLayout:
         home_page.click_mozilla_logo()
         Assert.equal(home_page.get_url_current_page(), "http://www.mozilla.org/")
 
+    @nondestructive
     def test_that_other_applications_link_has_tooltip(self, mozwebqa):
         """ Litmus 22925
             https://litmus.mozilla.org/show_test.cgi?id=29698 """
@@ -91,6 +99,7 @@ class TestAmoLayout:
         tooltip = home_page.get_title_of_link('Other applications')
         Assert.equal(tooltip, 'Find add-ons for other applications')
 
+    @nondestructive
     def test_the_applications_listed_in_other_applications(self, mozwebqa):
         """
         Test for Litmus 25740

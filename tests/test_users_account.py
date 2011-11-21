@@ -42,10 +42,13 @@ from unittestzero import Assert
 from pages.home import Home
 
 xfail = pytest.mark.xfail
+nondestructive = pytest.mark.nondestructive
+destructive = pytest.mark.destructive
 
 
 class TestAccounts:
 
+    @nondestructive
     def test_user_can_login_and_logout(self, mozwebqa):
         """ Test for litmus 7857
             https://litmus.mozilla.org/show_test.cgi?id=7857
@@ -61,6 +64,7 @@ class TestAccounts:
         home_page.header.click_logout()
         Assert.false(home_page.header.is_user_logged_in)
 
+    @nondestructive
     def test_user_can_access_the_edit_profile_page(self, mozwebqa):
         """
             Test for litmus 5039
@@ -81,6 +85,7 @@ class TestAccounts:
         Assert.equal("Details", amo_user_edit_page.details_header_text)
         Assert.equal("Notifications", amo_user_edit_page.notification_header_text)
 
+    @nondestructive
     @xfail(reason="Bugzilla 682801")
     def test_user_can_access_the_view_profile_page(self, mozwebqa):
         """
@@ -97,6 +102,7 @@ class TestAccounts:
 
         Assert.equal(view_profile_page.about_me, 'About me')
 
+    @destructive
     def test_hide_email_checkbox_works(self, mozwebqa):
         home_page = Home(mozwebqa)
         home_page.login()

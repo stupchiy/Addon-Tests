@@ -46,10 +46,12 @@ from unittestzero import Assert
 from pages.home import Home
 
 xfail = pytest.mark.xfail
+nondestructive = pytest.mark.nondestructive
 
 
 class TestThemes:
 
+    @nondestructive
     def test_that_themes_can_be_sorted_by_name(self, mozwebqa):
         """ Test for Litmus 11727, 4839 """
         home_page = Home(mozwebqa)
@@ -69,6 +71,7 @@ class TestThemes:
         addons.sort()
         [Assert.equal(addons_orig[i], addons[i]) for i in xrange(len(addons))]
 
+    @nondestructive
     def test_that_themes_can_be_sorted_by_updated_date(self, mozwebqa):
         """ test for litmus 11638 """
         home_page = Home(mozwebqa)
@@ -83,6 +86,7 @@ class TestThemes:
         updated_dates.extend(themes_page.addon_updated_dates)
         Assert.is_sorted_descending(updated_dates)
 
+    @nondestructive
     def test_that_themes_can_be_sorted_by_created_date(self, mozwebqa):
         """ test for litmus 11638 """
         home_page = Home(mozwebqa)
@@ -97,6 +101,7 @@ class TestThemes:
         created_dates.extend(themes_page.addon_created_dates)
         Assert.is_sorted_descending(created_dates)
 
+    @nondestructive
     def test_that_themes_can_be_sorted_by_popularity(self, mozwebqa):
         """ test for litmus 11638 """
         home_page = Home(mozwebqa)
@@ -111,6 +116,7 @@ class TestThemes:
         downloads.extend(themes_page.addon_download_number)
         Assert.is_sorted_descending(downloads)
 
+    @nondestructive
     def test_that_themes_loads_themes_landing_page(self, mozwebqa):
         """test for litmus 15339"""
         home_page = Home(mozwebqa)
@@ -118,6 +124,7 @@ class TestThemes:
         url_current_page = themes_page.get_url_current_page()
         Assert.true(url_current_page.endswith("/themes/"))
 
+    @nondestructive
     def test_that_clicking_on_theme_name_loads_its_detail_page(self, mozwebqa):
         """test for litmus 15363"""
         home_page = Home(mozwebqa)
@@ -126,6 +133,7 @@ class TestThemes:
         theme_page = themes_page.click_on_first_addon()
         Assert.contains(theme_name, theme_page.addon_title)
 
+    @nondestructive
     def test_that_themes_page_has_correct_title(self, mozwebqa):
         """test for litmus 15340"""
         home_page = Home(mozwebqa)
@@ -133,6 +141,7 @@ class TestThemes:
         expected_title = "Most Popular Themes :: Add-ons for Firefox"
         Assert.equal(expected_title, themes_page.page_title)
 
+    @nondestructive
     def test_themes_page_breadcrumb(self, mozwebqa):
         """test for litmus 15344"""
         home_page = Home(mozwebqa)
@@ -140,6 +149,7 @@ class TestThemes:
         expected_breadcrumb = "Themes"
         Assert.equal(expected_breadcrumb, themes_page.breadcrumb_name)
 
+    @nondestructive
     def test_that_clicking_on_a_subcategory_loads_expected_page(self, mozwebqa):
         """test for litmus 15949"""
         home_page = Home(mozwebqa)
@@ -148,6 +158,7 @@ class TestThemes:
         amo_category_page = themes_page.click_on_first_category()
         Assert.equal(selected_category, amo_category_page.title)
 
+    @nondestructive
     def test_themes_subcategory_page_breadcrumb(self, mozwebqa):
         home_page = Home(mozwebqa)
         themes_page = home_page.click_themes()
@@ -156,6 +167,7 @@ class TestThemes:
         expected_breadcrumb = "Add-ons for Firefox Themes %s" % selected_category
         Assert.equal(expected_breadcrumb, amo_category_page.breadcrumb)
 
+    @nondestructive
     def test_that_themes_categories_are_listed_on_left_hand_side(self, mozwebqa):
         """ test for litmus 15342"""
         home_page = Home(mozwebqa)

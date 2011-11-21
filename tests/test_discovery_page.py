@@ -49,7 +49,7 @@ from pages.discovery import DiscoveryPane
 from pages.home import Home
 
 xfail = pytest.mark.xfail
-
+nondestructive = pytest.mark.nondestructive
 
 class TestDiscoveryPane:
     """ This only works with Firefox 4 """
@@ -57,6 +57,7 @@ class TestDiscoveryPane:
     #Need to get this info before run
     basepath = '/en-US/firefox/discovery/pane/4.0/Darwin'
 
+    @nondestructive
     def test_that_users_with_less_than_3_addons_get_what_are_addons(self, mozwebqa):
         """ Test case for litmus 15063 -
         Since Selenium starts with a clean profile all the time this will always have
@@ -70,6 +71,7 @@ class TestDiscoveryPane:
 
         Assert.equal(what_are_addons_expected, discovery_pane.what_are_addons_text)
 
+    @nondestructive
     def test_that_mission_statement_is_on_addons_home_page(self, mozwebqa):
         """ TestCase for Litmus 15065 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
@@ -81,6 +83,7 @@ class TestDiscoveryPane:
         download_count_regex = "Add-ons downloaded: (.+)"
         Assert.true(re.search(download_count_regex, discovery_pane.download_count) != None)
 
+    @nondestructive
     def test_that_featured_personas_is_present_and_has_5_item(self, mozwebqa):
         """ TestCase for Litmus 15079, 15080 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
@@ -88,6 +91,7 @@ class TestDiscoveryPane:
         Assert.equal(5, discovery_pane.personas_count)
         Assert.true(discovery_pane.is_personas_see_all_link_visible)
 
+    @nondestructive
     @xfail(reason="Disabled until bug 674374 is fixed.")
     def test_that_featured_personas_go_to_their_landing_page_when_clicked(self, mozwebqa):
         """ TestCase for Litmus 15081 """
@@ -98,6 +102,7 @@ class TestDiscoveryPane:
         Assert.true(first_persona_url in discovery_pane.get_url_current_page())
         Assert.equal(first_persona, persona.persona_title)
 
+    @nondestructive
     def test_that_More_Ways_To_Customize_section_is_available(self, mozwebqa):
         " TestCase for Litmus 15082 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
@@ -105,11 +110,13 @@ class TestDiscoveryPane:
         Assert.equal("Browse all add-ons", discovery_pane.more_ways_addons)
         Assert.equal("See all themes and Personas", discovery_pane.more_ways_personas)
 
+    @nondestructive
     def test_that_up_and_coming_is_present_and_had_5_items(self, mozwebqa):
         """ TestCase for Litmus 15074 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
         Assert.equal(5, discovery_pane.up_and_coming_item_count)
 
+    @nondestructive
     def test_the_logout_link_for_logged_in_users(self, mozwebqa):
         """
         Litmus 15110

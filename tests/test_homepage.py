@@ -41,8 +41,11 @@
 # ***** END LICENSE BLOCK *****
 
 from unittestzero import Assert
+import pytest
 
 from pages.home import Home
+
+nondestructive = pytest.mark.nondestructive
 
 
 class TestHome:
@@ -61,6 +64,7 @@ class TestHome:
                 u"More\u2026":      ["Add-ons for Mobile", "Dictionaries & Language Packs", "Plugins", "Search Tools", "Developer Hub"]
                 }
 
+    @nondestructive
     def test_that_checks_the_most_popular_section_exists(self, mozwebqa):
         """
         Litmus 25807
@@ -70,6 +74,7 @@ class TestHome:
         Assert.contains('MOST POPULAR', home_page.most_popular_list_heading)
         Assert.equal(home_page.most_popular_count, 10)
 
+    @nondestructive
     def test_that_clicking_on_addon_name_loads_details_page(self, mozwebqa):
         """ Litmus 25812
             https://litmus.mozilla.org/show_test.cgi?id=25812"""
@@ -77,6 +82,7 @@ class TestHome:
         details_page = home_page.click_on_first_addon()
         Assert.true(details_page.is_the_current_page)
 
+    @nondestructive
     def test_that_featured_personas_exist_on_the_Home(self, mozwebqa):
         """
         Litmus29698
@@ -88,6 +94,7 @@ class TestHome:
 
         Assert.equal(home_page.featured_personas_count, 6)
 
+    @nondestructive
     def test_that_clicking_see_all_personas_link_works(self, mozwebqa):
         """
         Litmus 29699
@@ -99,6 +106,7 @@ class TestHome:
         Assert.true(featured_persona_page.is_the_current_page)
         Assert.equal(featured_persona_page.persona_header, 'Personas')
 
+    @nondestructive
     def test_that_extensions_link_loads_extensions_page(self, mozwebqa):
         """
         Litmus 25746
@@ -108,6 +116,7 @@ class TestHome:
         extensions_page = home_page.click_extensions()
         Assert.true(extensions_page.is_the_current_page)
 
+    @nondestructive
     def test_that_most_popular_section_is_ordered_by_users(self, mozwebqa):
         """
         Litmus 25808
@@ -118,6 +127,7 @@ class TestHome:
         most_popular_items = home_page.most_popular_items
         Assert.is_sorted_descending([i.users_number for i in most_popular_items])
 
+    @nondestructive
     def test_that_verifies_upper_menu_navigation_items(self, mozwebqa):
         """
         Litmus 25744 =>  25796

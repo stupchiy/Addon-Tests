@@ -45,10 +45,13 @@ from pages.home import Home
 from pages.details import Details
 
 xfail = pytest.mark.xfail
+nondestructive = pytest.mark.nondestructive
+destructive = pytest.mark.destructive
 
 
 class TestReviews:
 
+    @nondestructive
     def test_that_all_reviews_hyperlink_works(self, mozwebqa):
         """ Test for litmus 4843
             https://litmus.mozilla.org/show_test.cgi?id=4843
@@ -84,6 +87,7 @@ class TestReviews:
         Assert.equal(details_page.review_count, 20)
         Assert.equal(details_page.current_page, page_number + 1)
 
+    @destructive
     def test_that_new_review_is_saved(self, mozwebqa):
         """ Litmus 22921
             https://litmus.mozilla.org/show_test.cgi?id=22921 """
@@ -115,6 +119,7 @@ class TestReviews:
         Assert.equal(review.date, date)
         Assert.equal(review.text, body)
 
+    @destructive
     def test_that_one_star_rating_increments(self, mozwebqa):
         """ Litmus 22916
             https://litmus.mozilla.org/show_test.cgi?id=22916 """
@@ -146,7 +151,7 @@ class TestReviews:
         new_rating_counter = details_page.get_rating_counter(1)
         Assert.equal(new_rating_counter, 1)
 
-
+    @destructive
     def test_that_two_star_rating_increments(self, mozwebqa):
         """ Litmus 22917
             https://litmus.mozilla.org/show_test.cgi?id=22917 """
@@ -179,6 +184,7 @@ class TestReviews:
         new_rating_counter = details_page.get_rating_counter(2)
         Assert.equal(new_rating_counter, 1)
 
+    @destructive
     def test_that_three_star_rating_increments(self, mozwebqa):
         """ Litmus 22918
             https://litmus.mozilla.org/show_test.cgi?id=22918 """
@@ -211,6 +217,7 @@ class TestReviews:
         new_rating_counter = details_page.get_rating_counter(3)
         Assert.equal(new_rating_counter, 1)
 
+    @destructive
     def test_that_four_star_rating_increments(self, mozwebqa):
         """ Litmus 22919
             https://litmus.mozilla.org/show_test.cgi?id=22918 """
@@ -243,6 +250,7 @@ class TestReviews:
         new_rating_counter = details_page.get_rating_counter(4)
         Assert.equal(new_rating_counter, 1)
 
+    @destructive
     def test_that_five_star_rating_increments(self, mozwebqa):
         """ Litmus 22920
             https://litmus.mozilla.org/show_test.cgi?id=22920 """
