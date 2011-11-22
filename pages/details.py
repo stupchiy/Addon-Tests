@@ -367,7 +367,10 @@ class Details(Base):
 
     def get_rating_counter(self, rating):
         elements = self.selenium.find_elements(*self._rating_counter_locator)
-        return int(elements[5 - rating].text)
+        try:
+            return int(elements[5 - rating].text)
+        except IndexError:
+            return 0
 
     @property
     def previewer(self):

@@ -60,7 +60,13 @@ class Base(Page):
     _footer_locator = (By.CSS_SELECTOR, "#footer")
 
     def login(self, user="default"):
-        login = self.header.click_login()
+        #login = self.header.click_login()
+        
+        #this get is a temporary fix before migrating in browserid compatibility
+        from pages.user import Login
+        login = Login(self.testsetup)
+        login.selenium.get(self.base_url + '/en-US/firefox/users/login')
+        
         login.login_user(user)
 
     @property
