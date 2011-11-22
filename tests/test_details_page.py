@@ -54,16 +54,10 @@ nondestructive = pytest.mark.nondestructive
 class TestDetails:
 
     @nondestructive
-    def test_that_register_link_is_present_in_addon_details_page(self, mozwebqa):
+    def test_that_register_login_link_is_present_in_addon_details_page(self, mozwebqa):
         """ Test for Litmus 9890"""
         details_page = Details(mozwebqa, "Firebug")
-        Assert.equal(details_page.register_link, "Log in / Register", "Login text does not match the expected one")
-
-    @nondestructive
-    def test_that_login_link_is_present_in_addon_details_page(self, mozwebqa):
-        """ Test for Litmus 9890"""
-        details_page = Details(mozwebqa, "Firebug")
-        Assert.equal(details_page.login_link, "Log in")
+        Assert.equal(details_page.register_link, "Log in / Register", "Login / Register text does not match the expected one")
 
     @nondestructive
     def test_that_dropdown_menu_is_present_after_click_on_other_apps(self, mozwebqa):
