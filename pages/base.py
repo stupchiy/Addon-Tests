@@ -61,12 +61,12 @@ class Base(Page):
 
     def login(self, user="default"):
         #login = self.header.click_login()
-        
+
         #this get is a temporary fix before migrating in browserid compatibility
         from pages.user import Login
         login = Login(self.testsetup)
         login.selenium.get(self.base_url + '/en-US/firefox/users/login')
-        
+
         login.login_user(user)
 
     @property
@@ -103,11 +103,6 @@ class Base(Page):
     def breadcrumbs(self):
         return [self.BreadcrumbsRegion(self.testsetup, element)
                 for element in self.selenium.find_elements(*self._breadcrumbs_locator)]
-
-    @property
-    def breadcrumb_name(self):
-        return self.selenium.find_element(By.CSS_SELECTOR,
-                                          "%s > span" % self._breadcrumbs_locator[1]).text
 
     def _extract_iso_dates(self, date_format, *locator):
         """
