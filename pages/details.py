@@ -277,8 +277,8 @@ class Details(Base):
 
     @property
     def part_of_collections(self):
-        poc_list = self.selenium.find_elements(*self._part_of_collections_list_locator)
-        return [self.PartOfCollectionsSnippet(self.testsetup, poc_list[element]) for element in range(len(poc_list))]
+        return [self.PartOfCollectionsSnippet(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._part_of_collections_list_locator)]
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()
