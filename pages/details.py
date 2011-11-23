@@ -160,8 +160,7 @@ class Details(Base):
 
     @property
     def authors(self):
-        author_elements = self.selenium.find_elements(*self._authors_locator)
-        return [author_elements[i].text for i in range(len(author_elements))]
+        return [element.text for element in self.selenium.find_elements(*self._authors_locator)]
 
     @property
     def summary(self):
