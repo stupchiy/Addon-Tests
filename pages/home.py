@@ -139,11 +139,6 @@ class Home(Base):
         return self.selenium.find_element(*locator).get_attribute('title')
 
     @property
-    def categories_count(self):
-        return len(self.selenium.find_elements(self._category_list_locator[0],
-                                               "%s li" % self._category_list_locator[1]))
-
-    @property
     def categories(self):
         return [self.Categories(self.testsetup, element)
                 for element in self.selenium.find_elements(*self._category_list_locator)]
@@ -174,7 +169,7 @@ class Home(Base):
             return Category(self.testsetup)
 
     class MostPopularRegion(Page):
-        _name_locator = (By.CSS_SELECTOR, "span")
+        _name_locator = (By.TAG_NAME, "span")
         _users_locator = (By.CSS_SELECTOR, "small")
 
         def __init__(self, testsetup, element):
