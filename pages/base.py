@@ -168,7 +168,9 @@ class Base(Page):
             hover_locator = self.selenium.find_element(*self._other_applications_locator)
             app_locator = self.selenium.find_element(By.CSS_SELECTOR,
                                                      "#app-%s" % other_app.lower())
-            ActionChains(self.selenium).move_to_element(hover_locator).move_to_element(app_locator).click().perform()
+            ActionChains(self.selenium).move_to_element(hover_locator).\
+                move_to_element(app_locator).\
+                click().perform()
 
         def is_other_application_visible(self, other_app):
             hover_locator = self.selenium.find_element(*self._other_applications_locator)
@@ -199,7 +201,9 @@ class Base(Page):
             hover_element = self.selenium.find_element(*self._account_controller_locator)
             click_element = self.selenium.find_element(self._account_dropdown_locator[0],
                                                        '%s > li:nth-child(2) a' % self._account_dropdown_locator[1])
-            ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+            ActionChains(self.selenium).move_to_element(hover_element).\
+                move_to_element(click_element).\
+                click().perform()
 
             from pages.user import EditProfile
             return EditProfile(self.testsetup)
@@ -208,7 +212,9 @@ class Base(Page):
             hover_element = self.selenium.find_element(*self._account_controller_locator)
             click_element = self.selenium.find_element(self._account_dropdown_locator[0],
                                                        '%s > li:nth-child(1) a' % self._account_dropdown_locator[1])
-            ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+            ActionChains(self.selenium).move_to_element(hover_element).\
+                move_to_element(click_element).\
+                click().perform()
 
             from pages.user import ViewProfile
             return ViewProfile(self.testsetup)
