@@ -127,12 +127,13 @@ class Details(Base):
 
     @property
     def _page_title(self):
-        return "%s:: Add-ons for Firefox" % self.title
+        return "%s :: Add-ons for Firefox" % self.title
 
     @property
     def title(self):
         base = self.selenium.find_element(*self._title_locator).text
-        return base.replace(self.version_number, '')
+        '''base = "firebug 1.8.9" we have to remove version number for it'''
+        return base.replace(self.version_number, '').strip()
 
     @property
     def has_reviews(self):
