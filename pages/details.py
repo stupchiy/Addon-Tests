@@ -127,16 +127,17 @@ class Details(Base):
 
     @property
     def _page_title(self):
-        return "%s:: Add-ons for Firefox" % self.title
+        return "%s :: Add-ons for Firefox" % self.title
 
     @property
     def title(self):
         base = self.selenium.find_element(*self._title_locator).text
-        return base.replace(self.version_number, '')
+        '''base = "firebug 1.8.9" we will have to remove version number for it'''
+        return base.replace(self.version_number, '').strip()
 
     @property
     def has_reviews(self):
-        return len(self.selenium.find_elements(*self._review_details_locator)) > 0
+        return self.review_count > 0
 
     def click_all_reviews_link(self):
         self.selenium.find_element(*self._all_reviews_link_locator).click()
@@ -159,8 +160,7 @@ class Details(Base):
 
     @property
     def authors(self):
-        author_elements = self.selenium.find_elements(*self._authors_locator)
-        return [author_elements[i].text for i in range(len(author_elements))]
+        return [element.text for element in self.selenium.find_elements(*self._authors_locator)]
 
     @property
     def summary(self):
@@ -277,8 +277,8 @@ class Details(Base):
 
     @property
     def part_of_collections(self):
-        poc_list = self.selenium.find_elements(*self._part_of_collections_list_locator)
-        return [self.PartOfCollectionsSnippet(self.testsetup, poc_list[element]) for element in range(len(poc_list))]
+        return [self.PartOfCollectionsSnippet(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._part_of_collections_list_locator)]
 
     def page_forward(self):
         self.selenium.find_element(*self._next_link_locator).click()
