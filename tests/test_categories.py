@@ -87,7 +87,7 @@ class TestCategory:
         categories = home_page.categories
 
         # Catch extra/missing categories with a simple count check
-        Assert.equal(home_page.categories_count, len(expected_categories))
+        Assert.equal(len(home_page.categories), len(expected_categories))
 
         # Check the categories that are there against the expected list
         for category in categories:
