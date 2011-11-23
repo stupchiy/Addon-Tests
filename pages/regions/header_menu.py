@@ -114,7 +114,9 @@ class HeaderMenu(Page):
             submenu_link = self._submenu_root_element.find_element(*self._link_tag)
             parent_menu_name = self._root_element.find_element(*self._link_locator).text
 
-            ActionChains(self.selenium).move_to_element(self._root_element).move_to_element(submenu_link).click().perform()
+            ActionChains(self.selenium).move_to_element(self._root_element).\
+                move_to_element(submenu_link).\
+                click().perform()
 
             if "Extensions" in parent_menu_name:
                 from pages.extensions import ExtensionsHome

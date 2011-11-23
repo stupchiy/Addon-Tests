@@ -110,7 +110,7 @@ class TestReviews:
         review_page = write_review_block.click_to_save_review()
 
         # Step 5 - Assert review
-        review = review_page.review()
+        review = review_page.reviews[0]
         Assert.equal(review.rating, 1)
         Assert.equal(review.author, mozwebqa.credentials['default']['name'])
         date = datetime.now().strftime("%B %d, %Y")

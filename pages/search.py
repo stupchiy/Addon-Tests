@@ -102,7 +102,9 @@ class SearchHome(Base):
     def sort_by(self, type):
         hover_element = self.selenium.find_element(*self._hover_more_locator)
         click_element = self.selenium.find_element(*getattr(self, '_sort_by_%s_locator' % type.replace(' ', '_').lower()))
-        ActionChains(self.selenium).move_to_element(hover_element).move_to_element(click_element).click().perform()
+        ActionChains(self.selenium).move_to_element(hover_element).\
+            move_to_element(click_element).\
+            click().perform()
         self._wait_for_results_refresh()
         return SearchHome(self.testsetup)
 

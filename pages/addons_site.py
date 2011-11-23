@@ -65,7 +65,8 @@ class WriteReviewBlock(Base):
     def set_review_rating(self, rating):
         locator = self.selenium.find_element(self._add_review_input_rating_locator[0],
                                              '%s[data-stars="%s"]' % (self._add_review_input_rating_locator[1], rating))
-        ActionChains(self.selenium).move_to_element(locator).click().perform()
+        ActionChains(self.selenium).move_to_element(locator).\
+            click().perform()
 
     def click_to_save_review(self):
         self.selenium.find_element(*self._add_review_submit_button_locator).click()
@@ -78,22 +79,23 @@ class WriteReviewBlock(Base):
 
 class ViewReviews(Base):
 
-    def review(self, index=1):
+    _review_locator = (By.CSS_SELECTOR, "div.primary div.review")
+
+    @property
+    def reviews(self):
         """ Returns review object with index. """
-        return self.ReviewSnippet(self.testsetup, index)
+        return [self.ReviewSnippet(self.testsetup, element) for element in self.selenium.find_elements(*self._review_locator)]
 
     class ReviewSnippet(Base):
 
-        _review_locator = (By.CSS_SELECTOR, "div.primary div.review")
         _review_text_locator = (By.CSS_SELECTOR, ".description")
         _review_rating_locator = (By.CSS_SELECTOR, "span[itemprop=rating]")
         _review_author_locator = (By.CSS_SELECTOR, "a:not(.permalink)")
         _review_date_locator = (By.CSS_SELECTOR, ".byline")
 
-        def __init__(self, testsetup, index):
+        def __init__(self, testsetup, element):
             Base.__init__(self, testsetup)
-            self._root_element = self.selenium.find_element(self._review_locator[0],
-                                             '%s:nth-child(%s)' % (self._review_locator[1], index))
+            self._root_element = element
 
         @property
         def text(self):
