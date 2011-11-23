@@ -46,6 +46,7 @@
 # ***** END LICENSE BLOCK *****
 
 import re
+from unittestzero import Assert
 
 from pages.base import Base
 from selenium.webdriver.common.by import By
@@ -142,8 +143,7 @@ class PersonasDetail(Base):
     @property
     def is_the_current_page(self):
         # This overrides the method in the Page super class.
-        if not (re.match(self._page_title_regex, self.selenium.title)):
-            raise Exception('Expected the current page to be the personas detail page.')
+        Assert.not_none(re.match(self._page_title_regex, self.selenium.title), 'Expected the current page to be the personas detail page.')
         return True
 
     @property
@@ -169,8 +169,8 @@ class PersonasBrowse(Base):
     @property
     def is_the_current_page(self):
         # This overrides the method in the Page super class.
-        if not (self.is_element_present(*self._personas_grid_locator)):
-            raise Exception('Expected the current page to be the personas browse page.')
+        Assert.true(self.is_element_present(*self._personas_grid_locator),
+            'Expected the current page to be the personas browse page.')
         return True
 
     @property
