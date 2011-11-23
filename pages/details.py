@@ -132,12 +132,12 @@ class Details(Base):
     @property
     def title(self):
         base = self.selenium.find_element(*self._title_locator).text
-        '''base = "firebug 1.8.9" we have to remove version number for it'''
+        '''base = "firebug 1.8.9" we will have to remove version number for it'''
         return base.replace(self.version_number, '').strip()
 
     @property
     def has_reviews(self):
-        return len(self.selenium.find_elements(*self._review_details_locator)) > 0
+        return self.review_count > 0
 
     def click_all_reviews_link(self):
         self.selenium.find_element(*self._all_reviews_link_locator).click()
