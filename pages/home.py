@@ -187,4 +187,5 @@ class Home(Base):
 
         @property
         def users_number(self):
-            return int(self._root_element.find_element(*self._users_locator).text.split(' ')[0].replace(',', ''))
+            users_text = self._root_element.find_element(*self._users_locator).text
+            return int(users_text.split(' ')[0].replace(',', ''))
