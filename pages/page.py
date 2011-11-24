@@ -47,6 +47,7 @@ from unittestzero import Assert
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException
 
+
 class Page(object):
     '''
     Base class for all Pages

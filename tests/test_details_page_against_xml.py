@@ -42,6 +42,7 @@ import re
 import pytest
 
 from unittestzero import Assert
+
 from pages.details import Details
 from pages.addons_api import AddOnsAPI
 

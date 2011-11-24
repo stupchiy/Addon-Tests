@@ -45,9 +45,10 @@
 #
 # ***** END LICENSE BLOCK *****
 
+from selenium.webdriver.common.by import By
+
 from pages.page import Page
 from pages.base import Base
-from selenium.webdriver.common.by import By
 
 
 class Home(Base):

@@ -36,9 +36,11 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from pages.page import Page
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+
+from pages.page import Page
+
 
 class ImageViewer(Page):
 

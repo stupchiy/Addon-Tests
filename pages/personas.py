@@ -48,8 +48,9 @@
 import re
 from unittestzero import Assert
 
-from pages.base import Base
 from selenium.webdriver.common.by import By
+
+from pages.base import Base
 
 
 class Personas(Base):

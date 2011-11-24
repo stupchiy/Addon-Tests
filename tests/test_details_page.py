@@ -44,6 +44,7 @@ import re
 import pytest
 
 from unittestzero import Assert
+
 from pages.details import Details
 from pages.extensions import ExtensionsHome
 from pages.home import Home

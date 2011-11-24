@@ -39,10 +39,12 @@
 #
 # ***** END LICENSE BLOCK *****
 
+import pytest
 
 from unittestzero import Assert
+
 from pages.home import Home
-import pytest
+
 
 nondestructive = pytest.mark.nondestructive
 

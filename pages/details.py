@@ -46,10 +46,12 @@
 # ***** END LICENSE BLOCK *****
 
 import re
-from pages.page import Page
-from pages.base import Base
+
 from urllib2 import urlparse
 from selenium.webdriver.common.by import By
+
+from pages.page import Page
+from pages.base import Base
 
 
 class Details(Base):

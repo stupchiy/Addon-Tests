@@ -45,8 +45,10 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from pages.base import Base
 from selenium.webdriver.common.by import By
+
+from pages.base import Base
+
 
 class DiscoveryPane(Base):
 
@@ -61,7 +63,7 @@ class DiscoveryPane(Base):
     _more_ways_section_locator = (By.ID, "more-ways")
     _more_ways_addons_locator = (By.ID, "more-addons")
     _more_ways_personas_locator = (By.ID, "more-personas")
-    _up_and_coming_item = (By.XPATH , "//section[@id='up-and-coming']/ul/li/a[@class='addon-title']")
+    _up_and_coming_item = (By.XPATH, "//section[@id='up-and-coming']/ul/li/a[@class='addon-title']")
     _logout_link_locator = (By.CSS_SELECTOR, "#logout > a")
 
     def __init__(self, testsetup, path):
