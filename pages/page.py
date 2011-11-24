@@ -42,6 +42,8 @@
 Created on Jun 21, 2010
 
 '''
+from unittestzero import Assert
+
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException
 
@@ -62,14 +64,9 @@ class Page(object):
 
     @property
     def is_the_current_page(self):
-        page_title = self.selenium.title
-
-        if not page_title == self._page_title:
-            print "Expected page title: %s" % self._page_title
-            print "Actual page title: %s" % page_title
-            raise Exception("Expected page title does not match actual page title.")
-        else:
-            return True
+        Assert.equal(self.selenium.title, self._page_title,
+            "Expected page title: %s. Actual page title: %s" % (self._page_title, self.selenium.title))
+        return True
 
     def get_url_current_page(self):
         return(self.selenium.current_url)
