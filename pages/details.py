@@ -395,7 +395,7 @@ class Details(Base):
         _next_locator = (By.CSS_SELECTOR, 'section.previews.carousel > a.next')
         _prev_locator = (By.CSS_SELECTOR, 'section.previews.carousel > a.prev')
 
-        _image_locator = (By.CSS_SELECTOR, '#preview')
+        _image_locator = (By.CSS_SELECTOR, '#preview li')
 
         def next_set(self):
             self.selenium.find_element(*self._next_locator).click()
@@ -405,7 +405,7 @@ class Details(Base):
 
         def click_image(self, image_no=1):
             self.selenium.find_element(self._image_locator[0],
-                        '%s li:nth-child(%s) a' % (self._image_locator[1], image_no)).click()
+                        '%s:nth-child(%s) a' % (self._image_locator[1], image_no)).click()
             from pages.regions.image_viewer import ImageViewer
             image_viewer = ImageViewer(self.testsetup)
             image_viewer.wait_for_image_viewer_to_finish_animating()
@@ -413,15 +413,15 @@ class Details(Base):
 
         def image_title(self, image_no):
             return self.selenium.find_element(self._image_locator[0],
-                        '%s li:nth-child(%s) a' % (self._image_locator[1], image_no + 1)).get_attribute('title')
+                        '%s:nth-child(%s) a' % (self._image_locator[1], image_no + 1)).get_attribute('title')
 
         def image_link(self, image_no):
             return self.selenium.find_element(self._image_locator[0],
-                        '%s li:nth-child(%s) a img' % (self._image_locator[1], image_no + 1)).get_attribute('src')
+                        '%s:nth-child(%s) a img' % (self._image_locator[1], image_no + 1)).get_attribute('src')
 
         @property
         def image_count(self):
-            return len(self.selenium.find_elements(self._image_locator[0], '%s li' % self._image_locator[1]))
+            return len(self.selenium.find_elements(*self._image_locator))
 
         @property
         def image_set_count(self):
