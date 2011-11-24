@@ -436,10 +436,6 @@ class Details(Base):
         return [self.DetailsReviewSnippet(self.testsetup, element) for element in self.selenium.find_elements(*self._reviews_locator)]
 
     @property
-    def reviews_count(self):
-        return len(self.selenium.find_elements(*self._reviews_locator))
-
-    @property
     def version_info_link(self):
         return self.selenium.find_element(*self._info_link_locator).get_attribute('href')
 

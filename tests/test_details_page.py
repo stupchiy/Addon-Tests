@@ -274,7 +274,7 @@ class TestDetails:
         addon_name = 'firebug'
         detail_page = Details(mozwebqa, addon_name)
 
-        for i in range(0, detail_page.reviews_count):
+        for i in range(0, len(detail_page.reviews)):
             username = detail_page.reviews[i].username
             amo_user_page = detail_page.reviews[i].click_username()
             Assert.equal(username, amo_user_page.username)
