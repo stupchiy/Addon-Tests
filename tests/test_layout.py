@@ -39,8 +39,9 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from unittestzero import Assert
 import pytest
+
+from unittestzero import Assert
 
 from pages.home import Home
 

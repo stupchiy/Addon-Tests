@@ -39,6 +39,7 @@
 import pytest
 
 from unittestzero import Assert
+
 from pages.home import Home
 
 nondestructive = pytest.mark.nondestructive

@@ -37,9 +37,10 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from pages.base import Base
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+
+from pages.base import Base
 
 
 class Login(Base):

@@ -37,14 +37,16 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from pages.page import Page
+
 from time import strptime, mktime
-from pages.base import Base
-from pages.regions.search_filter import FilterBase
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.action_chains import ActionChains
+
+from pages.page import Page
+from pages.base import Base
+from pages.regions.search_filter import FilterBase
 
 
 class SearchHome(Base):

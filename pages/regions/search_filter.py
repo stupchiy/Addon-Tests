@@ -36,8 +36,9 @@
 #
 # ***** END LICENSE BLOCK *****
 
-from pages.page import Page
 from selenium.webdriver.common.by import By
+
+from pages.page import Page
 
 
 class FilterBase(Page):

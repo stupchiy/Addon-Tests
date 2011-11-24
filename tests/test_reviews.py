@@ -41,6 +41,7 @@ import pytest
 
 from datetime import datetime
 from unittestzero import Assert
+
 from pages.home import Home
 from pages.details import Details
 
@@ -168,7 +169,6 @@ class TestReviews:
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
 
-
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
 
@@ -200,7 +200,6 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
@@ -234,7 +233,6 @@ class TestReviews:
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
 
-
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()
 
@@ -266,7 +264,6 @@ class TestReviews:
         extensions_home_page.go_to_last_page()
         addon = extensions_home_page.extensions[-1]  # the last one is without rating
         details_page = addon.click()
-
 
         # Step 4 - Click on the "Write review" button
         write_review_block = details_page.click_to_write_review()

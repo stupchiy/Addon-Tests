@@ -45,6 +45,7 @@ Created on Jun 21, 2010
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException
 
+
 class Page(object):
     '''
     Base class for all Pages

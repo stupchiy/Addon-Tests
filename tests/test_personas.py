@@ -41,6 +41,7 @@ import random
 import pytest
 
 from unittestzero import Assert
+
 from pages.home import Home
 from pages.personas import Personas
 

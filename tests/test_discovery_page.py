@@ -45,6 +45,7 @@ import re
 import pytest
 
 from unittestzero import Assert
+
 from pages.discovery import DiscoveryPane
 from pages.home import Home
 
