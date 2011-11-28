@@ -72,7 +72,7 @@ class Home(Base):
     _featured_personas_title_locator = (By.CSS_SELECTOR, "#featured-personas h2")
     _featured_personas_items_locator = (By.CSS_SELECTOR, "#featured-personas li")
 
-    _category_list_locator = (By.CSS_SELECTOR, "ul#side-categories")
+    _category_list_locator = (By.CSS_SELECTOR, "ul#side-categories li")
 
     _extensions_menu_link = (By.CSS_SELECTOR, "#extensions > a")
 
@@ -153,7 +153,6 @@ class Home(Base):
                 for element in self.selenium.find_elements(*self._most_popular_item_locator)]
 
     class Categories(Page):
-        _categories_locator = (By.CSS_SELECTOR, '#side-categories li')
         _link_locator = (By.CSS_SELECTOR, 'a')
 
         def __init__(self, testsetup, element):
@@ -162,7 +161,7 @@ class Home(Base):
 
         @property
         def name(self):
-            return self._root_element.find_element(*self._categories_locator).text
+            return self._root_element.text
 
         def click_link(self):
             self._root_element.find_element(*self._link_locator).click()

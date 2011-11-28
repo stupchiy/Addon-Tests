@@ -55,9 +55,9 @@ class TestCategory:
     def test_that_all_category_links_work(self, mozwebqa):
         "Test for Litmus 25796"
         home_page = Home(mozwebqa)
-        categories = home_page.categories
 
-        for category in categories:
+        for i in range(len(home_page.categories)):
+            category = home_page.categories[i]
             category_name = category.name
             category_page = category.click_link()
             Assert.contains(category_name, category_page.page_title)
@@ -89,7 +89,7 @@ class TestCategory:
         categories = home_page.categories
 
         # Catch extra/missing categories with a simple count check
-        Assert.equal(len(home_page.categories), len(expected_categories))
+        Assert.equal(len(categories), len(expected_categories))
 
         # Check the categories that are there against the expected list
         for category in categories:
