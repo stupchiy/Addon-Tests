@@ -44,6 +44,7 @@ import re
 from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.page import Page
 
@@ -72,6 +73,7 @@ class Base(Page):
 
     @property
     def page_title(self):
+        WebDriverWait(self.selenium, 10).until(lambda s: self.selenium.title != '')
         return self.selenium.title
 
     @property
