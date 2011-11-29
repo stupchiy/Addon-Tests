@@ -435,7 +435,8 @@ class Details(Base):
 
     @property
     def reviews(self):
-        return [self.DetailsReviewSnippet(self.testsetup, element) for element in self.selenium.find_elements(*self._reviews_locator)]
+        return [self.DetailsReviewSnippet(self.testsetup, element)
+                for element in self.selenium.find_elements(*self._reviews_locator)]
 
     @property
     def version_info_link(self):
