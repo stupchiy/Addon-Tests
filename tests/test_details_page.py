@@ -298,7 +298,7 @@ class TestDetails:
         details_page.click_version_info_link()
         Assert.equal(details_page.version_info_link, details_page.version_information_href)
         Assert.true(details_page.is_version_information_section_expanded)
-        Assert.true(details_page.does_page_scroll_to_version_information_section)
+        Assert.true(details_page.is_version_information_section_in_view)
 
     @nondestructive
     def test_that_breadcrumb_links_in_details_page_work(self, mozwebqa):
