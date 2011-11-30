@@ -70,7 +70,7 @@ class DiscoveryPane(Base):
         Base.__init__(self, testsetup)
         self.selenium.get("%s/%s" % (self.base_url, path))
         #resizing this page for elements that disappear when the window is < 1000
-        self.selenium.execute_script("window.resizeTo(10000,10000); window.moveTo(0,0)")
+        #self.selenium.set_window_size(1000, 1000) Commented because this selenium call is still in beta
 
     @property
     def what_are_addons_text(self):
