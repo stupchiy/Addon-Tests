@@ -97,9 +97,7 @@ class TestDiscoveryPane:
         """ TestCase for Litmus 15081 """
         discovery_pane = DiscoveryPane(mozwebqa, self.basepath)
         first_persona = discovery_pane.first_persona
-        first_persona_url = first_persona.lower().replace(" ", "-")
         persona = discovery_pane.click_on_first_persona()
-        Assert.true(first_persona_url in discovery_pane.get_url_current_page())
         Assert.equal(first_persona, persona.persona_title)
 
     @nondestructive
