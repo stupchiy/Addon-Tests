@@ -91,7 +91,7 @@ class TestHome:
         """
         home_page = Home(mozwebqa)
 
-        Assert.equal(home_page.fetaured_personas_title, u"Featured Personas See all \xbb", "Featured Personas region title doesn't match")
+        Assert.equal(home_page.featured_personas_title, u"Featured Personas See all \xbb", "Featured Personas region title doesn't match")
 
         Assert.equal(home_page.featured_personas_count, 6)
 
