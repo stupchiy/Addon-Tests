@@ -126,7 +126,7 @@ class Home(Base):
         return len(self.selenium.find_elements(*self._featured_personas_items_locator))
 
     @property
-    def fetaured_personas_title(self):
+    def featured_personas_title(self):
         return self.selenium.find_element(*self._featured_personas_title_locator).text
 
     def click_on_first_addon(self):
