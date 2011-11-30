@@ -176,7 +176,7 @@ class TestThemes:
         current_page_url = home_page.get_url_current_page()
         Assert.true(current_page_url.endswith("/themes/"))
         default_categories = ["Animals", "Compact", "Large", "Miscellaneous", "Modern", "Nature", "OS Integration", "Retro", "Sports"]
-        Assert.equal(len(themes_page.categories), len(default_categories))
+        Assert.equal(themes_page.categories_count, len(default_categories))
         count = 0
         for category in default_categories:
             count += 1

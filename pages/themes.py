@@ -95,7 +95,7 @@ class Themes(Base):
 
     @property
     def categories_count(self):
-        return len(self.selenium.find_elements(* self._categories_locator))
+        return len(self.selenium.find_elements(*self._categories_locator))
 
     @property
     def addon_names(self):
