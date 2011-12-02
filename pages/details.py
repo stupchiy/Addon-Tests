@@ -259,9 +259,14 @@ class Details(Base):
 
     @property
     def is_version_information_section_in_view(self):
-        """ The scrip return the pixels the current document has been scrolled from the
-            upper left corner of the window, vertically.
-            If the offset is > 1000, the page has scrolled to the information section."""
+        """ Check if the information section is in view.
+
+        The script returns the pixels the current document has been scrolled from the
+        upper left corner of the window, vertically.
+        If the offset is > 1000, the page has scrolled to the information section and it
+        is in view.
+
+        """
         return (self.selenium.execute_script('return window.pageYOffset')) > 1000
 
     @property
