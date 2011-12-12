@@ -47,10 +47,13 @@ from pages.home import Home
 
 
 nondestructive = pytest.mark.nondestructive
+xfail = pytest.mark.xfail
+
 
 
 class TestCategory:
 
+    @xfail(reason="Bug 709764")
     @nondestructive
     def test_that_all_category_links_work(self, mozwebqa):
         "Test for Litmus 25796"
