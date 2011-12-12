@@ -47,9 +47,11 @@ class Login(Base):
 
     _page_title = 'User Login :: Add-ons for Firefox'
 
-    _email_locator = (By.ID, 'id_username')
-    _password_locator = (By.ID, 'id_password')
-    _login_button_locator = (By.ID, 'login-submit')
+    _email_locator = (By.ID, 'LoginEmail')
+    _password_locator = (By.ID, 'LoginPassword')
+    _login_button_locator = (By.CSS_SELECTOR, '#login button.prominent')
+    _login_link_locator = (By.CSS_SELECTOR, '#aux-nav a:nth-child(2)')
+    _register_link_locator = (By.CSS_SELECTOR, '#aux-nav li.account a:nth-child(1)')
     _normal_login_locator = (By.ID, 'show-normal-login')
     _browser_id_locator = (By.CSS_SELECTOR, 'button.browserid-login')
 
@@ -57,7 +59,7 @@ class Login(Base):
 
     def login_user_normal(self, user):
         credentials = self.testsetup.credentials[user]
-        self.selenium.find_element(*self._normal_login_locator).click()
+        self.selenium.find_element(*self._login_link_locator).click()
 
         email = self.selenium.find_element(*self._email_locator)
         email.send_keys(credentials['email'])
