@@ -50,7 +50,6 @@ nondestructive = pytest.mark.nondestructive
 xfail = pytest.mark.xfail
 
 
-
 class TestCategory:
 
     @xfail(reason="Bug 709764")
