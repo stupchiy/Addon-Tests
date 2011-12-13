@@ -70,8 +70,8 @@ class Details(Base):
     _view_the_source_locator = (By.CSS_SELECTOR, ".source-code")
     _complete_version_history_locator = (By.CSS_SELECTOR, "p.more > a")
     _description_locator = (By.CSS_SELECTOR, "div.prose")
-    _register_link_locator = (By.CSS_SELECTOR, "li.account > a")
-    _login_link_locator = (By.CSS_SELECTOR, "li.account > a:nth-child(2)")
+    _register_link_locator = (By.CSS_SELECTOR, "#aux-nav li.account a:nth-child(1)")
+    _login_link_locator = (By.CSS_SELECTOR, "#aux-nav a:nth-child(2)")
     _other_applications_locator = (By.ID, "other-apps")
 
     _about_addon_locator = (By.CSS_SELECTOR, "section.primary > h2")
