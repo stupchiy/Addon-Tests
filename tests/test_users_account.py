@@ -42,7 +42,6 @@ from unittestzero import Assert
 
 from pages.home import Home
 
-xfail = pytest.mark.xfail
 nondestructive = pytest.mark.nondestructive
 destructive = pytest.mark.destructive
 
@@ -55,23 +54,6 @@ class TestAccounts:
             https://litmus.mozilla.org/show_test.cgi?id=7857
             Test for litmus 4859
             https://litmus.mozilla.org/show_test.cgi?id=4859
-        """
-
-        home_page = Home(mozwebqa)
-        home_page.login("normal")
-        Assert.true(home_page.is_the_current_page)
-        Assert.true(home_page.header.is_user_logged_in)
-
-        home_page.header.click_logout()
-        Assert.false(home_page.header.is_user_logged_in)
-
-    @xfail(reason="disabled until BrowserID gets into production")
-    @nondestructive
-    def test_user_can_login_and_logout_using_browser_id(self, mozwebqa):
-        """ Test for litmus 7857
-        https://litmus.mozilla.org/show_test.cgi?id=7857
-        Test for litmus 4859
-        https://litmus.mozilla.org/show_test.cgi?id=4859
         """
 
         home_page = Home(mozwebqa)
