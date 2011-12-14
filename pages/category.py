@@ -44,7 +44,7 @@ from pages.base import Base
 
 class Category(Base):
 
-    _category_title_locator = (By.CSS_SELECTOR, ".island.hero.c > h1")
+    _category_title_locator = (By.CSS_SELECTOR, "div.island > h1")
 
     @property
     def category_header_title(self):
