@@ -52,7 +52,7 @@ xfail = pytest.mark.xfail
 
 class TestCategory:
 
-    @xfail(reason="Bug 709764")
+    @xfail(reason="Bug 709797")
     @nondestructive
     def test_that_all_category_links_work(self, mozwebqa):
         "Test for Litmus 25796"
