@@ -48,7 +48,7 @@ from unittestzero import Assert
 from pages.home import Home
 
 nondestructive = pytest.mark.nondestructive
-
+xfail = pytest.mark.xfail
 
 class TestSearch:
 
@@ -208,6 +208,7 @@ class TestSearch:
         Assert.is_sorted_descending([i.created_date for i in search_page.results()])
 
     @nondestructive
+    @xfail(reason="Bugzilla 698165")
     def test_sorting_by_most_recently_updated(self, mozwebqa):
         """ Litmus 17345
             https://litmus.mozilla.org/show_test.cgi?id=17345 """
