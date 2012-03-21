@@ -19,7 +19,7 @@ class Login(Base):
     _email_locator = (By.ID, 'id_username')
     _password_locator = (By.ID, 'id_password')
     _login_button_locator = (By.ID, 'login-submit')
-    _logout_locator = (By.CSS_SELECTOR, '.logout')
+    _logout_locator = (By.CSS_SELECTOR, 'li[class=\'nomenu logout\']')
     _normal_login_locator = (By.ID, 'show-normal-login')
     _browser_id_locator = (By.CSS_SELECTOR, 'button.browserid-login')
 
